@@ -61,17 +61,15 @@
                     </div>
                   </div>
                 </div>
-                <Form :label-width="150">
+                <Form :label-width="150" >
                     <Row>
                         <Col span="8">
                         <FormItem label="姓名／工号／手机号" prop="teacherName">
                             <Input v-model="formItemName.teacherName" placeholder=""></Input>
                         </FormItem>
                         </Col>
-                        <Col span="3">
-                          <FormItem>
+                        <Col span="3" style="margin-left: 10px">
                             <Button type="primary" @click="getTeachersByName">搜索</Button>
-                          </FormItem>
                         </Col>
                     </Row>
                 </Form>
@@ -88,7 +86,7 @@
                         <!--</Col>-->
                     <!--</Row>-->
                     <Row>
-                        <Col span="6">
+                        <Col span="8">
                         <FormItem label="级别" prop="level">
                             <Select v-model="formItem.level" :select="formItem.level">
                                 <Option value="">请选择</Option>
@@ -107,7 +105,7 @@
                             </Select>
                         </FormItem>
                         </Col>
-                        <Col span="6">
+                        <Col span="8">
                         <FormItem label="性别" prop="gender">
                             <Select v-model="formItem.gender" :select="formItem.gender">
                                 <Option value="">请选择</Option>
@@ -124,20 +122,34 @@
                             <!--</Select>-->
                         <!--</FormItem>-->
                         <!--</Col>-->
-                        <Col span="6">
+                        <Col span="8">
                         <FormItem label="所属研究院" prop="institute">
-                            <Select v-model="formItem.institute">
+                            <Select v-model="formItem.institute" filterable>
                                 <Option value="">请选择</Option>
-                                <Option value="北京">北京</Option>
-                                <Option value="天津">天津</Option>
-                                <Option value="上海">上海</Option>
+                                <Option :value="item.name" v-for="item,index in instituteList" :key="index">{{item.name}}</Option>
                             </Select>
                         </FormItem>
                         </Col>
+                        <Col span="8">
+                        <FormItem label="主修" prop="major">
+                            <Select v-model="formItem.major" :select="formItem.major" filterable>
+                                <Option value="">请选择</Option>
+                                <Option :value="item.id" v-for="item,index in levelData" :style="{textIndent:item.level*20+'px'}" :key="index">{{item.name}}</Option>
+                            </Select>
+                        </FormItem>
+                        </Col>
+                        <Col span="8">
+                        <FormItem label="辅修" prop="minor">
+                            <Select v-model="formItem.minor" :select="formItem.minor" filterable>
+                                <Option value="">请选择</Option>
+                                <Option :value="item.id" v-for="item,index in levelData" :style="{textIndent:item.level*20+'px'}" :key="index">{{item.name}}</Option>
+                            </Select>
+                        </FormItem>
+                        </Col>
+                        <Col span="5" style="margin-left: 10px">
+                          <Button type="primary" @click="getTeachers">搜索</Button>
+                        </Col>
                     </Row>
-                    <FormItem>
-                        <Button type="primary" @click="getTeachers">搜索</Button>
-                    </FormItem>
                 </Form>
                 <table id="arrange_table1" border="1" width="100%" style="border-collapse:collapse;text-align: center;">
                   <tr>
@@ -152,15 +164,15 @@
                     <!--<th>被投诉次数</th>-->
                     <!--<th>被投诉次数</th>-->
                     <!--<th>目前所在地</th>-->
-                    <!--<th class="frontPage pageBtn" @click="toFrontPage" v-if="row>7">-->
-                      <!--<Icon type="chevron-left"></Icon>-->
-                    <!--</th>-->
-                    <!--<th class="calender" v-for="index in row" v-show="(index) > (page-1)*7 && (index) <= page*7" >-->
-                      <!--{{formatDate(index-1).m}}月{{formatDate(index-1).d}}日-->
-                    <!--</th>-->
-                    <!--<th class="nextPage pageBtn" @click="toNextPage" v-if="row>7">-->
-                      <!--<Icon type="chevron-right"></Icon>-->
-                    <!--</th>-->
+                    <th class="frontPage pageBtn" @click="toFrontPage" v-if="queryDays ? queryDays.length>5 : 0">
+                      <Icon type="chevron-left"></Icon>
+                    </th>
+                    <th class="calender" v-for="i,index in queryDays" v-show="(index+1) > (page-1)*5 && (index+1) <= page*5" >
+                      {{timestampToTime(i)}}
+                    </th>
+                    <th class="nextPage pageBtn" @click="toNextPage" v-if="queryDays ? queryDays.length>5 : 0">
+                      <Icon type="chevron-right"></Icon>
+                    </th>
                     <th class="operate">操作</th>
                   </tr>
                   <tr v-for="(item,index) in data2" :class="{arranged:item.arranged}">
@@ -174,11 +186,11 @@
                     <td>{{item.complaints == null?'--':item.complaints}}</td>
                     <!--<td>{{item.complaints}}</td>-->
                     <!--<td>{{item.place}}</td>-->
-                    <!--<td class="pageBtn frontPage"></td>-->
-                    <!--<td class="calender" :class="{blank:ite.plan === ''}" v-for="(ite, ind) in item.arrange" v-show="(ind+1) > (page-1)*7 && (ind+1) <= page*7" >-->
-                      <!--{{ite.plan}}-->
-                    <!--</td>-->
-                    <!--<td class="pageBtn nextPage"></td>-->
+                    <td class="pageBtn frontPage"></td>
+                    <td class="calender" :class="{blank:ite.length === 0}" v-for="(ite, ind) in item.extraData.items" v-show="(ind+1) > (page-1)*5 && (ind+1) <= page*5" >
+                      <div v-for="i in ite">{{i}}</div>
+                    </td>
+                    <td class="pageBtn nextPage"></td>
                     <td class="operate">
                       <Button type="success" size="small" @click="arrangement(item,item.teacherId)">选择老师</Button>
                     </td>
@@ -314,16 +326,15 @@
         formItem: {
           level:'',
           gender:'',
-          institute:''
+          institute:'',
+          major: '',
+          minor: ''
         },
         formItemName:{
           teacherName: ''
         },
         data1: [],    //三级科目列表
         // 行数 通过props 传入
-        row: 15,// 天数
-        date: '1月31日',
-        curYear: 2018,
         page: 1,
         scheduleData:[],
         data2:[],   //师资列表
@@ -346,9 +357,30 @@
         teacherItemId:'',
         modifyHistoryList:[],   //修改历史
         // classDaysArr:[]
+        majorList: [], // 主修辅修列表
+        instituteList: [] //研究院列表
       }
     },
     computed: {
+      levelData () {
+        let data3 = []
+        function pushBranch(obj,level) {
+          data3.push({id:obj.id, name:obj.name, level:level})
+          if(!obj.children.length){
+            return
+          }
+          obj.children.map(function (item, index) {
+            pushBranch(item, level+1)
+          })
+        }
+        this.majorList.map((item,index) => {
+          pushBranch(item, 1)
+        })
+        return data3
+      },
+      queryDays () { // 教师日程 的天数列表
+        return this.classInfo.extraData ? this.classInfo.extraData.queryTeacherDates : []
+      },
       daysArr () {
         return [31,28+this.is_leap(this.curYear),31,30,31,30,31,31,30,31,30,31]
       },
@@ -360,6 +392,16 @@
       }
     },
     methods: {
+      timestampToTime(timestamp) {
+        var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        let Y = date.getFullYear() + '.';
+        let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '.';
+        let D = date.getDate() < 10 ? '0' + (date.getDate()):date.getDate();
+        //h = date.getHours() + ':';
+        //m = date.getMinutes() + ':';
+        //s = date.getSeconds();
+        return M+D;
+      },
       is_leap(year) {
         return (year % 100 == 0 ? (year % 400 == 0 ? 1 : 0) : (year % 4 == 0 ? 1 : 0));
       },
@@ -392,13 +434,13 @@
         return date
 
       },
-      // toFrontPage() {
-      //   this.page = (this.page - 1) < 1 ? 1 : this.page - 1
-      // },
-      // toNextPage() {
-      //   let pages = Math.ceil(this.row / 7)
-      //   this.page = (this.page + 1) > pages ? pages : this.page + 1
-      // },
+       toFrontPage() {
+         this.page = (this.page - 1) < 1 ? 1 : this.page - 1
+       },
+       toNextPage() {
+         let pages = Math.ceil(this.row / 5)
+         this.page = (this.page + 1) > pages ? pages : this.page + 1
+       },
       submit() {
         /*this.$Modal.confirm({
            title: '提示',
@@ -755,6 +797,38 @@
         let arr = time.split(':')
         let number = parseInt(arr[0] + '' + arr[1]);
         return number
+      },
+      getMajorAndMinor () {
+        // 主修、辅修的多级列表
+        this.$http({
+          method:'get',
+          //url: this.$store.state.app.baseUrl + 'dossier/category',
+          url: 'http://192.168.65.250:8088/dossier/category',
+          headers: {'Content-type': 'application/json'}
+        })
+          .then((res)=> {
+            console.log(res)
+            if(res.data.code == 0 ){
+              this.majorList = res.data.value
+            }else {
+              this.$Message.error(res.data.message)
+            }
+          })
+          .catch((error)=> {
+            this.$Message.error('网络错误')
+          })
+      },
+      getInstituteList() {
+        this.$http(this.$store.state.app.baseUrl + 'schedule/instituteList')
+          .then((res)=>{
+            if(res.data.code == 0 ){
+              this.instituteList = res.data.data;
+            }else {
+              this.$Message.error(res.data.message);
+            }
+          }).catch((error)=>{
+          this.$Message.error('网络错误');
+        });
       }
     },
     filters: {
@@ -811,6 +885,8 @@
       this.getArrangedTeachers();
       this.getModifyHistory();
       this.getBeiz();
+      this.getMajorAndMinor()
+      this.getInstituteList()
     }
   }
 </script>

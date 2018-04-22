@@ -33,11 +33,10 @@
                         </FormItem>
                         </Col>
                         <Col span="6">
-                        <FormItem label="班级类型" prop="classTypeId">
+                        <FormItem label="班级系列" prop="classTypeId">
                             <Select v-model="formItem1.classTypeId">
                                 <Option value="">请选择</Option>
-                                <Option value="1">组合班次</Option>
-                                <Option value="2">非组合班次</Option>
+                                <Option :value="item.id" v-for="item,index in classSeriesList" :key="index">{{item.classSeriesName}}</Option>
                             </Select>
                         </FormItem>
                         </Col>
@@ -179,8 +178,7 @@
               <FormItem label="班级类型" prop="classTypeId">
                 <Select v-model="formItem2.classTypeId">
                   <Option value="">请选择</Option>
-                  <Option value="1">组合班次</Option>
-                  <Option value="2">非组合班次</Option>
+                  <Option :value="item.id" v-for="item in classSeriesList" :key="item.id">{{item.classSeriesName}}</Option>
                 </Select>
               </FormItem>
               </Col>
@@ -446,10 +444,41 @@
                 let categoryTeacherDos = params.row.categoryTeacherDos;
                 let ele = [];
                 for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:categoryTeacherDos[i].ifNotice == '已通知'?'aaa item':'bbb item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].ifNotice == '已通知'?categoryTeacherDos[i].ifNotice:'未通知'))
+                  ele.push(
+                    h('div',
+                      {
+                        class:categoryTeacherDos[i].ifNotice == '已通知'?'aaa item':'bbb item',
+                        style:{height:100/params.row.categoryTeacherDos.length+'%'}
+                      },
+                      categoryTeacherDos[i].ifNotice == '已通知'?categoryTeacherDos[i].ifNotice:'未通知'))
                 }
                 return ele
               })())
+              }else {
+                return ''
+              }
+            }
+          },
+          {
+            title: '课程是否确认',
+            align: 'center',
+            key: 'ifNotice',
+            render:(h,params)=>{
+              if(params.row.categoryTeacherDos.length > 0) {
+                return h('div',{class:'ifNotice'},(() => {
+                  let categoryTeacherDos = params.row.categoryTeacherDos;
+                  let ele = [];
+                  for (let i = 0; i < categoryTeacherDos.length; i++) {
+                    ele.push(
+                      h('div',
+                        {
+                          class:categoryTeacherDos[i].state == '确认'?'aaa item':'bbb item',
+                          style:{height:100/params.row.categoryTeacherDos.length+'%'}
+                        },
+                        categoryTeacherDos[i].state /* == '已确认'?categoryTeacherDos[i].state:'待确认'*/))
+                  }
+                  return ele
+                })())
               }else {
                 return ''
               }
@@ -817,6 +846,8 @@
         data2:[],   //副班次
         // 地区数据
         provinces: [],
+        // 班级系列数据
+        classSeriesList: [],
         rejectModal:false,
         isMerge:false,
         currentCategoryId:-1,
@@ -1157,7 +1188,7 @@
           method:'get',
           url:this.$store.state.app.baseUrl + 'category/findByProject',
           params:{
-            projectId:this.formItem.projectId
+            projectId:this.formItem1.projectId
           }
         })
           .then((res)=>{
@@ -1209,6 +1240,19 @@
           }
         }
       },
+      getAllClassSeries () {
+        this.$http(this.$store.state.app.baseUrl + 'classSeries/findAllClassSeries')
+          .then((res)=>{
+          if(res.data.code == 0 ){
+            this.classSeriesList = res.data.data;
+          }else {
+            this.$Message.error(res.data.message);
+          }
+          })
+          .catch((error)=>{
+            this.$Message.error('网络错误');
+          });
+      }
     },
     mounted(){
       this.$http(this.$store.state.app.baseUrl + 'area/getUserVisualProvince')
@@ -1221,7 +1265,7 @@
         }).catch((error)=>{
         this.$Message.error('网络错误');
       });
-
+      this.getAllClassSeries()
       this.search1();
     },
     filters: {
@@ -1350,6 +1394,10 @@
             margin-top: 23px;
             margin-right: 10px;
 
+        }
+        .day{
+            margin-left: 0;
+            margin-right: 0;
         }
     }
     /*.thead{

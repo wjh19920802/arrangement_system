@@ -46,5 +46,37 @@ new Vue({
             }
         });
         this.$store.commit('setTagsList', tagsList);
+
+      axios.defaults.timeout = 5000
+      axios.interceptors.request.use((config)=>{
+        this.$Spin.show({
+          render: (h) => {
+            return h('div', [
+              h('Icon', {
+                'class': 'demo-spin-icon-load',
+                props: {
+                  type: 'load-c',
+                  size: 38
+                }
+              }),
+              h('div', '努力加载中...')
+            ])
+          }
+        });
+        return config;
+      },(error)=>{
+        //对返回的错误进行一些处理
+        this.$Spin.hide();
+        return Promise.reject(error);
+      });
+
+      axios.interceptors.response.use((response)=>{
+        this.$Spin.hide();
+        return response;
+      },(error)=>{
+        //对返回的错误进行一些处理
+        this.$Spin.hide();
+        return Promise.reject(error);
+      });
     }
 });

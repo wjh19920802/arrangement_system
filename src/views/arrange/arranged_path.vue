@@ -33,11 +33,10 @@
             </FormItem>
             </Col>
             <Col span="6">
-            <FormItem label="班级类型" prop="classTypeId">
+            <FormItem label="班级系列" prop="classTypeId">
               <Select v-model="formItem.classTypeId">
                 <Option value="">请选择</Option>
-                <Option value="1">组合班次</Option>
-                <Option value="2">非组合班次</Option>
+                <Option :value="item.id" :key="item.id" v-for="item in classSeriesList">{{item.classSeriesName}}</Option>
               </Select>
             </FormItem>
             </Col>
@@ -160,6 +159,8 @@
         currentInfo:{},
         // 地区数据
         provinces: [],
+        // 班级系列数据
+        classSeriesList: [],
         rejectModal:false,
         currentId:-1,
         columns: [
@@ -495,6 +496,19 @@
             }
           }
         }
+      },
+      getAllClassSeries () {
+        this.$http(this.$store.state.app.baseUrl + 'classSeries/findAllClassSeries')
+          .then((res)=>{
+          if(res.data.code == 0 ){
+            this.classSeriesList = res.data.data;
+          }else {
+            this.$Message.error(res.data.message);
+          }
+        })
+      .catch((error)=>{
+          this.$Message.error('网络错误');
+        });
       }
     },
     mounted(){
@@ -508,6 +522,7 @@
         }).catch((error)=>{
         this.$Message.error('网络错误');
       });
+      this.getAllClassSeries()
       this.search1();
     }
   }
@@ -554,6 +569,10 @@
     }
     .bbb {
       color: #f3052b;
+    }
+    .day{
+      margin-left: 0;
+      margin-right: 0;
     }
   }
   .operate{

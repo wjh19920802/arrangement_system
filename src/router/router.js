@@ -221,7 +221,7 @@ export let baseRouter = [
       component: Main,
       children: [
         { path: 'student', title: '学员课程',access:1,name: 'unarrange_student', child:['arrange_lesson'], component: resolve => { require(['@/views/arrange/unarrangeStudent.vue'], resolve); } },
-        { path: 'teacher', title: '师资培训',access:1, name: 'unarrange_teacher', component: resolve => { require(['@/views/arrange/unarrangeTeacher.vue'], resolve); } },
+        //{ path: 'teacher', title: '师资培训',access:1, name: 'unarrange_teacher', component: resolve => { require(['@/views/arrange/unarrangeTeacher.vue'], resolve); } },
       ]
     },
     {

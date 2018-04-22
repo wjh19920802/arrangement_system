@@ -86,7 +86,7 @@
                 </Col>
                 <Col span="6">
                 <FormItem label="主修" prop="major">
-                  <Select v-model="formItem.major" :select="formItem.major">
+                  <Select v-model="formItem.major" :select="formItem.major" filterable>
                     <Option value="">请选择</Option>
                     <Option :value="item.id" v-for="item,index in levelData" :style="{textIndent:item.level*20+'px'}" :key="index">{{item.name}}</Option>
                   </Select>
@@ -94,7 +94,7 @@
                 </Col>
                 <Col span="6">
                 <FormItem label="辅修" prop="minor">
-                  <Select v-model="formItem.minor" :select="formItem.minor">
+                  <Select v-model="formItem.minor" :select="formItem.minor" filterable>
                     <Option value="">请选择</Option>
                     <Option :value="item.id" v-for="item,index in levelData" :style="{textIndent:item.level*20+'px'}" :key="index">{{item.name}}</Option>
                   </Select>
