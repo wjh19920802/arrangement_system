@@ -175,7 +175,7 @@
               </FormItem>
               </Col>
               <Col span="6">
-              <FormItem label="班级类型" prop="classTypeId">
+              <FormItem label="班级系列" prop="classTypeId">
                 <Select v-model="formItem2.classTypeId">
                   <Option value="">请选择</Option>
                   <Option :value="item.id" v-for="item in classSeriesList" :key="item.id">{{item.classSeriesName}}</Option>
@@ -282,12 +282,9 @@
             }
           },
           {
-            title: '班级类型',
+            title: '班级系列',
             align: 'center',
-            key: 'classType',
-            render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.classType == 1?'组合班次':'非组合班次');
-            }
+            key: 'classSeriesName',
           },
           {
             title: '申请科目',
@@ -638,12 +635,9 @@
             }
           },
           {
-            title: '班级类型',
+            title: '班级系列',
             align: 'center',
-            key: 'classType',
-            render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.classType == 1?'组合班次':'非组合班次');
-            }
+            key: 'classSeriesName',
           },
           {
             title: '申请科目',
@@ -880,7 +874,7 @@
           classInfoName: form.classInfoName==''?null:form.classInfoName,
           studyCenterIdList: form.studyCenterIdList==''?[null]:[form.studyCenterIdList],
           projectId: form.projectId==''?null:form.projectId,
-          classTypeId: form.classTypeId==''?null:form.classTypeId,
+          classSeriesId: form.classTypeId==''?null:form.classTypeId,
           examStyleId: form.examStyleId==''?null:form.examStyleId,
           categoryId: form.categoryId==''?null:form.categoryId,
           openClassTime: form.openClassTime[0]?[form.openClassTime[0].getTime(),form.openClassTime[1].getTime()]:[],
@@ -895,7 +889,7 @@
           classInfoName: form.classInfoName==''?null:form.classInfoName,
           studyCenterIdList: form.studyCenterIdList==''?[null]:[form.studyCenterIdList],
           projectId: form.projectId==''?null:form.projectId,
-          classTypeId: form.classTypeId==''?null:form.classTypeId,
+          classSeriesId: form.classTypeId==''?null:form.classTypeId,
           examStyleId: form.examStyleId==''?null:form.examStyleId,
           categoryId: form.categoryId==''?null:form.categoryId,
           openClassTime: form.openClassTime[0]?[form.openClassTime[0].getTime(),form.openClassTime[1].getTime()]:[],

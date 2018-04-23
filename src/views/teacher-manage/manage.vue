@@ -222,8 +222,7 @@
                       onOk: () => {
                         this.$http({
                           method:'put',
-                          //url:this.$store.state.app.baseUrl + `dossier/teacher?id=${params.row.teacherId}&state=${val}`,
-                          url: `http://192.168.65.250:8088/dossier/teacher?id=${params.row.teacherId}&state=${val}`,
+                          url:this.$store.state.app.baseUrl + `dossier/teacher?id=${params.row.teacherId}&state=${val}`,
                           headers: {'Content-type': 'application/json'}
                         })
                           .then((res)=> {
@@ -392,14 +391,15 @@
           major: form.major,
           minor: form.minor
         };
-        let string1 = Object.keys(search).map((item,index) => {
+        /*let string1 = Object.keys(search).map((item,index) => {
           if(search[item]){
             return item + '=' + search[item]
           }
         }).filter((item,index)=>{
           return item
         })
-        return string1.join('&')
+        return string1.join('&')*/
+        return search
       },
       searchStringPage () {
         let form = this.currentInfo
@@ -414,14 +414,15 @@
           major: form.major,
           minor: form.minor
         };
-        let string1 = Object.keys(search).map((item,index) => {
+        /*let string1 = Object.keys(search).map((item,index) => {
           if(search[item]){
             return item + '=' + search[item]
           }
         }).filter((item,index)=>{
           return item
         })
-        return string1.join('&')
+        return string1.join('&')*/
+        return search
       }
     },
     methods: {
@@ -441,15 +442,16 @@
           this.currentInfo = this.formItem
           this.$http({
             method:'get',
-            //url:this.$store.state.app.baseUrl + 'dossier/search?'+ this.searchString,
-            url: 'http://192.168.65.250:8088/dossier/search?'+ this.searchString,
+            url:this.$store.state.app.baseUrl + 'dossier/search',
+            //url: 'http://192.168.65.250:8088/dossier/search?'+ this.searchString,
+            params: this.searchString,
             headers: {'Content-type': 'application/json'}
           })
             .then((res)=> {
               console.log(res)
               if(res.data.code == 0 ){
-                this.data1 = res.data.value.pageList || [];
-                this.total = res.data.value.total || 0;
+                this.data1 = res.data.data ? res.data.data.pageList : [];
+                this.total = res.data.data ? res.data.data.total : 0;
                 this.searchType = 1
               }else{
                 this.$Message.error(res.data.message)
@@ -462,15 +464,15 @@
           this.currentInfo = this.searchInfo
           this.$http({
             method:'get',
-            //url:this.$store.state.app.baseUrl + 'dossier/search?'+ this.searchString,
-            url: 'http://192.168.65.250:8088/dossier/fuzzysearch?'+ this.fuzzySearchString,
+            url:this.$store.state.app.baseUrl + 'dossier/fuzzysearch?'+ this.fuzzySearchString,
+            //url: 'http://192.168.65.250:8088/dossier/fuzzysearch?'+ this.fuzzySearchString,
             headers: {'Content-type': 'application/json'}
           })
             .then((res)=> {
               //console.log(res)
               if(res.data.code == 0 ){
-                this.data1 = res.data.value.pageList || [];
-                this.total = res.data.value.total || 0;
+                this.data1 = res.data.data.pageList || [];
+                this.total = res.data.data.total || 0;
                 this.searchType = 0
               }else {
                 this.$Message.error(res.data.message)
@@ -488,15 +490,16 @@
         if(type){
           this.$http({
             method:'get',
-            //url:this.$store.state.app.baseUrl + 'dossier/search?'+ this.searchString,
-            url: 'http://192.168.65.250:8088/dossier/search?'+ this.searchStringPage,
+            url:this.$store.state.app.baseUrl + 'dossier/search',
+            //url: 'http://192.168.65.250:8088/dossier/search?'+ this.searchStringPage,
+            params: this.searchStringPage,
             headers: {'Content-type': 'application/json'}
           })
             .then((res)=> {
               console.log(res)
               if(res.data.code == 0 ){
-                this.data1 = res.data.value.pageList || [];
-                this.total = res.data.value.total || 0;
+                this.data1 = res.data.data ? res.data.data.pageList : [];
+                this.total = res.data.data ? res.data.data.total : 0;
                 this.searchType = 1
               }else {
                 this.$Message.error(res.data.message)
@@ -508,15 +511,15 @@
         }else{
           this.$http({
             method:'get',
-            //url:this.$store.state.app.baseUrl + 'dossier/search?'+ this.searchString,
-            url: 'http://192.168.65.250:8088/dossier/fuzzysearch?'+ this.fuzzySearchStringPage,
+            url:this.$store.state.app.baseUrl + 'dossier/fuzzysearch'+ this.fuzzySearchStringPage,
+            //url: 'http://192.168.65.250:8088/dossier/fuzzysearch?'+ this.fuzzySearchStringPage,
             headers: {'Content-type': 'application/json'}
           })
             .then((res)=> {
               console.log(res)
               if(res.data.code == 0 ){
-                this.data1 = res.data.value.pageList || [];
-                this.total = res.data.value.total || 0;
+                this.data1 = res.data.data.pageList || [];
+                this.total = res.data.data.total || 0;
                 this.searchType = 0
               }else {
                 this.$Message.error(res.data.message)
@@ -551,14 +554,14 @@
       // 主修、辅修的多级列表
       this.$http({
         method:'get',
-        //url:this.$store.state.app.baseUrl + 'dossier/search?'+ this.searchString,
-        url: 'http://192.168.65.250:8088/dossier/category',
+        url:this.$store.state.app.baseUrl + 'dossier/category',
+        //url: 'http://192.168.65.250:8088/dossier/category',
         headers: {'Content-type': 'application/json'}
       })
         .then((res)=> {
           console.log(res)
           if(res.data.code == 0 ){
-            this.data2 = res.data.value
+            this.data2 = res.data.data
           }else {
             this.$Message.error(res.data.message)
           }

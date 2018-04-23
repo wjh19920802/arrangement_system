@@ -186,11 +186,11 @@
                     <td>{{item.complaints == null?'--':item.complaints}}</td>
                     <!--<td>{{item.complaints}}</td>-->
                     <!--<td>{{item.place}}</td>-->
-                    <td class="pageBtn frontPage"></td>
+                    <td class="pageBtn frontPage" v-if="queryDays ? queryDays.length>5 : 0"></td>
                     <td class="calender" :class="{blank:ite.length === 0}" v-for="(ite, ind) in item.extraData.items" v-show="(ind+1) > (page-1)*5 && (ind+1) <= page*5" >
                       <div v-for="i in ite">{{i}}</div>
                     </td>
-                    <td class="pageBtn nextPage"></td>
+                    <td class="pageBtn nextPage" v-if="queryDays ? queryDays.length>5 : 0"></td>
                     <td class="operate">
                       <Button type="success" size="small" @click="arrangement(item,item.teacherId)">选择老师</Button>
                     </td>
@@ -438,7 +438,7 @@
          this.page = (this.page - 1) < 1 ? 1 : this.page - 1
        },
        toNextPage() {
-         let pages = Math.ceil(this.row / 5)
+         let pages = Math.ceil(this.queryDays.length / 5)
          this.page = (this.page + 1) > pages ? pages : this.page + 1
        },
       submit() {
@@ -802,14 +802,13 @@
         // 主修、辅修的多级列表
         this.$http({
           method:'get',
-          //url: this.$store.state.app.baseUrl + 'dossier/category',
-          url: 'http://192.168.65.250:8088/dossier/category',
+          url: this.$store.state.app.baseUrl + 'dossier/category',
           headers: {'Content-type': 'application/json'}
         })
           .then((res)=> {
             console.log(res)
             if(res.data.code == 0 ){
-              this.majorList = res.data.value
+              this.majorList = res.data.data
             }else {
               this.$Message.error(res.data.message)
             }

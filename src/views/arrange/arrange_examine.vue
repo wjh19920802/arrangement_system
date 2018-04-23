@@ -173,12 +173,9 @@
             key: 'classInfoName'
           },
           {
-            title: '班级类型',
+            title: '班级系列',
             align: 'center',
-            key: 'classType',
-            render:(h,params)=>{
-              return params.row.classType == 1?'组合班次':'非组合班次'
-            }
+            key: 'classSeriesName',
           },
           {
             title: '申请科目',
@@ -416,7 +413,7 @@
           classInfoName: form.classInfoName==''?null:form.classInfoName,
           studyCenterIdList: form.provinceId==''?[]:[form.provinceId],
           projectId: form.projectId==''?null:form.projectId,
-          classTypeId: form.classTypeId==''?null:form.classTypeId,
+          classSeriesId: form.classTypeId==''?null:form.classTypeId,
           examStyleId: form.examStyleId==''?null:form.examStyleId,
           categoryId: form.categoryId==''?null:form.categoryId,
           openClassTime: form.openClassTime[0]?[form.openClassTime[0].getTime(),form.openClassTime[1].getTime()]:[],
@@ -431,7 +428,7 @@
           classInfoName: form.classInfoName==''?null:form.classInfoName,
           studyCenterIdList: form.provinceId==''?[]:[form.provinceId],
           projectId: form.projectId==''?null:form.projectId,
-          classTypeId: form.classTypeId==''?null:form.classTypeId,
+          classSeriesId: form.classTypeId==''?null:form.classTypeId,
           examStyleId: form.examStyleId==''?null:form.examStyleId,
           categoryId: form.categoryId==''?null:form.categoryId,
           openClassTime: form.openClassTime[0]?[form.openClassTime[0].getTime(),form.openClassTime[1].getTime()]:[],
