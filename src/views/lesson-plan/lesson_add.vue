@@ -624,7 +624,7 @@
                       this.lessonAddNotGroup.priceInfoArray.splice(0,this.lessonAddNotGroup.priceInfoArray.length,{agreement:'协议', stay:'基地', price:0, writtenTf:0,interviewTf:0})
                       this.lessonAddNotGroup.categoryIds.splice(0,this.lessonAddNotGroup.categoryIds.length);
                     }else {
-                      this.$Message.error('网络错误!');
+                      this.$Message.error(res.data.message);
                     }
                   })
               } else {
@@ -668,7 +668,7 @@
                   })
                   .catch((error)=>{
                     this.disabled = false;
-                    this.$Message.error('网络错误！')
+                    this.$Message.error(error.message)
                   })
 
               } else {
@@ -713,7 +713,7 @@
                       this.lessonAddNotGroup.categoryIds.splice(0,this.lessonAddNotGroup.categoryIds.length);
                       this.search2();
                     }else {
-                      this.$Message.error('网络错误!');
+                      this.$Message.error(res.data.message);
                     }
                   })
               } else {
@@ -758,12 +758,12 @@
                         this.lessonAddGroup.priceInfoArray.splice(0,this.lessonAddGroup.priceInfoArray.length,{agreement:'协议', price:0, writtenTf:0,interviewTf:0})
                         this.search2();
                       }else{
-                        this.$Message.error('网络错误!');
+                        this.$Message.error(res.data.message);
                       }
                     })
                     .catch((error)=>{
                       this.disabled = false;
-                      this.$Message.error('网络错误！')
+                      this.$Message.error(error.message)
                     })
                 }
               } else {
@@ -788,7 +788,7 @@
             this.rootDirectoryNameGroup = res.data.data
           })
           .catch((error)=>{
-
+          this.$Message.error(error.message)
           })
       },
       searchClassSeries() {       //根据笔试面试获取班级系列
@@ -805,10 +805,12 @@
             .then((res)=>{
               if(res.data.code == 0) {
                 this.classSeriesIdNotGroup = res.data.data;
+              }else{
+                this.$Message.error(res.data.message);
               }
             })
             .catch((error)=>{
-
+            this.$Message.error(error.message)
             })
         }else {     //组合班次
           this.examStyle = this.lessonAddGroup.examStyleId;
@@ -823,10 +825,12 @@
             .then((res)=>{
               if(res.data.code == 0) {
                 this.classSeriesIdGroup = res.data.data;
+              }else{
+                this.$Message.error(res.data.message);
               }
             })
             .catch((error)=>{
-
+            this.$Message.error(error.message)
             })
         }
 
@@ -850,10 +854,12 @@
               }else {
                 callback();
               }
+            }else{
+              this.$Message.error(res.data.message);
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络错误');
+            this.$Message.error(error.message);
           })
       },
       searchChild () {
@@ -881,7 +887,7 @@
             this.searchedData = res.data.data.content;
           })
           .catch(()=>{
-            this.$Message.error('网络错误');
+            this.$Message.error(error.message);
           })
       },
       addInfo () {
@@ -935,7 +941,7 @@
                 }
               })
               .catch((error)=>{
-                this.$Message.error('网络异常');
+                this.$Message.error(error.message);
               })
           }
         } else {
@@ -1025,11 +1031,11 @@
             if(res.data.code == 0) {
               this.writeManList = res.data.data;
             } else {
-              this.$Message.error('网络异常');
+              this.$Message.error(res.data.message);
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
 
         this.$http({
@@ -1043,11 +1049,11 @@
             if(res.data.code == 0) {
               this.faceManList = res.data.data;
             } else {
-              this.$Message.error('网络异常');
+              this.$Message.error(res.data.message);
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       }
 
@@ -1064,11 +1070,11 @@
           if(res.data.code == 0) {
             this.categoryName = res.data.data;
           } else {
-            this.$Message.error('网络异常');
+            this.$Message.error(res.data.message);
           }
         })
         .catch((error)=>{
-          this.$Message.error('网络异常');
+          this.$Message.error(error.message);
         })
 
 
@@ -1080,11 +1086,11 @@
           if(res.data.code == 0) {
             this.erpClassTypeList = res.data.data;
           } else {
-            this.$Message.error('网络异常');
+            this.$Message.error(res.data.message);
           }
         })
         .catch((error)=>{
-          this.$Message.error('网络异常');
+          this.$Message.error(error.message);
         })
     }
   }

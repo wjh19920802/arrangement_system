@@ -290,7 +290,7 @@
                 }
               })
               .catch((error)=> {
-                this.$Message.error('网络错误')
+                this.$Message.error(error.message)
               })
           }
         })
@@ -313,7 +313,7 @@
                 }
               })
               .catch((error)=> {
-                this.$Message.error('网络错误')
+                this.$Message.error(error.message)
               })
           }
         })
@@ -336,7 +336,7 @@
                 }
               })
               .catch((error)=> {
-                this.$Message.error('网络错误')
+                this.$Message.error(error.message)
               })
           }
         })
@@ -361,7 +361,7 @@
             }
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
       searchPage () {
@@ -382,7 +382,7 @@
             }
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
       // findCategory(){
@@ -398,12 +398,12 @@
       //         this.categoryList = rea.data.data;
       //         this.$Message.success('保存成功');
       //       }else {
-      //         this.$Message.error('网络异常');
+      //         this.$Message.error(error.message);
       //       }
       //     })
       //     .catch((error)=>{
       //       console.log(error)
-      //       this.$Message.error('网络异常');
+      //       this.$Message.error(error.message);
       //     })
       // },
       formateDate(timeStamp) {
@@ -453,7 +453,7 @@
             this.$Message.error(res.data.message);
           }
         }).catch((error)=>{
-        this.$Message.error('网络错误');
+        this.$Message.error(error.message);
       });
       this.search()
     }

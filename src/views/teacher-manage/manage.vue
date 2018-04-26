@@ -233,7 +233,7 @@
                             }
                           })
                           .catch((error)=> {
-                            this.$Message.error('网络错误')
+                            this.$Message.error(error.message)
                           })
                       }
                     })
@@ -458,7 +458,7 @@
               }
             })
             .catch((error)=> {
-              this.$Message.error('网络错误')
+              this.$Message.error(error.message)
             })
         }else{
           this.currentInfo = this.searchInfo
@@ -479,7 +479,7 @@
               }
             })
             .catch((error)=> {
-              this.$Message.error('网络错误')
+              this.$Message.error(error.message)
             })
         }
 
@@ -506,7 +506,7 @@
               }
             })
             .catch((error)=> {
-              this.$Message.error('网络错误')
+              this.$Message.error(error.message)
             })
         }else{
           this.$http({
@@ -526,7 +526,7 @@
               }
             })
             .catch((error)=> {
-              this.$Message.error('网络错误')
+              this.$Message.error(error.message)
             })
           }
       },
@@ -546,7 +546,7 @@
             }
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       }
     },
@@ -567,7 +567,7 @@
           }
         })
         .catch((error)=> {
-          this.$Message.error('网络错误')
+          this.$Message.error(error.message)
         })
       //this.search(1)
     }

@@ -564,7 +564,7 @@
               this.$Message.success('删除成功');
               this.getThirdCourses();
             }else {
-              this.$Message.error('删除失败');
+              this.$Message.error(res.data.message);
             }
           })
       },
@@ -578,12 +578,12 @@
               this.classInfo = res.data.data;
               this.scheduleData = res.data.data.extraData.classCourseTableVo;
             } else {
-              this.$Message.error('网络异常');
+              this.$Message.error(res.data.message);
             }
           })
           .catch((error) => {
             console.log(error)
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       // getSchedule(){
@@ -595,12 +595,12 @@
       //       if(res.data.code == 0) {
       //         this.scheduleData = res.data.data;
       //       } else {
-      //         this.$Message.error('网络异常');
+      //         this.$Message.error(error.message);
       //       }
       //     })
       //     .catch((error)=>{
       //       console.log(error)
-      //       this.$Message.error('网络异常');
+      //       this.$Message.error(error.message);
       //     })
       // },
       // getLessonAllInfo () { // 拿到班级所有的信息
@@ -614,7 +614,7 @@
       //       // this.formItem.note = res.data.data.classInfo.beiz
       //     })
       //     .catch((error)=>{
-      //       this.$Message.error('网络错误');
+      //       this.$Message.error(error.message);
       //     })
       // },
       getThirdCourses() {  //获取三级科目
@@ -648,12 +648,12 @@
                 }
               }, 100)
             } else {
-              this.$Message.error('网络异常');
+              this.$Message.error(res.data.message);
             }
           })
           .catch((error) => {
             console.log(error)
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       getTeachersByName() {   // 通过姓名工号获取师资
@@ -747,7 +747,7 @@
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
       getBeiz() {      //保存备注
@@ -763,7 +763,7 @@
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
       numberToTime(number) {
@@ -814,7 +814,7 @@
             }
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
       getInstituteList() {
@@ -826,7 +826,7 @@
               this.$Message.error(res.data.message);
             }
           }).catch((error)=>{
-          this.$Message.error('网络错误');
+          this.$Message.error(error.message);
         });
       }
     },

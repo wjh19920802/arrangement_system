@@ -157,7 +157,7 @@
                       }
                   })
                   .catch((error)=>{
-                      this.$Message.error('网络异常')
+                      this.$Message.error(error.message)
                       console.log(error)
                   })
           })

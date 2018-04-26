@@ -425,7 +425,7 @@
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
       searchPage() {
@@ -443,7 +443,7 @@
             }
           })
           .catch((error)=>{
-            this.$Message.error(error)
+            this.$Message.error(error.message)
           })
       },
       //添加标记
@@ -461,7 +461,7 @@
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
         this.tagModal = true;
       },
@@ -496,7 +496,7 @@
           })
           .catch((error)=>{
             console.log(error)
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       findCategory(){
@@ -516,7 +516,7 @@
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       formateDate(timeStamp) {
@@ -566,7 +566,7 @@
             this.$Message.error(res.data.message);
           }
         }).catch((error)=>{
-        this.$Message.error('网络错误');
+        this.$Message.error(error.message);
       });
       this.search();
     }

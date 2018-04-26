@@ -360,7 +360,7 @@
                   this.total = res.data.data.total;
                 })
                 .catch(()=>{
-                    this.$Message.error('网络错误')
+                    this.$Message.error(error.message)
                 })
       },
       formateDate(timeStamp){

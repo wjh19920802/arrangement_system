@@ -47,7 +47,7 @@ new Vue({
         });
         this.$store.commit('setTagsList', tagsList);
 
-      axios.defaults.timeout = 5000
+      axios.defaults.timeout = 15000
       axios.interceptors.request.use((config)=>{
         this.$Spin.show({
           render: (h) => {

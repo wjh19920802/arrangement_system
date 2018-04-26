@@ -345,7 +345,7 @@
                               this.scheduleData = res.data.data ? res.data.data.courseTableLineItemVos : []
                             })
                             .catch((error)=>{
-                              this.$Message.error('网络错误');
+                              this.$Message.error(error.message);
                             })
                           this.scheduleModal1 = true;
                           this.curIndex = params.index;
@@ -373,7 +373,7 @@
                             }))
                           })
                           .catch((error)=>{
-                            this.$Message.error('网络错误');
+                            this.$Message.error(error.message);
                           })
                       }else {
                         this.$http(this.$store.state.app.baseUrl + 'course/getSubCourses?courseId='+params.row.id)
@@ -384,7 +384,7 @@
                             }))
                           })
                           .catch((error)=>{
-                            this.$Message.error('网络错误');
+                            this.$Message.error(error.message);
                           })
                       }
                     }
@@ -560,7 +560,7 @@
                                     this.scheduleData = res.data.data ? res.data.data.courseTableLineItemVos : []
                                   })
                                   .catch((error)=>{
-                                    this.$Message.error('网络错误');
+                                    this.$Message.error(error.message);
                                   })
                                 this.scheduleModal1 = true;
                                 this.curIndex = params.index;
@@ -588,7 +588,7 @@
                                   }))
                                 })
                                 .catch((error)=>{
-                                  this.$Message.error('网络错误');
+                                  this.$Message.error(error.message);
                                 })
                             }else {
                               this.$http(this.$store.state.app.baseUrl + 'course/getSubCourses?courseId='+params.row.id)
@@ -599,7 +599,7 @@
                                   }))
                                 })
                                 .catch((error)=>{
-                                  this.$Message.error('网络错误');
+                                  this.$Message.error(error.message);
                                 })
                             }
                           }
@@ -767,7 +767,7 @@
                             this.scheduleData = res.data.data ? res.data.data.courseTableLineItemVos : []
                           })
                           .catch((error)=>{
-                            this.$Message.error('网络错误');
+                            this.$Message.error(error.message);
                           })
                         this.curIndex = params.index;
                         this.scheduleModal1 = true;
@@ -864,11 +864,11 @@
             if(res.data.code == 0) {
               this.writeManList = res.data.data;
             } else {
-              this.$Message.error('网络异常');
+              this.$Message.error(error.message);
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
 
         this.$http({
@@ -882,11 +882,11 @@
             if(res.data.code == 0) {
               this.faceManList = res.data.data;
             } else {
-              this.$Message.error('网络异常');
+              this.$Message.error(error.message);
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       reject () {
@@ -947,12 +947,12 @@
                 this.publicAttachmentList.splice(0,this.publicAttachmentList.length);
                 this.$Message.success('通过成功');
               } else {
-                this.$Message.error('网络异常');
+                this.$Message.error(error.message);
               }
             })
             .catch((error)=>{
               console.log(error)
-              this.$Message.error('网络异常');
+              this.$Message.error(error.message);
             })
         }else {
           this.$Message.error('请选择需要审核的课程和主办人或驳回原因');
@@ -998,11 +998,11 @@
               this.checkedData = res.data.data.content;
               this.total1 = res.data.data.total;
             } else {
-              this.$Message.error('网络异常');
+              this.$Message.error(error.message);
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       search2 () {
@@ -1022,11 +1022,11 @@
               this.waitData = res.data.data.content;
               this.total2 = res.data.data.total;
             } else {
-              this.$Message.error('网络异常');
+              this.$Message.error(error.message);
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       changePublicAttachmentList  (publicAttachmentList,oldExam,branchCampusOption){

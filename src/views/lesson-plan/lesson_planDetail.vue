@@ -419,7 +419,7 @@
                               this.scheduleData = res.data.data ? res.data.data.courseTableLineItemVos : []
                             })
                             .catch((error)=>{
-                              this.$Message.error('网络错误');
+                              this.$Message.error(error.message);
                             })
                           this.scheduleModal1 = true;
                           this.curIndex = params.index;
@@ -447,7 +447,7 @@
                             }))
                           })
                           .catch((error)=>{
-                            this.$Message.error('网络错误');
+                            this.$Message.error(error.message);
                           })
                       }else {
                         this.$http(this.$store.state.app.baseUrl + 'course/getSubCourses?courseId='+params.row.id)
@@ -458,7 +458,7 @@
                             }))
                           })
                           .catch((error)=>{
-                            this.$Message.error('网络错误');
+                            this.$Message.error(error.message);
                           })
                       }
                     }
@@ -687,11 +687,11 @@
                                      this.data1 = res.data.data.courseTableLineItemVos
                                      //this.$store.state.user.schedule = res.data.data;
                                      }else {
-                                     this.$Message.error('网络错误');
+                                     this.$Message.error(res.data.message);
                                      }*/
                                   })
                                   .catch((error)=>{
-                                    this.$Message.error('网络错误');
+                                    this.$Message.error(error.message);
                                   })
                                 this.scheduleModal2 = true;
                                 this.curIndex = params.index;
@@ -743,7 +743,7 @@
                                   }))
                                 })
                                 .catch((error)=>{
-                                  this.$Message.error('网络错误');
+                                  this.$Message.error(error.message);
                                 })
                             }else {
                               this.$http(this.$store.state.app.baseUrl + 'course/getSubCourses?courseId='+params.row.id)
@@ -754,7 +754,7 @@
                                   }))
                                 })
                                 .catch((error)=>{
-                                  this.$Message.error('网络错误');
+                                  this.$Message.error(error.message);
                                 })
                             }
                           }
@@ -943,7 +943,7 @@
                             this.scheduleData = res.data.data ? res.data.data.courseTableLineItemVos : []
                           })
                           .catch((error)=>{
-                            this.$Message.error('网络错误');
+                            this.$Message.error(error.message);
                           })
                         this.curIndex = params.index;
                         this.scheduleModal1 = true;
@@ -1045,11 +1045,11 @@
             if(res.data.code == 0) {
               this.writeManList = res.data.data;
             } else {
-              this.$Message.error('网络异常');
+              this.$Message.error(res.data.message);
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           });
 
         this.$http({
@@ -1063,11 +1063,11 @@
             if(res.data.code == 0) {
               this.faceManList = res.data.data;
             } else {
-              this.$Message.error('网络异常');
+              this.$Message.error(res.data.message);
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       reject () {
@@ -1239,12 +1239,12 @@
                     this.publicAttachmentList.splice(0,this.publicAttachmentList.length);
                     this.waitStashData = [];
                   } else {
-                    this.$Message.error('网络异常');
+                    this.$Message.error(res.data.message);
                   }
                 })
                 .catch((error)=>{
                   console.log(error)
-                  this.$Message.error('网络异常');
+                  this.$Message.error(error.message);
                 })
             }
           }else {
@@ -1265,12 +1265,12 @@
                   this.reason = '';
                   this.waitStashData = [];
                 } else {
-                  this.$Message.error('网络异常');
+                  this.$Message.error(res.data.message);
                 }
               })
               .catch((error)=>{
                 console.log(error)
-                this.$Message.error('网络异常');
+                this.$Message.error(error.message);
               })
           }
         }else {
@@ -1308,11 +1308,11 @@
             if(res.data.code == 0) {
               this.$Message.success('添加成功!');
             } else {
-              this.$Message.error('网络异常');
+              this.$Message.error(res.data.message);
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       search1 () {
@@ -1332,11 +1332,11 @@
               this.plannedData = res.data.data.content;
               this.total1 = res.data.data.total;
             } else {
-              this.$Message.error('网络异常');
+              this.$Message.error(res.data.message);
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       search2 () {
@@ -1359,11 +1359,11 @@
               });
               this.total2 = res.data.data.total;
             } else {
-              this.$Message.error('网络异常');
+              this.$Message.error(res.data.message);
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       handleSuccess (res,file, fileList) {

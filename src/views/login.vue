@@ -97,7 +97,7 @@ export default {
                     })
                     .catch((error)=> {
                       this.switcher = true
-                      this.$Message.error('网络错误')
+                      this.$Message.error(error.message)
                     })
                 }
             });

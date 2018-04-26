@@ -366,7 +366,7 @@
                               }
                             })
                             .catch((error)=>{
-                              this.$Message.error('网络错误');
+                              this.$Message.error(error.message);
                             })
                           this.curIndex = params.index;
                           this.lessonData = this.waitData[this.curIndex];
@@ -397,7 +397,7 @@
                           }
                         })
                         .catch((error)=>{
-                          this.$Message.error('网络错误');
+                          this.$Message.error(error.message);
                         })
                     }
                   }
@@ -642,7 +642,7 @@
                                     }
                                   })
                                   .catch((error)=>{
-                                    this.$Message.error('网络错误');
+                                    this.$Message.error(error.message);
                                   })
                                 this.curIndex = params.index;
                                 this.lessonData = this.selectedData[this.curIndex];
@@ -675,7 +675,7 @@
                                     }
                                   })
                                   .catch((error)=>{
-                                    this.$Message.error('网络异常');
+                                    this.$Message.error(error.message);
                                   })
                               }else {
                                 const indexWait = params.index;     //在已选课程中的id
@@ -715,7 +715,7 @@
                                     }
                                   })
                                   .catch((error)=>{
-                                    this.$Message.error('网络错误');
+                                    this.$Message.error(error.message);
                                   })
                               }else {
                                 this.$http(this.$store.state.app.baseUrl + 'course/getSubCourses?courseId='+params.row.id)
@@ -730,7 +730,7 @@
                                     }
                                   })
                                   .catch((error)=>{
-                                    this.$Message.error('网络错误');
+                                    this.$Message.error(error.message);
                                   })
                               }
                             }
@@ -758,7 +758,7 @@
                                     }
                                   })
                                   .catch((error)=>{
-                                    this.$Message.error('网络异常');
+                                    this.$Message.error(error.message);
                                   })
                               }else {
                                 const indexWait = params.index;     //在已选课程中的id
@@ -943,7 +943,7 @@
                               }
                             })
                             .catch((error)=>{
-                              this.$Message.error('网络错误');
+                              this.$Message.error(error.message);
                             })
                           this.curIndex = params.index;
                           this.scheduleIsShow = true;
@@ -1042,7 +1042,7 @@
                       }
                   })
                   .catch((error)=>{
-                      this.$Message.error('网络错误');
+                      this.$Message.error(error.message);
                   })
           } else {
               this.$Message.error('请选择课程');
@@ -1234,7 +1234,7 @@
                 }
               })
               .catch((error)=>{
-                this.$Message.error('网络异常');
+                this.$Message.error(error.message);
               })
       },
       search2 () {
@@ -1262,7 +1262,7 @@
                   }
               })
               .catch((error)=>{
-                  this.$Message.error('网络异常');
+                  this.$Message.error(error.message);
               })
       },
       handleSuccess (res,file, fileList) {

@@ -322,7 +322,7 @@
             this.total = res.data.data.total;
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
     },
@@ -367,11 +367,11 @@
           if(res.data.code == 0 ){
             this.provinces = res.data.data;
           }else {
-            this.$Message.error('网络错误');
+            this.$Message.error(res.data.message);
           }
         })
         .catch((error)=>{
-          this.$Message.error('网络错误');
+          this.$Message.error(error.message);
         });
       this.search();
     }

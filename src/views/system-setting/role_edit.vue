@@ -156,7 +156,7 @@
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络错误！')
+            this.$Message.error(error.message)
           })
       },
       save () {

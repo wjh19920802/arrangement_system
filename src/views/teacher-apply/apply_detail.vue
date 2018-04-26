@@ -111,11 +111,11 @@
             </Card>
             <Card class="margin-top-10" style="text-align: center">
               <Button type="primary" size="large" @click="saveDraft('formItem')" v-if="!isEdit">存为待定课程</Button>
-              <Button type="primary" size="large" @click="handleSubmit('formItem')" v-if="!isEdit && erpNumber>=forceNumber">提交</Button>
+              <Button type="primary" size="large" @click="handleSubmit('formItem')" v-if="!isEdit">提交</Button>
               <Button type="primary" size="large" @click="saveInfo('formItem')" v-if="isEdit">保存修改</Button>
-              <Poptip v-if="!isEdit && erpNumber<forceNumber" trigger="hover"  content="当前报名人数过少">
+              <!--<Poptip v-if="!isEdit && erpNumber<forceNumber" trigger="hover"  content="当前报名人数过少">
               <Button type="warning" size="large" @click="forceHandleSubmit('formItem')" v-if="!isEdit && erpNumber<forceNumber">强制提交</Button>
-              </Poptip>
+              </Poptip>-->
             </Card>
             </Col>
         </Row>
@@ -308,7 +308,7 @@
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络错误！')
+            this.$Message.error(error.message)
           })
       },
       addTeacher () {
@@ -337,7 +337,7 @@
           this.classInfo = res.data.data.classInfo
           })
           .catch((error)=>{
-              this.$Message.error('网络错误');
+              this.$Message.error(error.message);
           })
       },*/
       getLessonAllInfo () { // 拿到班级所有的信息
@@ -357,7 +357,7 @@
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络错误');
+            this.$Message.error(error.message);
           })
       },
       /*getLessonInfo () {
@@ -369,12 +369,12 @@
             if (res.data.code == 0) {
               this.classInfo = res.data.data;
             } else {
-              this.$Message.error('网络异常');
+              this.$Message.error(error.message);
             }
           })
           .catch((error) => {
             console.log(error)
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },*/
       saveDraft (ref) {
@@ -401,7 +401,7 @@
                   }
                 })
                 .catch((error)=>{
-                  this.$Message.error('网络错误！')
+                  this.$Message.error(error.message)
                 })
             }
         })
@@ -434,7 +434,7 @@
                   }
                 })
                 .catch((error)=>{
-                  this.$Message.error('网络错误！')
+                  this.$Message.error(error.message)
                 })
             }
           })
@@ -461,11 +461,11 @@
                   this.$router.go(-1)
                   //this.getLessonAllInfo()
                 }else{
-                  this.$Message.error('网络错误!');
+                  this.$Message.error(res.data.message);
                 }
               })
               .catch((error)=>{
-                this.$Message.error('网络错误！')
+                this.$Message.error(error.message)
               })
           }
         })
@@ -484,11 +484,11 @@
                 if(res.data.code == 0 ){
                   this.$Message.success('提交成功!');
                 }else{
-                  this.$Message.error('网络错误!');
+                  this.$Message.error(res.data.message);
                 }
               })
               .catch((error)=>{
-                  this.$Message.error('网络错误！')
+                  this.$Message.error(error.message)
               })
           }
         })*/
@@ -516,7 +516,7 @@
                 }
               })
               .catch((error)=>{
-                this.$Message.error('网络错误！')
+                this.$Message.error(error.message)
               })
           }
         })

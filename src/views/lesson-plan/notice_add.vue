@@ -478,6 +478,7 @@
                                 this.$Message.error('请选择笔试或面试');
                                 return
                             }
+                            requestData.interviewForm = ''
                             if(this.hasFace == 1) {
                                 requestData.announceWrittenResultTime[0] = new Date(this.generalForm.announceWrittenResultTime[0]).getTime();
                                 requestData.announceWrittenResultTime[1] = new Date(this.generalForm.announceWrittenResultTime[1]).getTime();
@@ -531,7 +532,7 @@
                                                 this.generalForm.writtenCategorys.splice(0,this.generalForm.writtenCategorys.length,{categoryId:'', writtenDetail:'', writtenTime:[]})
                                                 this.$router.push({name:'notice_manage'});
                                             }else {
-                                                this.$Message.error('网络错误')
+                                                this.$Message.error(res.data.message)
                                             }
                                         })
                                         .catch((error)=> {
@@ -552,7 +553,7 @@
                                                 this.generalForm.writtenCategorys.splice(0,this.generalForm.writtenCategorys.length,{categoryId:'', writtenDetail:'', writtenTime:[]})
                                                 this.$router.push({name:'notice_manage'});
                                             }else {
-                                                this.$Message.error('网络错误');
+                                                this.$Message.error(res.data.message);
                                             }
                                         })
                                         .catch((error)=> {
@@ -695,11 +696,11 @@
                     if(res.data.code == 0) {
                       this.interviewFormData = res.data.data;
                     } else {
-                      this.$Message.error(res.data.data);
+                      this.$Message.error(res.data.message);
                     }
                   })
                   .catch((error)=>{
-                    this.$Message.error('网络异常');
+                    this.$Message.error(error.message);
                   })
               }
             },
@@ -716,11 +717,11 @@
                         if(res.data.code == 0) {
                             this.subjectList = res.data.data;
                         } else {
-                            this.$Message.error('网络异常');
+                            this.$Message.error(res.data.message);
                         }
                     })
                     .catch((error)=>{
-                        this.$Message.error('网络异常');
+                        this.$Message.error(error.message);
                     })
             },
             timeStampToDate() {
@@ -777,7 +778,7 @@
                         }
                     })
                     .catch((error)=>{
-                        this.$Message.error('网络错误');
+                        this.$Message.error(error.message);
                     })
             }
         },
@@ -790,7 +791,7 @@
                 this.$Message.error(res.data.message);
               }
             }).catch((error)=>{
-            this.$Message.error('网络错误');
+            this.$Message.error(error.message);
           });
         },
         computed:{

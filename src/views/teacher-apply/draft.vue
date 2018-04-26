@@ -403,7 +403,7 @@
             }
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
       searchPage () {
@@ -424,7 +424,7 @@
             }
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
       selectLessons (val) {
@@ -455,7 +455,7 @@
                   }
                 })
                 .catch((error)=>{
-                  this.$Message.error('网络错误！')
+                  this.$Message.error(error.message)
                 })
             }
           })
@@ -482,7 +482,7 @@
                   }
                 })
                 .catch((error)=>{
-                  this.$Message.error('网络错误！')
+                  this.$Message.error(error.message)
                 })
             }
           })
@@ -512,7 +512,7 @@
                   }
                 })
                 .catch((error) => {
-                  this.$Message.error('网络错误！')
+                  this.$Message.error(error.message)
                 })
             }
           })
@@ -544,7 +544,7 @@
             }
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
       searchPage2 () {
@@ -565,7 +565,7 @@
             }
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
       selectOtherLessons (val) {
@@ -594,7 +594,7 @@
             }
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       }
     },
@@ -604,10 +604,10 @@
           if(res.data.code == 0 ){
             this.provinces = res.data.data;
           }else {
-            this.$Message.error('网络错误');
+            this.$Message.error(res.data.message);
           }
         }).catch((error)=>{
-        this.$Message.error('网络错误');
+        this.$Message.error(error.message);
       });
       this.search()
     }

@@ -148,7 +148,7 @@
       return {
         formItem: {
           classInfoName: '',
-          provinceId: null,
+          provinceId: '',
           projectId: '',
           classTypeId: '',
           examStyleId: '',
@@ -333,7 +333,7 @@
         let form = this.formItem;
         return {
           classInfoName: form.classInfoName==''?null:form.classInfoName,
-          provinceId: form.provinceId==''?[null]:[form.provinceId],
+          studyCenterIdList: form.provinceId==''?[null]:[form.provinceId],
           projectId: form.projectId==''?null:form.projectId,
           classSeriesId: form.classTypeId==''?null:form.classTypeId,
           examStyleId: form.examStyleId==''?null:form.examStyleId,
@@ -348,7 +348,7 @@
         let form = this.currentInfo;
         return {
           classInfoName: form.classInfoName==''?null:form.classInfoName,
-          provinceId: form.provinceId==''?[null]:[form.provinceId],
+          studyCenterIdList: form.provinceId==''?[null]:[form.provinceId],
           projectId: form.projectId==''?null:form.projectId,
           classSeriesId: form.classTypeId==''?null:form.classTypeId,
           examStyleId: form.examStyleId==''?null:form.examStyleId,
@@ -381,7 +381,7 @@
           })
           .catch((error)=>{
             console.log(error)
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       //添加标记
@@ -399,7 +399,7 @@
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
         this.tagModal = true;
       },
@@ -434,7 +434,7 @@
           })
           .catch((error)=>{
             console.log(error)
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       findCategory(){
@@ -454,7 +454,7 @@
           })
           .catch((error)=>{
             console.log(error)
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       formateDate(timeStamp) {
@@ -504,7 +504,7 @@
           }
         })
       .catch((error)=>{
-          this.$Message.error('网络错误');
+          this.$Message.error(error.message);
         });
       }
     },
@@ -517,7 +517,7 @@
             this.$Message.error(res.data.message);
           }
         }).catch((error)=>{
-        this.$Message.error('网络错误');
+        this.$Message.error(error.message);
       });
       this.getAllClassSeries()
       this.search1();

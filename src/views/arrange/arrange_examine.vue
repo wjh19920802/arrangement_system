@@ -464,7 +464,7 @@
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       search1() {
@@ -483,7 +483,7 @@
           })
           .catch((error)=>{
             console.log(error)
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       searchPage() {
@@ -502,7 +502,7 @@
           })
           .catch((error)=>{
             console.log(error)
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       changePage1(page) {
@@ -512,6 +512,7 @@
       //提交
       //批量提交
       selectMany(selection){
+        this.classInfoCategoryLinkIdList = []
         if(selection.length>0) {
           selection.forEach((item)=>{
             this.classInfoCategoryLinkIdList.push(item.classInfoCategoryLinkId);
@@ -521,6 +522,7 @@
         }
       },
       submitMany(){
+        console.log(this.classInfoCategoryLinkIdList)
           this.$http({
             method:'post',
             url:this.$store.state.app.baseUrl + 'schedule/scheduledList/submit',
@@ -535,7 +537,7 @@
               }
             })
             .catch((error)=>{
-              this.$Message.error('网络错误');
+              this.$Message.error(error.message);
             })
       },
       //单个提交
@@ -555,7 +557,7 @@
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络错误');
+            this.$Message.error(error.message);
           })
       },
       //添加标记
@@ -573,7 +575,7 @@
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
         this.tagModal = true;
       },
@@ -608,7 +610,7 @@
           })
           .catch((error)=>{
             console.log(error)
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       findCategory(){
@@ -628,7 +630,7 @@
           })
           .catch((error)=>{
             console.log(error)
-            this.$Message.error('网络异常');
+            this.$Message.error(error.message);
           })
       },
       formateDate(timeStamp) {
@@ -678,7 +680,7 @@
           }
         })
       .catch((error)=>{
-          this.$Message.error('网络错误');
+          this.$Message.error(error.message);
         });
       }
     },
@@ -691,7 +693,7 @@
             this.$Message.error(res.data.message);
           }
         }).catch((error)=>{
-        this.$Message.error('网络错误');
+        this.$Message.error(error.message);
       });
       this.getAllClassSeries()
       this.search1();

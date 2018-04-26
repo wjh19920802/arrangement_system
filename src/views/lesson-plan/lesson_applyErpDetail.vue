@@ -195,7 +195,7 @@
                                 }
                               })
                               .catch((error)=> {
-                                this.$Message.error('网络错误');
+                                this.$Message.error(error.message);
                               })
                           }
                         })
@@ -241,7 +241,7 @@
                           }
                         })
                         .catch((error)=> {
-                          this.$Message.error('网络错误');
+                          this.$Message.error(error.message);
                         })
                     }
                   }
@@ -274,7 +274,7 @@
                           }
                         })
                         .catch((error)=> {
-                          this.$Message.error('网络错误');
+                          this.$Message.error(error.message);
                         })
                     }
                   }
@@ -390,7 +390,7 @@
                         //this.total = res.data.data.total;
                       })
                       .catch((error)=> {
-                        this.$Message.error('网络错误')
+                        this.$Message.error(error.message)
                       })
                     }
                   }
@@ -450,7 +450,7 @@
             }
           })
           .catch(()=>{
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       }
     },
@@ -473,7 +473,7 @@
           }
         })
         .catch((error)=> {
-          this.$Message.error('网络错误')
+          this.$Message.error(error.message)
         })
       this.getCourses();
     },

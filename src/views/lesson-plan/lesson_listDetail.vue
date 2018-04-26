@@ -286,7 +286,7 @@
                               this.scheduleData = res.data.data ? res.data.data.courseTableLineItemVos : []
                             })
                             .catch((error)=>{
-                              this.$Message.error('网络错误');
+                              this.$Message.error(error.message);
                             })
                           this.curIndex = params.index;
                           this.lessonData = this.data[this.curIndex];
@@ -313,7 +313,7 @@
                           }))
                         })
                         .catch((error)=>{
-                          this.$Message.error('网络错误');
+                          this.$Message.error(error.message);
                         })
                     }
                   }
@@ -480,7 +480,7 @@
                             this.scheduleData = res.data.data ? res.data.data.courseTableLineItemVos : []
                           })
                           .catch((error)=>{
-                            this.$Message.error('网络错误');
+                            this.$Message.error(error.message);
                           })
                         this.curIndex = params.index;
                         this.scheduleIsShow = true;
@@ -547,7 +547,7 @@
             this.branchCampusOption = res.data.data.branchCampusOption;
           })
           .catch(()=>{
-            this.$Message.error('网络错误');
+            this.$Message.error(error.message);
           })
       },
       formateDate (timeStamp){

@@ -574,7 +574,7 @@
             }
           })
           .catch((error)=> {
-            this.$Message.error('获取地区列表失败，请刷新重试')
+            this.$Message.error(error.message)
           })
       },
       getThirdTree (value,index) {
@@ -673,7 +673,7 @@
               }
             })
             .catch((error)=> {
-              vm.$Message.error('网络错误')
+              vm.$Message.error(error.message)
             })
         })
       },
@@ -693,7 +693,7 @@
             }
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
       getLessonInfo () {// 根据id获取课程信息
@@ -721,7 +721,7 @@
             }
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
       getPeriods () {
@@ -738,7 +738,7 @@
             }
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       }
     },

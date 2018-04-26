@@ -363,7 +363,7 @@
                 }
               })
               .catch((error)=> {
-                  this.$Message.error('网络错误')
+                  this.$Message.error(error.message)
               })
       },
     },
@@ -377,7 +377,7 @@
                     this.$Message.error(res.data.message);
                 }
             }).catch((error)=>{
-                this.$Message.error('网络错误');
+                this.$Message.error(error.message);
             });
         this.search();
     }

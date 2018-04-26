@@ -227,7 +227,7 @@
 
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
       initSetting () {
@@ -251,7 +251,7 @@
 
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
       getMenuList () {
@@ -271,7 +271,7 @@
               }
             })
             .catch((error)=>{
-              this.$Message.error('网络错误！')
+              this.$Message.error(error.message)
             })
         }
       },
@@ -288,7 +288,7 @@
             this.areaList = res.data.data;
           })
           .catch((error)=> {
-            this.$Message.error('网络错误')
+            this.$Message.error(error.message)
           })
       },
       save () {
@@ -313,7 +313,7 @@
             }
           })
           .catch((error)=>{
-            this.$Message.error('网络错误！')
+            this.$Message.error(error.message)
           })
       }
     },

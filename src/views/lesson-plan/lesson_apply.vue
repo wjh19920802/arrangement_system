@@ -350,11 +350,15 @@
                   headers: {'Content-type': 'application/json'}
               })
                   .then((res)=> {
+                    if(res.data.code == 0 ){
                       this.data1 = res.data.data.content;
                       this.total = res.data.data.total;
+                    }else {
+                      this.$Message.error(res.data.message);
+                    }
                   })
                   .catch((error)=> {
-                      this.$Message.error('网络错误')
+                      this.$Message.error(error.message)
                   })
           }
       },
@@ -400,11 +404,11 @@
                       this.provinces = res.data.data;
                       this.search();
                   }else {
-                      this.$Message.error('网络错误');
+                      this.$Message.error(res.data.message);
                   }
               })
               .catch((error)=>{
-                  this.$Message.error('网络错误');
+                  this.$Message.error(error.message);
               });
       }
   };
