@@ -29,6 +29,9 @@
                         <p>
                             <span>学员组成情况：协议人数：{{classInfo.extraData.erpNumCompose.agreementNum}} &nbsp;&nbsp;&nbsp;   非协议人数:{{classInfo.extraData.erpNumCompose.noAgreementNum}}</span>
                         </p>
+                        <p>
+                          <span>备注:  {{classInfo.Beiz?classInfo.Beiz:'--'}}</span>
+                        </p>
                     </div>
                 </div>
             </Card>
@@ -180,7 +183,7 @@
                     <td>{{item.gender}}</td>
                     <td>{{item.level}}</td>
                     <td>{{item.institute}}</td>
-                    <td>{{item.mobile}}</td>
+                    <td>{{item.mobile?item.mobile:'--'}}</td>
                     <td>{{item.major?item.major:'--'}}</td>
                     <td>{{item.minor?item.minor:'--'}}</td>
                     <td>{{item.complaints == null?'--':item.complaints}}</td>
@@ -251,7 +254,7 @@
                 </div>
                 <div style="width: 100%;text-align: center">
                   <Button type="primary" size="large" @click="save">保存备注</Button>
-                  <Button type="primary" size="large">取消</Button>
+                  <!--<Button type="primary" size="large">取消</Button>-->
                 </div>
             </Card>
             <Card id="modify_history" class="margin-top-10">
@@ -316,6 +319,7 @@
             erpNumCompose:{}
           },
           priceDesc:'',
+          beiz:''
         },
         beiz:'' ,    //备注
         // ruleValidate: {

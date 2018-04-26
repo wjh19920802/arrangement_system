@@ -285,6 +285,9 @@
             title: '班级系列',
             align: 'center',
             key: 'classSeriesName',
+            render:(h,params)=>{
+              return h('div',{class:'item2'},params.row.classSeriesName?params.row.classSeriesName:'')
+            }
           },
           {
             title: '申请科目',
@@ -538,6 +541,22 @@
                 }, '排课'),
                 h('Button', {
                   props: {
+                    type: 'success',
+                    size: 'small',
+                    show:this.isShow
+                  },
+                  style: {
+                    marginRight: '5px',
+                    marginBottom: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.headArrange(params.row.classInfoCategoryLinkId)
+                    }
+                  }
+                }, '总部直排'),
+                h('Button', {
+                  props: {
                     type: 'primary',
                     size: 'small',
                     show:this.isShow
@@ -568,22 +587,29 @@
                     }
                   }
                 }, '驳回'),
-                h('Button', {
-                  props: {
-                    type: 'info',
-                    size: 'small',
-                    show:this.isShow
-                  },
-                  style: {
-                    marginRight: '5px',
-                    marginBottom: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      this.tag(params.row.classInfoCategoryLinkId)
-                    }
+                h('Poptip', {
+                  props:{
+                    trigger:'hover',
+                    content:'呵额额额啦啦啦啦咯哦哦哦哦、'
                   }
-                }, '添加标记'),
+                }, [
+                  h('Button',{
+                    props: {
+                      type: 'info',
+                      size: 'small',
+                      show:this.isShow
+                    },
+                    style: {
+                      marginRight: '5px',
+                      marginBottom: '5px'
+                    },
+                    on:{
+                      click: () => {
+                        this.tag(params.row.classInfoCategoryLinkId)
+                      }
+                    }
+                  },'添加标记')
+                ]),
                 h('Button', {
                   props: {
                     type: 'primary',
@@ -599,23 +625,7 @@
                       this.merge(params.row.categoryId,params.row.classInfoId,params.row.classInfoCategoryLinkId)
                     }
                   }
-                }, '合并开班'),
-                h('Button', {
-                  props: {
-                    type: 'primary',
-                    size: 'small',
-                    show:this.isShow
-                  },
-                  style: {
-                    marginRight: '5px',
-                    marginBottom: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      this.headArrange(params.row.classInfoCategoryLinkId)
-                    }
-                  }
-                }, '总部直排')
+                }, '合并开班')
               ]);
             }
           }

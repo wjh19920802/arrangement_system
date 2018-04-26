@@ -181,8 +181,8 @@
                   </FormItem>
                 </div>
                 </Col>
-                <Col span="8">
-                <FormItem prop="mark" label="备注">
+                <Col span="8" class="price_mark">
+                <FormItem label="备注">
                   <Input type="textarea" v-model="item.mark" :rows="1"></Input>
                 </FormItem>
                 </Col>
@@ -325,8 +325,8 @@
                   <InputNumber  v-model="item.interviewTf" :min="0"></InputNumber>
                 </FormItem>
                 </Col>
-                <Col span="8">
-                <FormItem prop="mark" label="备注">
+                <Col span="8" class="price_mark">
+                <FormItem label="备注">
                   <Input type="textarea" v-model="item.mark" :rows="1"></Input>
                 </FormItem>
                 </Col>
@@ -1185,6 +1185,10 @@
       text-align: center;
       display: none;
     }
+  }
+  .price_mark .ivu-form-item-label:before {
+    content: "";
+    display: inline-block;
   }
   .priceIsCom{
     .ivu-input,.ivu-select-selection,.ivu-input-number{
