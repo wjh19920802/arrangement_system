@@ -250,6 +250,7 @@
                   <th>操作</th>
                 </tr>
                 <tr v-for="item,index in mergedData" style="background-color:rgba(153, 153, 255,0.5)">
+                  <td>{{item.courseName}}</td>
                   <td>{{item.classSeries.classSeriesName}}</td>
                   <td>{{item.rootDirectoryName}}</td>
                   <td>{{item.examStyleId ==1?'笔试':item.examStyleId ==2?'面试':'笔试+面试'}}</td>
@@ -260,7 +261,11 @@
                   <td>{{item.projectId ==1?'公务员(国考)':item.projectId ==2?'公务员(省考)':'事业单位'}}</td>
                   <td>{{item.isClosed ==1?'封闭班':'非封闭班'}}</td>
                   <td>{{item.dayOfRest}}</td>
-                  <td>{{item.coursePrice}}</td>
+                  <td>
+                    <div v-for="i in item.priceInfoArray">
+                      <span>{{item.agreement + '班-' + item.price  + (item.stay==null?'-':'-'+item.stay)  + (item.writtenTf?'-笔试不过退费:'+item.writtenTf:'') + (item.interviewTf?'-面试不过退费:'+item.interviewTf:'')}}</span>
+                    </div>
+                  </td>
                   <td>{{item.interviewGroupNumber}}</td>
                   <td>{{item.classOrientation}}</td>
                   <td>{{item.branchCampusOption}}</td>
@@ -270,6 +275,7 @@
                   </td>
                 </tr>
                 <tr v-for="item,index in searchedData">
+                  <td>{{item.courseName}}</td>
                   <td>{{item.classSeries.classSeriesName}}</td>
                   <td>{{item.rootDirectoryName}}</td>
                   <td>{{item.examStyleId ==1?'笔试':item.examStyleId ==2?'面试':'笔试+面试'}}</td>
@@ -280,7 +286,11 @@
                   <td>{{item.projectId ==1?'公务员(国考)':item.projectId ==2?'公务员(省考)':'事业单位'}}</td>
                   <td>{{item.isClosed == 1?'封闭班':'非封闭班'}}</td>
                   <td>{{item.dayOfRest}}</td>
-                  <td>{{item.coursePrice}}</td>
+                  <td>
+                    <div v-for="i in item.priceInfoArray">
+                      <span>{{i.agreement + '班-' + i.price  + (i.stay==null?'-':'-'+i.stay)  + (i.writtenTf?'-笔试不过退费:'+i.writtenTf:'') + (i.interviewTf?'-面试不过退费:'+i.interviewTf:'')}}</span>
+                    </div>
+                  </td>
                   <td>{{item.interviewGroupNumber}}</td>
                   <td>{{item.classOrientation}}</td>
                   <td>{{item.branchCampusOption}}</td>
@@ -495,7 +505,6 @@
         addGroupRules:{
           courseName:[{required:true,message:'班级名称不能为空',trigger:'blur'}],
           classType:[{required:true,message:'班级类型不能为空',trigger:'change'}],
-          classSeriesId:[{required:true,validator:validateClassSeriesId,trigger:'change'}],
           erpClassTypeId:[{validator:validateAddErp,required:true,trigger:'change'}],
         },
 
@@ -532,6 +541,7 @@
 
         selectedSub:[],     //  选中的科目
         tableHeadData:[
+          {name:'name',value:'班级名称'},
           {name:'classSeriesId',value:'班级系列'}, //班级系列
           {name:'rootDirectoryName',value:'根目录'},    //根目录
           {name:'examStyleId',value:'考试类型'},    //考试类型

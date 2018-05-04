@@ -130,7 +130,7 @@
               @on-ok="submitReject"
       >
         <Select v-model="checkState">
-          <Option value="2">驳回省院</Option>
+          <Option value="2" v-show="role != '省院'">驳回省院</Option>
           <Option value="1">驳回地方</Option>
         </Select>
         <div style="margin-top: 10px;">
@@ -243,6 +243,7 @@
   export default {
     data () {
       return {
+        role:localStorage.getItem('role'),
         formItem1: {
           classInfoName: '',
           studyCenterIdList: '',
@@ -522,7 +523,7 @@
             width:'150',
             align: 'center',
             render: (h, params) => {
-              return h('div', [
+              return h('div', {class:'wrap'},[
                 h('Button', {
                   props: {
                     type: 'success',
@@ -587,29 +588,43 @@
                     }
                   }
                 }, '驳回'),
-                h('Poptip', {
-                  props:{
-                    trigger:'hover',
-                    content:'呵额额额啦啦啦啦咯哦哦哦哦、'
-                  }
-                }, [
-                  h('Button',{
-                    props: {
-                      type: 'info',
-                      size: 'small',
-                      show:this.isShow
-                    },
-                    style: {
-                      marginRight: '5px',
-                      marginBottom: '5px'
-                    },
-                    on:{
-                      click: () => {
-                        this.tag(params.row.classInfoCategoryLinkId)
-                      }
+                h('span',{
+                  on:{
+                    mouseover: () => {
+
                     }
-                  },'添加标记')
-                ]),
+                  }
+                },[
+                  h('Poptip', {
+                    props:{
+                      trigger:'hover',
+                      content:'',
+                      on:{
+                        click:()=>{
+                          alert(111)
+                        }
+                      }
+                    },
+                  }, [
+                    h('Button',{
+                      props: {
+                        type: 'info',
+                        size: 'small',
+                        show:this.isShow
+                      },
+                      style: {
+                        marginRight: '5px',
+                        marginBottom: '5px'
+                      },
+                      on:{
+                        click: () => {
+                          this.tag(params.row.classInfoCategoryLinkId)
+                        }
+                      }
+                    },'添加标记')
+                  ])
+                ])
+                ,
                 h('Button', {
                   props: {
                     type: 'primary',
@@ -1352,6 +1367,12 @@
         }
         .unarranfeTable td .ivu-table-cell {
             height: 100%;
+            display: flex;
+            justify-content: space-around;
+            /*position:relative;*/
+            .wrap {
+              align-self: center;
+            }
             .studyTime ,.category,.day,.teacher,.level,.gender,.mobile,.ifNotice{
                 height: 100%;
                 .item:last-of-type {
@@ -1405,6 +1426,9 @@
         .day{
             margin-left: 0;
             margin-right: 0;
+        }
+        .ivu-poptip-popper {
+          z-index: 9999;
         }
     }
     /*.thead{
