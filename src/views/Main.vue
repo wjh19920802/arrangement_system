@@ -64,9 +64,9 @@
         </div>
         <div class="single-page-con" :style="{left: shrink?'60px':'200px'}">
             <div class="single-page">
-                <keep-alive :include="cachePage">
+                <div :include="cachePage">
                     <router-view></router-view>
-                </keep-alive>
+                </div>
             </div>
         </div>
     </div>

@@ -21,7 +21,7 @@
                     <div class="add info">
                       <div>
                         <div v-for="item in publicAttachmentList" style="margin-left: 4em;">
-                                <span>{{item.filename}}</span> <a class="operate" :href="url + '/v1/announce/download-attachment?url=' + item.ossUrl + '&filename=' + item.filename">下载附件</a>
+                                <span>{{item.filename}}</span> <a class="operate" :href="url + 'announce/download-attachment?url=' + item.ossUrl + '&filename=' + item.filename">下载附件</a>
                         </div>
                       </div>
                     </div>
