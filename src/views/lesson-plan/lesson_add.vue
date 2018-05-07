@@ -287,18 +287,21 @@
                   <td>{{item.isClosed == 1?'封闭班':'非封闭班'}}</td>
                   <td>{{item.dayOfRest}}</td>
                   <td>
-                    <div v-for="i in item.priceInfoArray">
+                    <div v-if="item.priceInfoArray.length > 0" v-for="i in item.priceInfoArray">
                       <span>{{i.agreement + '班-' + i.price  + (i.stay==null?'-':'-'+i.stay)  + (i.writtenTf?'-笔试不过退费:'+i.writtenTf:'') + (i.interviewTf?'-面试不过退费:'+i.interviewTf:'')}}</span>
+                    </div>
+                    <div v-if="item.priceInfoArray.length == 0">
+                      <span>--</span>
                     </div>
                   </td>
                   <td>{{item.interviewGroupNumber}}</td>
-                  <td>{{item.classOrientation}}</td>
-                  <td>{{item.branchCampusOption}}</td>
+                  <td>{{item.classOrientation?item.classOrientation:'--'}}</td>
+                  <td>{{item.branchCampusOption?item.branchCampusOption:'--'}}</td>
                   <td class="operate" @click="addToMergedData(index,item.examStyleId)">添加</td>
                 </tr>
               </table>
             </Row>
-            <p style="border-bottom: 1px solid #e9eaec;padding: 14px 16px;line-height: 1;    margin-bottom: 20px;">
+            <p style="border-bottom: 1px solid #e9eaec;padding: 14px 16px;line-height: 1;margin-bottom: 20px;">
               <Icon type="pinpoint" ></Icon>
               价格
               <Button type="primary" style="margin-left: 15px" @click="addInfo">添加</Button>

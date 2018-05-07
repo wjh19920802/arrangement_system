@@ -90,7 +90,7 @@ export default {
                           // this.$router.push({
                           //   name: 'home_index'
                           // });
-                          // history.go(0) || window.location.reload();
+                          history.go(0) || window.location.reload();
                         },1000)
                       }else {
                         this.switcher = true

@@ -87,7 +87,7 @@
                     <Icon type="pinpoint"></Icon>
                     班次列表
                 </p>
-              <Table border ref="selection" :columns="columns1" :data="data1" @on-selection-change="selectMany" class="unarranfeTable"></Table>
+              <Table border ref="selection" :columns="columns1" :data="data1" @on-selection-change="selectMany" class="unarrangeTable"></Table>
               <Button class="sumbit_many" type="primary" @click="submitMany">批量提交</Button>
               <!--<div class="sumbit_many" @click="headArrangeMany">总部直排</div>-->
               <Page :total="total1" :current="pageNumber1" :page-size="pageSize1" @on-change="changePage1" show-total style="float: right;margin-top: 20px;" ></Page>
@@ -144,7 +144,7 @@
              title="合并开班"
              @on-ok="mergeClass"
       >
-        <Card>
+        <Card class="unarrangeTable">
           <p slot="title">
             <Icon type="pinpoint"></Icon>
             查询条件
@@ -231,7 +231,7 @@
               </Col>
             </Row>
           </Form>
-          <Table border ref="selection" :columns="columns2" :data="data2" @on-selection-change="selectMany2" class="unarranfeTable"></Table>
+          <Table border ref="selection" :columns="columns2" :data="data2" @on-selection-change="selectMany2"></Table>
           <Page :total="total2" :current="pageNumber2" :page-size="pageSize2" @on-change="changePage2" show-total style="margin-top: 20px;"></Page>
         </Card>
       </Modal>
@@ -315,7 +315,7 @@
                   return ele
                 })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             },
           },
@@ -334,7 +334,7 @@
                   return ele
                 })())
               }else {
-               return ''
+               return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -355,7 +355,7 @@
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -374,7 +374,7 @@
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -393,7 +393,7 @@
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -412,7 +412,7 @@
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -431,7 +431,7 @@
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -456,7 +456,7 @@
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -481,7 +481,7 @@
                   return ele
                 })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -498,7 +498,7 @@
             align:'center',
             key:'teachPlace',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.teachPlace?params.row.teachPlace:'');
+              return h('div',{class:'item2'},params.row.teachPlace?params.row.teachPlace:'--');
             }
           },
           {
@@ -506,7 +506,7 @@
             align:'center',
             key:'totalTeacher',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.totalTeacher?params.row.totalTeacher:'');
+              return h('div',{class:'item2'},params.row.totalTeacher?params.row.totalTeacher:'--');
             }
           },
           {
@@ -514,7 +514,7 @@
             align:'center',
             key:'beiz',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.beiz?params.row.beiz:'');
+              return h('div',{class:'item2'},params.row.beiz?params.row.beiz:'--');
             }
           },
           {
@@ -663,6 +663,9 @@
             title: '班级系列',
             align: 'center',
             key: 'classSeriesName',
+            render:(h,params)=>{
+              return h('div',{class:'item2'},params.row.classSeriesName?params.row.classSeriesName:'')
+            }
           },
           {
             title: '申请科目',
@@ -689,7 +692,7 @@
                   return ele
                 })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             },
           },
@@ -708,7 +711,7 @@
                   return ele
                 })())
               }else {
-               return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -729,7 +732,7 @@
                   return ele
                 })())
               }else {
-               return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -748,7 +751,7 @@
                   return ele
                 })())
               }else {
-               return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -767,7 +770,7 @@
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -786,7 +789,7 @@
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -805,7 +808,7 @@
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -824,7 +827,7 @@
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -833,7 +836,7 @@
             align: 'center',
             key: 'erp',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.erpNum.allNum?params.row.erpNum.allNum:'');
+              return h('div',{class:'item2'},params.row.erpNum.allNum);
             }
           },
           {
@@ -841,7 +844,7 @@
             align:'center',
             key:'teachPlace',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.teachPlace?params.row.teachPlace:'');
+              return h('div',{class:'item2'},params.row.teachPlace?params.row.teachPlace:'--');
             }
           },
           {
@@ -849,7 +852,7 @@
             align:'center',
             key:'totalTeacher',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.totalTeacher?params.row.totalTeacher:'');
+              return h('div',{class:'item2'},params.row.totalTeacher?params.row.totalTeacher:'--');
             }
           },
           {
@@ -857,7 +860,7 @@
             align:'center',
             key:'beiz',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.beiz?params.row.beiz:'');
+              return h('div',{class:'item2'},params.row.beiz?params.row.beiz:'--');
             }
           }
         ],
@@ -1359,40 +1362,6 @@
                 }
             }
         }
-        .ivu-checkbox-wrapper {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-        }
-        .unarranfeTable td .ivu-table-cell {
-            height: 100%;
-            display: flex;
-            justify-content: space-around;
-            /*position:relative;*/
-            .wrap {
-              align-self: center;
-            }
-            .studyTime ,.category,.day,.teacher,.level,.gender,.mobile,.ifNotice{
-                height: 100%;
-                .item:last-of-type {
-                    border-bottom: none;
-                }
-            }
-            .item {
-                height: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: space-around;
-                border-bottom: 1px solid #e9eaec;
-            }
-            .item2 {
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: space-around;
-            }
-        }
         .jiaban {
             height: 100%;
             overflow: hidden;
@@ -1431,50 +1400,39 @@
           z-index: 9999;
         }
     }
-    /*.thead{
-        text-align: center;
-        .tr{
-            background-color: #f8f8f9;
-            width: 100%;
-            display: flex;
-            border-top:1px solid #e9eaec;
-            border-left:1px solid #e9eaec;
-            border-bottom:1px solid #e9eaec;
-            justify-content: flex-start;
-            .th{
-                flex:1;
-                border-right:1px solid #e9eaec;
-                display: inline-block;
-                min-width: 30px;
-                min-height: 50px;
-                padding: 14px 5px;
-            }
-            .operate{
-                min-width: 250px;
-            }
+    .unarrangeTable .ivu-table-cell {
+      height: 100%;
+      display: flex;
+      justify-content: space-around;
+      /*position:relative;*/
+      .ivu-checkbox-wrapper {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+      }
+      .wrap {
+        align-self: center;
+      }
+      .studyTime ,.category,.day,.teacher,.level,.gender,.mobile,.ifNotice{
+        width: 100%;
+        height: 100%;
+        .item:last-of-type {
+          border-bottom: none;
         }
+      }
+      .item {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        border-bottom: 1px solid #e9eaec;
+      }
+      .item2 {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+      }
     }
-    .tbody{
-        text-align: center;
-        background-color: #fff;
-        border-left:1px solid #e9eaec;
-        border-bottom:1px solid #e9eaec;
-        font-size: 12px;
-        .tr{
-            display: flex;
-            justify-content: flex-start;
-            .td{
-                flex:1;
-                border-right:1px solid #e9eaec;
-                border-bottom:1px solid #e9eaec;
-                min-width: 30px;
-                min-height: 50px;
-                line-height: 2;
-                padding: 15px 5px;
-            }
-            .operate{
-                min-width: 250px;
-            }
-        }
-    }*/
 </style>

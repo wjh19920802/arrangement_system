@@ -117,12 +117,12 @@
                     </FormItem>
                 </Row>
                 <Row>
-                  <FormItem label="笔试不过退费">
+                  <FormItem label="笔试不过退费" v-show="priceForm.agreement == 0 && (examStyleId == 1 || examStyleId == 3)" >
                     <InputNumber :min="0" v-model="priceForm.writtenTf"></InputNumber>
                   </FormItem>
                 </Row>
                 <Row>
-                  <FormItem label="面试不过退费">
+                  <FormItem label="面试不过退费" v-show="priceForm.agreement == 1 && (examStyleId == 2 || examStyleId == 3)" >
                     <InputNumber :min="0" v-model="priceForm.interviewTf"></InputNumber>
                   </FormItem>
                 </Row>
@@ -563,6 +563,7 @@
                               click: () => {
                                   this.addIsShow = true;
                                   this.selectedId = params.row.id;
+                                  this.examStyleId = params.row.examStyleId;
                               }
                           }
                       }, '添加')
@@ -982,6 +983,7 @@
         currentName:'',     //当前名称
         changePublishIsShow:false,      //修改开班日期
         currentPublish:'',  //开班日期
+        examStyleId:0,   //当前点击的课程班级类型
         priceForm:{
             agreement:'0',   //是否协议  0 协议 1 非协议
             stay:'0',        //住宿地址  0 基地 1 酒店
