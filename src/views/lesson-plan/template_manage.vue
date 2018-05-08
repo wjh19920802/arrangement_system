@@ -197,6 +197,14 @@
             }
         },
         methods:{
+            init () {
+              let vm = this;
+              window.onkeydown = function (e) {
+                if(e.keyCode == 13) {
+                  vm.search();
+                }
+              }
+            },
             enable(item) {
               this.$http({
                 method:'get',
@@ -318,6 +326,7 @@
           }
         },
         mounted() {
+          this.init();
           this.search();
           this.$http({
             method:'get',

@@ -375,6 +375,14 @@
           return Y+M+D;
         }
       },
+      init () {
+        let vm = this;
+        window.onkeydown = function (e) {
+          if(e.keyCode == 13) {
+            vm.search();
+          }
+        }
+      }
       // isObjectValueEqual(a, b) {
       //   var aProps = Object.getOwnPropertyNames(a);
       //   var bProps = Object.getOwnPropertyNames(b);
@@ -391,7 +399,7 @@
       // }
     },
     mounted() {
-      // this.search();
+      this.init();
       let url = this.$store.state.app.baseUrl  + 'course/query';
       let data = Util.deepClone(this.formItem);
       let checkStates = [];

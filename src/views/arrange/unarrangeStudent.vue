@@ -281,7 +281,7 @@
             align: 'center',
             key: 'classInfoName',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.classInfoName?params.row.classInfoName:'')
+              return h('div',{class:'item2'},params.row.classInfoName?params.row.classInfoName:'--')
             }
           },
           {
@@ -289,7 +289,7 @@
             align: 'center',
             key: 'classSeriesName',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.classSeriesName?params.row.classSeriesName:'')
+              return h('div',{class:'item2'},params.row.classSeriesName?params.row.classSeriesName:'--')
             }
           },
           {
@@ -297,7 +297,7 @@
             align: 'center',
             key: 'applyCategoryName',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.categoryName?params.row.categoryName:'');
+              return h('div',{class:'item2'},params.row.categoryName?params.row.categoryName:'--');
             }
           },
           {
@@ -306,7 +306,7 @@
             key: 'studyTimeSet',
             render: (h, params) => {
               if(params.row.studyTimeSet ===null) {
-                return '--'
+                return h('div',{class:'item2'},'--')
               }else if(params.row.studyTimeSet.length > 0) {
                 return h('div',{class:'studyTime'},(() => {
                   let studyTimeSet = params.row.studyTimeSet;
@@ -346,7 +346,7 @@
             key: 'day',
             render:(h,params)=>{
               if(params.row.studyTimeSet ===null) {
-                return '--'
+                return h('div',{class:'item2'},'--')
               }else if(params.row.categoryTeacherDos.length > 0) {
               return h('div',{class:'day'},(() => {
                 let categoryTeacherDos = params.row.categoryTeacherDos;
@@ -684,7 +684,7 @@
             key: 'studyTimeSet',
             render: (h, params) => {
               if(params.row.studyTimeSet ===null) {
-                return '--'
+                return h('div',{class:'item2'},'--')
               }else if(params.row.studyTimeSet.length > 0) {
                 return h('div',{class:'studyTime'},(() => {
                   let studyTimeSet = params.row.studyTimeSet;
@@ -724,7 +724,7 @@
             key: 'day',
             render:(h,params)=>{
               if(params.row.studyTimeSet ===null) {
-                return '--'
+                return h('div',{class:'item2'},'--')
               }else if(params.row.categoryTeacherDos.length > 0) {
                 return h('div',{class:'day'},(() => {
                   let categoryTeacherDos = params.row.categoryTeacherDos;

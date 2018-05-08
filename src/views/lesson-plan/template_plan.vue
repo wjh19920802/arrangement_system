@@ -322,21 +322,29 @@
           .catch((error)=> {
             this.$Message.error(error.message)
           })
+      },
+      init () {
+        let vm = this;
+        window.onkeydown = function (e) {
+          if(e.keyCode == 13) {
+            vm.search();
+          }
+        }
       }
     },
     mounted(){
-      this.$http(this.$store.state.app.baseUrl + 'area')
+      this.init();
+      this.$http(this.$store.state.app.baseUrl + 'area/getUserVisualProvince')
         .then((res)=>{
           if(res.data.code == 0 ){
             this.provinces = res.data.data;
+            this.search();
           }else {
             this.$Message.error(res.data.message);
           }
         }).catch((error)=>{
         this.$Message.error(error.message);
       });
-
-      this.search()
     }
   };
 </script>
