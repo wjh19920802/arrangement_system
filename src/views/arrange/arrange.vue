@@ -254,7 +254,7 @@
                 </div>
                 <div style="width: 100%;text-align: center">
                   <Button type="primary" size="large" @click="save">保存备注</Button>
-                  <!--<Button type="primary" size="large">取消</Button>-->
+                  <Button type="primary" size="large" @click="back">&nbsp;&nbsp;返&nbsp;&nbsp;&nbsp;回&nbsp;&nbsp;</Button>
                 </div>
             </Card>
             <Card id="modify_history" class="margin-top-10">
@@ -286,10 +286,13 @@
             </Col>
             <Col span="18">
               <Select v-model="reason">
-                <Option value=""></Option>
-                <Option value="aaaaa">aaaaa</Option>
-                <Option value="bbbbb">bbbbb</Option>
-                <Option value="ccccc">ccccc</Option>
+                <Option value="">--请选择--</Option>
+                <Option value="修改时间">修改时间</Option>
+                <Option value="车次延误或者取消">车次延误或者取消</Option>
+                <Option value="投诉">投诉</Option>
+                <Option value="授课师资生病">授课师资生病</Option>
+                <Option value="课程调整">课程调整</Option>
+                <Option value="课程调整">其他问题</Option>
               </Select>
             </Col>
           </Row>
@@ -832,6 +835,9 @@
           }).catch((error)=>{
           this.$Message.error(error.message);
         });
+      },
+      back () {
+        window.history.go(-1);
       }
     },
     filters: {

@@ -1,5 +1,5 @@
 <template>
-    <div style="position: relative;">
+    <div id="apply-detail" style="position: relative;">
         <Row>
             <Col span="24">
             <Card>
@@ -1303,11 +1303,14 @@
         this.modalFlag = false;
       }
     },
+    beforeMount () {
+      // window.scrollTo(0, 0)
+    },
     mounted() {
         this.search1();
         this.search2();
         this.id = this.$route.params.id;
-        // this.uploadList = this.$refs.upload.fileList;
+      // this.uploadList = this.$refs.upload.fileList;
     },
     components:{
         Popup,
@@ -1319,66 +1322,70 @@
 </script>
 
 <style lang="less" rel="stylesheet/less">
+  #apply-detail {
     .subTitle{
-        margin-bottom: 15px;
-        font-size: 16px;
+      margin-bottom: 15px;
+      font-size: 16px;
     }
     .content{
-        padding: 0 10px;
-        margin-bottom: 20px;
-        .info{
-            p{
-                line-height: 2;
-                span{
-                    margin-right: 30px;
-                }
-            }
+      padding: 0 10px;
+      margin-bottom: 20px;
+      .info{
+        p{
+          line-height: 2;
+          span{
+            margin-right: 30px;
+          }
         }
-        .ivu-collapse{
-            margin-top: 15px;
-            .ivu-collapse-header{
-                .ivu-icon-arrow-right-b{
-                    display: none;
-                }
-                .addBtn{
-                    float: right;
-                    position: absolute;
-                    right: 15px;
-                    top: -25px;
-                }
-            }
+      }
+      .ivu-collapse{
+        margin-top: 15px;
+        .ivu-collapse-header{
+          .ivu-icon-arrow-right-b{
+            display: none;
+          }
+          .addBtn{
+            float: right;
+            position: absolute;
+            right: 15px;
+            top: -25px;
+          }
         }
+      }
     }
     i.ivu-icon{
-        margin-right: 10px;
+      margin-right: 10px;
     }
     .waitTable{
-        .notShow{
-            display: none;
-            pointer-events:none;
-        }
+      .notShow{
+        display: none;
+        pointer-events:none;
+      }
     }
     .operate{
-        color: #2d8cf0;
-        margin: 0 3px;
-        cursor: pointer;
-        padding:0 5px 0 ;
+      color: #2d8cf0;
+      margin: 0 3px;
+      cursor: pointer;
+      padding:0 5px 0 ;
     }
     .titleContent{
-        width: 80%;
-        height: 100px;
-        padding: 10px;
-        outline: none;
+      width: 80%;
+      height: 100px;
+      padding: 10px;
+      outline: none;
     }
     .month,.day{
-        width: 50px;
-        text-align: center;
-        margin-right: 25px;
-        margin-left: 25px;
-        outline: none;
+      width: 50px;
+      text-align: center;
+      margin-right: 25px;
+      margin-left: 25px;
+      outline: none;
     }
     .ivu-table-cell{
-        padding: 0!important;
+      padding: 0!important;
     }
-
+    .ivu-collapse-content {
+      overflow: initial;
+    }
+  }
 </style>

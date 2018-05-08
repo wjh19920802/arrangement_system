@@ -263,7 +263,7 @@
                   <td>{{item.dayOfRest}}</td>
                   <td>
                     <div v-for="i in item.priceInfoArray">
-                      <span>{{item.agreement + '班-' + item.price  + (item.stay==null?'-':'-'+item.stay)  + (item.writtenTf?'-笔试不过退费:'+item.writtenTf:'') + (item.interviewTf?'-面试不过退费:'+item.interviewTf:'')}}</span>
+                      <span>{{i.agreement + '班-' + i.price  + (i.stay==null?'-':'-'+i.stay)  + (i.writtenTf?'-笔试不过退费:'+i.writtenTf:'') + (i.interviewTf?'-面试不过退费:'+i.interviewTf:'')}}</span>
                     </div>
                   </td>
                   <td>{{item.interviewGroupNumber}}</td>

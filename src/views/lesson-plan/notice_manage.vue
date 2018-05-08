@@ -366,8 +366,17 @@
                   this.$Message.error(error.message)
               })
       },
+      init () {
+        let vm = this;
+        window.onkeydown = function (e) {
+          if(e.keyCode == 13) {
+            vm.search();
+          }
+        }
+      }
     },
     mounted () {
+        this.init();
         this.$http(this.$store.state.app.baseUrl + 'area/getUserVisualProvince')
             .then((res)=>{
                 if(res.data.code == 0 ){

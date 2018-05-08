@@ -94,148 +94,150 @@
             </Card>
             </Col>
         </Row>
-      <!--标记弹窗-->
-      <Modal width="40%" v-model="addTag" title="添加标记" @on-ok="submitAdd">
-        <p>标记对象</p>
-        <Select v-model="tagOption" style="margin-bottom: 20px;">
-          <Option value="师资">师资</Option>
-          <Option value="班级">班级</Option>
-        </Select>
-        <div>
-          <p>备注</p>
-          <Input v-model="signNote" type="textarea" placeholder=""></Input>
-        </div>
-      </Modal>
-      <Modal  width="40%"
-              v-model="tagModal"
-              title="添加标记"
-              @on-ok="submitTag"
-              ok-text="保存"
-      >
-        <h3 class="operate" @click="addNewTag">添加新标记<Icon type="plus-circled" style="font-size: 21px;vertical-align: top;margin-left: 20px;"></Icon></h3>
-        <h4 v-for="item,index in classCategorySigns" style="position: relative;margin-bottom: 10px;background: #ccc;border-radius: 10px;padding: 10px;font-size: 14px;">
-          <p>
-            <span style="width: 90px;display: inline-block;">{{index + 1}}、标记对象:</span><span>{{item.signType}}</span>
-          </p>
-          <p>
-            <span style="width: 90px;text-align: center;display: inline-block">备注 :</span><span>{{item.signNote}}</span>
-          </p>
-          <span @click="deleteTag(index)"><Icon type="ios-close-empty" style="position: absolute;right: 2px;top: -4px;color: red;font-size: 30px;width: 20px;height: 20px;"></Icon></span>
-        </h4>
-      </Modal>
-      <!--驳回弹窗-->
-      <Modal  width="40%"
-              v-model="rejectModal"
-              title="驳回"
-              @on-ok="submitReject"
-      >
-        <Select v-model="checkState">
-          <Option value="2" v-show="role != '省院'">驳回省院</Option>
-          <Option value="1">驳回地方</Option>
-        </Select>
-        <div style="margin-top: 10px;">
-          <p>备注:</p>
-          <Input v-model="regectReason" type="textarea" placeholder=""></Input>
-        </div>
-      </Modal>
-      <!--合并开班弹窗-->
-      <Modal width="1000px"
-             v-model="isMerge"
-             title="合并开班"
-             @on-ok="mergeClass"
-      >
-        <Card class="unarrangeTable">
-          <p slot="title">
-            <Icon type="pinpoint"></Icon>
-            查询条件
-          </p>
-          <Form :model="formItem2" :label-width="100">
-            <Row>
-              <Col span="6">
-              <FormItem label="班级名称" prop="classInfoName">
-                <Input v-model="formItem2.classInfoName" placeholder=""></Input>
-              </FormItem>
-              </Col>
-              <Col span="6">
-              <FormItem label="学习中心" prop="studyCenterIdList">
-                <Select v-model="formItem2.studyCenterIdList">
-                  <Option value=''>请选择</Option>
-                  <Option v-for="item in provinces" :key="item.areaid" :value="item.areaid">{{item.name}}</Option>
-                </Select>
-              </FormItem>
-              </Col>
-              <Col span="6">
-              <FormItem label="项目类型" prop="projectId">
-                <Select v-model="formItem2.projectId" @on-change="findCategory">
-                  <Option value="">请选择</Option>
-                  <Option value="1">公务员（国考）</Option>
-                  <Option value="2">公务员（省考）</Option>
-                  <Option value="4">事业单位</Option>
-                </Select>
-              </FormItem>
-              </Col>
-              <Col span="6">
-              <FormItem label="班级系列" prop="classTypeId">
-                <Select v-model="formItem2.classTypeId">
-                  <Option value="">请选择</Option>
-                  <Option :value="item.id" v-for="item in classSeriesList" :key="item.id">{{item.classSeriesName}}</Option>
-                </Select>
-              </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span="12">
-              <FormItem label="开课时间">
-                <DatePicker type="daterange" placeholder="" v-model="formItem2.openClassTime"></DatePicker>
-              </FormItem>
-              </Col>
-              <Col span="12">
-              <FormItem label="结课时间">
-                <DatePicker type="daterange" placeholder="" v-model="formItem2.closeClassTime"></DatePicker>
-              </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span="6">
-              <FormItem label="考试类型" prop="examStyleId">
-                <Select v-model="formItem2.examStyleId">
-                  <Option value="">请选择</Option>
-                  <Option value="1">笔试</Option>
-                  <Option value="2">面试</Option>
-                  <Option value="3">笔试 + 面试</Option>
-                </Select>
-              </FormItem>
-              </Col>
-              <Col span="6">
-              <FormItem label="科目" prop="categoryId">
-                <Select v-model="formItem2.categoryId">
-                  <Option value="">请选择</Option>
-                  <Option v-for="item in categoryList" :key="item.id" :value="item.id">{{item.categoryName}}</Option>
-                </Select>
-              </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <!--<Col span="6">
-              <FormItem label="排序">
-                  <Select v-model="formItem.orderByCategory">
-                      <Option value="科目时间由近及远">科目时间由近及远</Option>
-                  </Select>
-              </FormItem>
-              </Col>-->
-              <Col span="6">
-              <FormItem>
-                <Button type="primary" @click="search2">查询</Button>
-                <!--<Button type="ghost" style="margin-left: 8px">重置</Button>-->
-              </FormItem>
-              </Col>
-            </Row>
-          </Form>
-          <Table border ref="selection" :columns="columns2" :data="data2" @on-selection-change="selectMany2"></Table>
-          <Page :total="total2" :current="pageNumber2" :page-size="pageSize2" @on-change="changePage2" show-total style="margin-top: 20px;"></Page>
-        </Card>
-      </Modal>
-    </div>
+        <!--标记弹窗-->
+        <Modal width="40%" v-model="addTag" title="添加标记" @on-ok="submitAdd">
+          <p>标记对象</p>
+          <Select v-model="tagOption" style="margin-bottom: 20px;">
+            <Option value="师资">师资</Option>
+            <Option value="班级">班级</Option>
+          </Select>
+          <div>
+            <p>备注</p>
+            <Input v-model="signNote" type="textarea" placeholder=""></Input>
+          </div>
+        </Modal>
+        <Modal  width="40%"
+                v-model="tagModal"
+                title="添加标记"
+                @on-ok="submitTag"
+                ok-text="保存"
+        >
+          <h3 class="operate" @click="addNewTag">添加新标记<Icon type="plus-circled" style="font-size: 21px;vertical-align: top;margin-left: 20px;"></Icon></h3>
+          <h4 v-for="item,index in classCategorySigns" style="position: relative;margin-bottom: 10px;background: #ccc;border-radius: 10px;padding: 10px;font-size: 14px;">
+            <p>
+              <span style="width: 90px;display: inline-block;">{{index + 1}}、标记对象:</span><span>{{item.signType}}</span>
+            </p>
+            <p>
+              <span style="width: 90px;text-align: center;display: inline-block">备注 :</span><span>{{item.signNote}}</span>
+            </p>
+            <span @click="deleteTag(index)"><Icon type="ios-close-empty" style="position: absolute;right: 2px;top: -4px;color: red;font-size: 30px;width: 20px;height: 20px;"></Icon></span>
+          </h4>
+        </Modal>
+        <!--驳回弹窗-->
+        <Modal  width="40%"
+                v-model="rejectModal"
+                title="驳回"
+                @on-ok="submitReject"
+        >
+          <Select v-model="checkState">
+            <Option value="2" v-show="role != '省院'">驳回省院</Option>
+            <Option value="1">驳回地方</Option>
+          </Select>
+          <div style="margin-top: 10px;">
+            <p>备注:</p>
+            <Input v-model="regectReason" type="textarea" placeholder=""></Input>
+          </div>
+        </Modal>
+        <!--合并开班弹窗-->
+        <Modal width="1000px"
+               v-model="isMerge"
+               title="合并开班"
+               @on-ok="mergeClass"
+        >
+          <Card>
+            <div class="unarrangeTable">
+              <p slot="title">
+                <Icon type="pinpoint"></Icon>
+                查询条件
+              </p>
+              <Form :model="formItem2" :label-width="100">
+                <Row>
+                  <Col span="6">
+                  <FormItem label="班级名称" prop="classInfoName">
+                    <Input v-model="formItem2.classInfoName" placeholder=""></Input>
+                  </FormItem>
+                  </Col>
+                  <Col span="6">
+                  <FormItem label="学习中心" prop="studyCenterIdList">
+                    <Select v-model="formItem2.studyCenterIdList">
+                      <Option value=''>请选择</Option>
+                      <Option v-for="item in provinces" :key="item.areaid" :value="item.areaid">{{item.name}}</Option>
+                    </Select>
+                  </FormItem>
+                  </Col>
+                  <Col span="6">
+                  <FormItem label="项目类型" prop="projectId">
+                    <Select v-model="formItem2.projectId" @on-change="findCategory">
+                      <Option value="">请选择</Option>
+                      <Option value="1">公务员（国考）</Option>
+                      <Option value="2">公务员（省考）</Option>
+                      <Option value="4">事业单位</Option>
+                    </Select>
+                  </FormItem>
+                  </Col>
+                  <Col span="6">
+                  <FormItem label="班级系列" prop="classTypeId">
+                    <Select v-model="formItem2.classTypeId">
+                      <Option value="">请选择</Option>
+                      <Option :value="item.id" v-for="item in classSeriesList" :key="item.id">{{item.classSeriesName}}</Option>
+                    </Select>
+                  </FormItem>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span="12">
+                  <FormItem label="开课时间">
+                    <DatePicker type="daterange" placeholder="" v-model="formItem2.openClassTime"></DatePicker>
+                  </FormItem>
+                  </Col>
+                  <Col span="12">
+                  <FormItem label="结课时间">
+                    <DatePicker type="daterange" placeholder="" v-model="formItem2.closeClassTime"></DatePicker>
+                  </FormItem>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span="6">
+                  <FormItem label="考试类型" prop="examStyleId">
+                    <Select v-model="formItem2.examStyleId">
+                      <Option value="">请选择</Option>
+                      <Option value="1">笔试</Option>
+                      <Option value="2">面试</Option>
+                      <Option value="3">笔试 + 面试</Option>
+                    </Select>
+                  </FormItem>
+                  </Col>
+                  <Col span="6">
+                  <FormItem label="科目" prop="categoryId">
+                    <Select v-model="formItem2.categoryId">
+                      <Option value="">请选择</Option>
+                      <Option v-for="item in categoryList" :key="item.id" :value="item.id">{{item.categoryName}}</Option>
+                    </Select>
+                  </FormItem>
+                  </Col>
+                </Row>
+                <Row>
+                  <!--<Col span="6">
+                  <FormItem label="排序">
+                      <Select v-model="formItem.orderByCategory">
+                          <Option value="科目时间由近及远">科目时间由近及远</Option>
+                      </Select>
+                  </FormItem>
+                  </Col>-->
+                  <Col span="6">
+                  <FormItem>
+                    <Button type="primary" @click="search2">查询</Button>
+                    <!--<Button type="ghost" style="margin-left: 8px">重置</Button>-->
+                  </FormItem>
+                  </Col>
+                </Row>
+              </Form>
+              <Table border ref="selection" :columns="columns2" :data="data2" @on-selection-change="selectMany2" id="merge_table"></Table>
+              <Page :total="total2" :current="pageNumber2" :page-size="pageSize2" @on-change="changePage2" show-total style="margin-top: 20px;"></Page>
+            </div>
+          </Card>
+        </Modal>
+      </div>
 </template>
 
 <script>
@@ -329,7 +331,7 @@
                   let categoryTeacherDos = params.row.categoryTeacherDos;
                   let ele = [];
                   for (let i = 0; i < categoryTeacherDos.length; i++) {
-                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].categoryName?categoryTeacherDos[i].categoryName:''))
+                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].categoryName?categoryTeacherDos[i].categoryName:'--'))
                   }
                   return ele
                 })())
@@ -369,7 +371,7 @@
                 let categoryTeacherDos = params.row.categoryTeacherDos;
                 let ele = [];
                 for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.name:''))
+                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.name:'--'))
                 }
                 return ele
               })())
@@ -388,7 +390,7 @@
                 let categoryTeacherDos = params.row.categoryTeacherDos;
                 let ele = [];
                 for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.level:''))
+                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.level:'--'))
                 }
                 return ele
               })())
@@ -407,7 +409,7 @@
                 let categoryTeacherDos = params.row.categoryTeacherDos;
                 let ele = [];
                 for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.gender:''))
+                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.gender:'--'))
                 }
                 return ele
               })())
@@ -426,7 +428,7 @@
                 let categoryTeacherDos = params.row.categoryTeacherDos;
                 let ele = [];
                 for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.mobile:''))
+                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.mobile:'--'))
                 }
                 return ele
               })())
@@ -591,19 +593,20 @@
                 h('span',{
                   on:{
                     mouseover: () => {
-
+                      for(let i = 0;i<params.row.signs.length;i++) {
+                        this.signStr += i+1 + '.标记对象:' +  params.row.signs[i].signType + ';备注:' + params.row.signs[i].signNote + '    ';
+                      }
+                    },
+                    mouseout: () => {
+                      this.signStr = '';
                     }
                   }
                 },[
                   h('Poptip', {
                     props:{
                       trigger:'hover',
-                      content:'',
-                      on:{
-                        click:()=>{
-                          alert(111)
-                        }
-                      }
+                      content:this.signStr,
+                      placement:'top-end',
                     },
                   }, [
                     h('Button',{
@@ -656,7 +659,7 @@
             align: 'center',
             key: 'classInfoName',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.classInfoName?params.row.classInfoName:'')
+              return h('div',{class:'item2'},params.row.classInfoName?params.row.classInfoName:'--')
             }
           },
           {
@@ -664,7 +667,7 @@
             align: 'center',
             key: 'classSeriesName',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.classSeriesName?params.row.classSeriesName:'')
+              return h('div',{class:'item2'},params.row.classSeriesName?params.row.classSeriesName:'--')
             }
           },
           {
@@ -672,7 +675,7 @@
             align: 'center',
             key: 'applyCategoryName',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.categoryName?params.row.categoryName:'');
+              return h('div',{class:'item2'},params.row.categoryName?params.row.categoryName:'--');
             }
           },
           {
@@ -706,7 +709,7 @@
                   let categoryTeacherDos = params.row.categoryTeacherDos;
                   let ele = [];
                   for (let i = 0; i < categoryTeacherDos.length; i++) {
-                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].categoryName))
+                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].categoryName?categoryTeacherDos[i].categoryName:'--'))
                   }
                   return ele
                 })())
@@ -746,7 +749,7 @@
                   let categoryTeacherDos = params.row.categoryTeacherDos;
                   let ele = [];
                   for (let i = 0; i < categoryTeacherDos.length; i++) {
-                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher.name))
+                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.name:'--'))
                   }
                   return ele
                 })())
@@ -765,7 +768,7 @@
                 let categoryTeacherDos = params.row.categoryTeacherDos;
                 let ele = [];
                 for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher.level))
+                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.level:'--'))
                 }
                 return ele
               })())
@@ -784,7 +787,7 @@
                 let categoryTeacherDos = params.row.categoryTeacherDos;
                 let ele = [];
                 for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher.gender))
+                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.gender:'--'))
                 }
                 return ele
               })())
@@ -803,7 +806,7 @@
                 let categoryTeacherDos = params.row.categoryTeacherDos;
                 let ele = [];
                 for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher.mobile))
+                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.mobile:'--'))
                 }
                 return ele
               })())
@@ -836,7 +839,7 @@
             align: 'center',
             key: 'erp',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.erpNum.allNum);
+              return h('div',{class:'item2'},params.row.erpNum.allNum?params.row.erpNum.allNum:'--');
             }
           },
           {
@@ -892,7 +895,8 @@
         currentClassInfoCategoryLinkId:-1,
         categoryList:[],
         classInfoCategoryLinkIdList:[],   //批量提交classInfoCategoryLinkIdList 列表
-        majorClassId:''
+        majorClassId:'',
+        signStr:''    //标记内容
       }
     },
     computed:{
@@ -1116,6 +1120,7 @@
           .then((res)=>{
             if(res.data.code == 0) {
               this.$Message.success('保存成功');
+              this.search1()
             }else {
               this.$Message.error(res.data.message);
             }
@@ -1342,48 +1347,11 @@
 
 <style lang="less" rel="stylesheet/less">
     #unarrange {
-        #unarrange_table,#merge_table {
-            border: 1px solid #e9eaec;
-            th{
-                border: 1px solid #e9eaec;
-                min-height: 55px;
-                background-color: #f8f8f9;
-                padding: 10px 5px;
-            }
-            td {
-                border: 1px solid #e9eaec;
-                max-width: 150px;
-                min-height: 45px;
-                font-size: 12px;
-                word-break: break-all;
-                overflow: hidden;
-                .ivu-select-selection{
-                    border: transparent!important;
-                }
-            }
-        }
-        .jiaban {
-            height: 100%;
-            overflow: hidden;
-            border-bottom: 1px solid green;
-            border-bottom: 1px solid rgb(233, 234, 236);
-            display: flex;
-            justify-content: space-around;
-            .jiaban_content {
-                align-self: center;
-            }
-        }
         .aaa{
             color:#10b321;
         }
         .bbb{
             color:#f3052b;
-        }
-        .operate{
-            color: #2d8cf0;
-            margin: 0 3px;
-            cursor: pointer;
-            margin-bottom: 10px;
         }
         .sumbit_many {
             float: left;
@@ -1399,40 +1367,74 @@
         .ivu-poptip-popper {
           z-index: 9999;
         }
-    }
-    .unarrangeTable .ivu-table-cell {
-      height: 100%;
-      display: flex;
-      justify-content: space-around;
-      /*position:relative;*/
-      .ivu-checkbox-wrapper {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-      }
-      .wrap {
-        align-self: center;
-      }
-      .studyTime ,.category,.day,.teacher,.level,.gender,.mobile,.ifNotice{
-        width: 100%;
-        height: 100%;
-        .item:last-of-type {
-          border-bottom: none;
+        .unarrangeTable {
+          .ivu-table-tbody {
+            overflow: initial;
+          }
+          #merge_table {
+            border: 1px solid #e9eaec;
+            th{
+              border: 1px solid #e9eaec;
+              min-height: 55px;
+              background-color: #f8f8f9;
+              padding: 10px 5px;
+            }
+            td {
+              border: 1px solid #e9eaec;
+              max-width: 150px;
+              min-height: 45px;
+              font-size: 12px;
+              word-break: break-all;
+              overflow: hidden;
+              .ivu-select-selection{
+                border: transparent!important;
+              }
+            }
+          }
+          .ivu-table-cell {
+            height: 100%;
+            display: flex;
+            justify-content: space-around;
+            /*position:relative;*/
+            .ivu-checkbox-wrapper {
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-around;
+            }
+            .wrap {
+              align-self: center;
+            }
+            .studyTime ,.category,.day,.teacher,.level,.gender,.mobile,.ifNotice{
+              width: 100%;
+              height: 100%;
+              .item:last-of-type {
+                border-bottom: none;
+              }
+            }
+            .item {
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-around;
+              border-bottom: 1px solid #e9eaec;
+            }
+            .item2 {
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-around;
+            }
+          }
         }
-      }
-      .item {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-        border-bottom: 1px solid #e9eaec;
-      }
-      .item2 {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-      }
+         .ivu-poptip-inner {
+           white-space: pre-wrap;
+         }
+    }
+    .operate{
+      color: #2d8cf0;
+      margin: 0 3px;
+      cursor: pointer;
+      margin-bottom: 10px;
     }
 </style>
