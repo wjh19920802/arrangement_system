@@ -305,7 +305,13 @@
             align: 'center',
             key: 'applyCategoryName',
             render:(h,params)=>{
-              return params.row.regectType==1?'驳回到地市':'驳回到省院';
+              if(params.row.regectType == null || params.row.regectType == '') {
+                return '--'
+              }else if(params.row.regectType == 1) {
+                return '驳回到省院'
+              }else if(params.row.regectType == 2) {
+                return '驳回到地市'
+              }
             }
           },
           {

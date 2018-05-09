@@ -87,155 +87,157 @@
                     <Icon type="pinpoint"></Icon>
                     班次列表
                 </p>
-              <Table border ref="selection" :columns="columns1" :data="data1" @on-selection-change="selectMany" class="unarranfeTable"></Table>
+              <Table border ref="selection" :columns="columns1" :data="data1" @on-selection-change="selectMany" class="unarrangeTable"></Table>
               <Button class="sumbit_many" type="primary" @click="submitMany">批量提交</Button>
               <!--<div class="sumbit_many" @click="headArrangeMany">总部直排</div>-->
               <Page :total="total1" :current="pageNumber1" :page-size="pageSize1" @on-change="changePage1" show-total style="float: right;margin-top: 20px;" ></Page>
             </Card>
             </Col>
         </Row>
-      <!--标记弹窗-->
-      <Modal width="40%" v-model="addTag" title="添加标记" @on-ok="submitAdd">
-        <p>标记对象</p>
-        <Select v-model="tagOption" style="margin-bottom: 20px;">
-          <Option value="师资">师资</Option>
-          <Option value="班级">班级</Option>
-        </Select>
-        <div>
-          <p>备注</p>
-          <Input v-model="signNote" type="textarea" placeholder=""></Input>
-        </div>
-      </Modal>
-      <Modal  width="40%"
-              v-model="tagModal"
-              title="添加标记"
-              @on-ok="submitTag"
-              ok-text="保存"
-      >
-        <h3 class="operate" @click="addNewTag">添加新标记<Icon type="plus-circled" style="font-size: 21px;vertical-align: top;margin-left: 20px;"></Icon></h3>
-        <h4 v-for="item,index in classCategorySigns" style="position: relative;margin-bottom: 10px;background: #ccc;border-radius: 10px;padding: 10px;font-size: 14px;">
-          <p>
-            <span style="width: 90px;display: inline-block;">{{index + 1}}、标记对象:</span><span>{{item.signType}}</span>
-          </p>
-          <p>
-            <span style="width: 90px;text-align: center;display: inline-block">备注 :</span><span>{{item.signNote}}</span>
-          </p>
-          <span @click="deleteTag(index)"><Icon type="ios-close-empty" style="position: absolute;right: 2px;top: -4px;color: red;font-size: 30px;width: 20px;height: 20px;"></Icon></span>
-        </h4>
-      </Modal>
-      <!--驳回弹窗-->
-      <Modal  width="40%"
-              v-model="rejectModal"
-              title="驳回"
-              @on-ok="submitReject"
-      >
-        <Select v-model="checkState">
-          <Option value="2">驳回省院</Option>
-          <Option value="1">驳回地方</Option>
-        </Select>
-        <div style="margin-top: 10px;">
-          <p>备注:</p>
-          <Input v-model="regectReason" type="textarea" placeholder=""></Input>
-        </div>
-      </Modal>
-      <!--合并开班弹窗-->
-      <Modal width="1000px"
-             v-model="isMerge"
-             title="合并开班"
-             @on-ok="mergeClass"
-      >
-        <Card>
-          <p slot="title">
-            <Icon type="pinpoint"></Icon>
-            查询条件
-          </p>
-          <Form :model="formItem2" :label-width="100">
-            <Row>
-              <Col span="6">
-              <FormItem label="班级名称" prop="classInfoName">
-                <Input v-model="formItem2.classInfoName" placeholder=""></Input>
-              </FormItem>
-              </Col>
-              <Col span="6">
-              <FormItem label="学习中心" prop="studyCenterIdList">
-                <Select v-model="formItem2.studyCenterIdList">
-                  <Option value=''>请选择</Option>
-                  <Option v-for="item in provinces" :key="item.areaid" :value="item.areaid">{{item.name}}</Option>
-                </Select>
-              </FormItem>
-              </Col>
-              <Col span="6">
-              <FormItem label="项目类型" prop="projectId">
-                <Select v-model="formItem2.projectId" @on-change="findCategory">
-                  <Option value="">请选择</Option>
-                  <Option value="1">公务员（国考）</Option>
-                  <Option value="2">公务员（省考）</Option>
-                  <Option value="4">事业单位</Option>
-                </Select>
-              </FormItem>
-              </Col>
-              <Col span="6">
-              <FormItem label="班级系列" prop="classTypeId">
-                <Select v-model="formItem2.classTypeId">
-                  <Option value="">请选择</Option>
-                  <Option :value="item.id" v-for="item in classSeriesList" :key="item.id">{{item.classSeriesName}}</Option>
-                </Select>
-              </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span="12">
-              <FormItem label="开课时间">
-                <DatePicker type="daterange" placeholder="" v-model="formItem2.openClassTime"></DatePicker>
-              </FormItem>
-              </Col>
-              <Col span="12">
-              <FormItem label="结课时间">
-                <DatePicker type="daterange" placeholder="" v-model="formItem2.closeClassTime"></DatePicker>
-              </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span="6">
-              <FormItem label="考试类型" prop="examStyleId">
-                <Select v-model="formItem2.examStyleId">
-                  <Option value="">请选择</Option>
-                  <Option value="1">笔试</Option>
-                  <Option value="2">面试</Option>
-                  <Option value="3">笔试 + 面试</Option>
-                </Select>
-              </FormItem>
-              </Col>
-              <Col span="6">
-              <FormItem label="科目" prop="categoryId">
-                <Select v-model="formItem2.categoryId">
-                  <Option value="">请选择</Option>
-                  <Option v-for="item in categoryList" :key="item.id" :value="item.id">{{item.categoryName}}</Option>
-                </Select>
-              </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <!--<Col span="6">
-              <FormItem label="排序">
-                  <Select v-model="formItem.orderByCategory">
-                      <Option value="科目时间由近及远">科目时间由近及远</Option>
-                  </Select>
-              </FormItem>
-              </Col>-->
-              <Col span="6">
-              <FormItem>
-                <Button type="primary" @click="search2">查询</Button>
-                <!--<Button type="ghost" style="margin-left: 8px">重置</Button>-->
-              </FormItem>
-              </Col>
-            </Row>
-          </Form>
-          <Table border ref="selection" :columns="columns2" :data="data2" @on-selection-change="selectMany2" class="unarranfeTable"></Table>
-          <Page :total="total2" :current="pageNumber2" :page-size="pageSize2" @on-change="changePage2" show-total style="margin-top: 20px;"></Page>
-        </Card>
-      </Modal>
-    </div>
+        <!--标记弹窗-->
+        <Modal width="40%" v-model="addTag" title="添加标记" @on-ok="submitAdd">
+          <p>标记对象</p>
+          <Select v-model="tagOption" style="margin-bottom: 20px;">
+            <Option value="师资">师资</Option>
+            <Option value="班级">班级</Option>
+          </Select>
+          <div>
+            <p>备注</p>
+            <Input v-model="signNote" type="textarea" placeholder=""></Input>
+          </div>
+        </Modal>
+        <Modal  width="40%"
+                v-model="tagModal"
+                title="添加标记"
+                @on-ok="submitTag"
+                ok-text="保存"
+        >
+          <h3 class="operate" @click="addNewTag">添加新标记<Icon type="plus-circled" style="font-size: 21px;vertical-align: top;margin-left: 20px;"></Icon></h3>
+          <h4 v-for="item,index in classCategorySigns" style="position: relative;margin-bottom: 10px;background: #ccc;border-radius: 10px;padding: 10px;font-size: 14px;">
+            <p>
+              <span style="width: 90px;display: inline-block;">{{index + 1}}、标记对象:</span><span>{{item.signType}}</span>
+            </p>
+            <p>
+              <span style="width: 90px;text-align: center;display: inline-block">备注 :</span><span>{{item.signNote}}</span>
+            </p>
+            <span @click="deleteTag(index)"><Icon type="ios-close-empty" style="position: absolute;right: 2px;top: -4px;color: red;font-size: 30px;width: 20px;height: 20px;"></Icon></span>
+          </h4>
+        </Modal>
+        <!--驳回弹窗-->
+        <Modal  width="40%"
+                v-model="rejectModal"
+                title="驳回"
+                @on-ok="submitReject"
+        >
+          <Select v-model="checkState">
+            <Option value="2" v-show="role != '省院'">驳回省院</Option>
+            <Option value="1">驳回地方</Option>
+          </Select>
+          <div style="margin-top: 10px;">
+            <p>备注:</p>
+            <Input v-model="regectReason" type="textarea" placeholder=""></Input>
+          </div>
+        </Modal>
+        <!--合并开班弹窗-->
+        <Modal width="1000px"
+               v-model="isMerge"
+               title="合并开班"
+               @on-ok="mergeClass"
+        >
+          <Card>
+            <div class="unarrangeTable">
+              <p slot="title">
+                <Icon type="pinpoint"></Icon>
+                查询条件
+              </p>
+              <Form :model="formItem2" :label-width="100">
+                <Row>
+                  <Col span="6">
+                  <FormItem label="班级名称" prop="classInfoName">
+                    <Input v-model="formItem2.classInfoName" placeholder=""></Input>
+                  </FormItem>
+                  </Col>
+                  <Col span="6">
+                  <FormItem label="学习中心" prop="studyCenterIdList">
+                    <Select v-model="formItem2.studyCenterIdList">
+                      <Option value=''>请选择</Option>
+                      <Option v-for="item in provinces" :key="item.areaid" :value="item.areaid">{{item.name}}</Option>
+                    </Select>
+                  </FormItem>
+                  </Col>
+                  <Col span="6">
+                  <FormItem label="项目类型" prop="projectId">
+                    <Select v-model="formItem2.projectId" @on-change="findCategory">
+                      <Option value="">请选择</Option>
+                      <Option value="1">公务员（国考）</Option>
+                      <Option value="2">公务员（省考）</Option>
+                      <Option value="4">事业单位</Option>
+                    </Select>
+                  </FormItem>
+                  </Col>
+                  <Col span="6">
+                  <FormItem label="班级系列" prop="classTypeId">
+                    <Select v-model="formItem2.classTypeId">
+                      <Option value="">请选择</Option>
+                      <Option :value="item.id" v-for="item in classSeriesList" :key="item.id">{{item.classSeriesName}}</Option>
+                    </Select>
+                  </FormItem>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span="12">
+                  <FormItem label="开课时间">
+                    <DatePicker type="daterange" placeholder="" v-model="formItem2.openClassTime"></DatePicker>
+                  </FormItem>
+                  </Col>
+                  <Col span="12">
+                  <FormItem label="结课时间">
+                    <DatePicker type="daterange" placeholder="" v-model="formItem2.closeClassTime"></DatePicker>
+                  </FormItem>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span="6">
+                  <FormItem label="考试类型" prop="examStyleId">
+                    <Select v-model="formItem2.examStyleId">
+                      <Option value="">请选择</Option>
+                      <Option value="1">笔试</Option>
+                      <Option value="2">面试</Option>
+                      <Option value="3">笔试 + 面试</Option>
+                    </Select>
+                  </FormItem>
+                  </Col>
+                  <Col span="6">
+                  <FormItem label="科目" prop="categoryId">
+                    <Select v-model="formItem2.categoryId">
+                      <Option value="">请选择</Option>
+                      <Option v-for="item in categoryList" :key="item.id" :value="item.id">{{item.categoryName}}</Option>
+                    </Select>
+                  </FormItem>
+                  </Col>
+                </Row>
+                <Row>
+                  <!--<Col span="6">
+                  <FormItem label="排序">
+                      <Select v-model="formItem.orderByCategory">
+                          <Option value="科目时间由近及远">科目时间由近及远</Option>
+                      </Select>
+                  </FormItem>
+                  </Col>-->
+                  <Col span="6">
+                  <FormItem>
+                    <Button type="primary" @click="search2">查询</Button>
+                    <!--<Button type="ghost" style="margin-left: 8px">重置</Button>-->
+                  </FormItem>
+                  </Col>
+                </Row>
+              </Form>
+              <Table border ref="selection" :columns="columns2" :data="data2" @on-selection-change="selectMany2" id="merge_table"></Table>
+              <Page :total="total2" :current="pageNumber2" :page-size="pageSize2" @on-change="changePage2" show-total style="margin-top: 20px;"></Page>
+            </div>
+          </Card>
+        </Modal>
+      </div>
 </template>
 
 <script>
@@ -243,6 +245,7 @@
   export default {
     data () {
       return {
+        role:localStorage.getItem('role'),
         formItem1: {
           classInfoName: '',
           studyCenterIdList: '',
@@ -278,20 +281,35 @@
             align: 'center',
             key: 'classInfoName',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.classInfoName?params.row.classInfoName:'')
+              return h('div',{class:'item2'},[
+                h('div',{width:'8px',height:'8px'},[
+                  h('Icon',{
+                    props:{
+                      type:'information-circled',
+                      size:'10px',
+                      color:'red'
+                    },
+                    class:params.row.signs.length>0?'icon-sign iconShow':'icon-sign iconNotShow'
+                  })
+                ]),
+                h('div',params.row.classInfoName?params.row.classInfoName:'--'),
+              ])
             }
           },
           {
             title: '班级系列',
             align: 'center',
             key: 'classSeriesName',
+            render:(h,params)=>{
+              return h('div',{class:'item2'},params.row.classSeriesName?params.row.classSeriesName:'--')
+            }
           },
           {
             title: '申请科目',
             align: 'center',
             key: 'applyCategoryName',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.categoryName?params.row.categoryName:'');
+              return h('div',{class:'item2'},params.row.categoryName?params.row.categoryName:'--');
             }
           },
           {
@@ -300,7 +318,7 @@
             key: 'studyTimeSet',
             render: (h, params) => {
               if(params.row.studyTimeSet ===null) {
-                return '--'
+                return h('div',{class:'item2'},'--')
               }else if(params.row.studyTimeSet.length > 0) {
                 return h('div',{class:'studyTime'},(() => {
                   let studyTimeSet = params.row.studyTimeSet;
@@ -311,7 +329,7 @@
                   return ele
                 })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             },
           },
@@ -325,12 +343,12 @@
                   let categoryTeacherDos = params.row.categoryTeacherDos;
                   let ele = [];
                   for (let i = 0; i < categoryTeacherDos.length; i++) {
-                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].categoryName?categoryTeacherDos[i].categoryName:''))
+                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].categoryName?categoryTeacherDos[i].categoryName:'--'))
                   }
                   return ele
                 })())
               }else {
-               return ''
+               return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -340,7 +358,7 @@
             key: 'day',
             render:(h,params)=>{
               if(params.row.studyTimeSet ===null) {
-                return '--'
+                return h('div',{class:'item2'},'--')
               }else if(params.row.categoryTeacherDos.length > 0) {
               return h('div',{class:'day'},(() => {
                 let categoryTeacherDos = params.row.categoryTeacherDos;
@@ -351,7 +369,7 @@
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -365,12 +383,12 @@
                 let categoryTeacherDos = params.row.categoryTeacherDos;
                 let ele = [];
                 for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.name:''))
+                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.name:'--'))
                 }
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -384,12 +402,12 @@
                 let categoryTeacherDos = params.row.categoryTeacherDos;
                 let ele = [];
                 for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.level:''))
+                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.level:'--'))
                 }
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -403,12 +421,12 @@
                 let categoryTeacherDos = params.row.categoryTeacherDos;
                 let ele = [];
                 for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.gender:''))
+                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.gender:'--'))
                 }
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -422,12 +440,12 @@
                 let categoryTeacherDos = params.row.categoryTeacherDos;
                 let ele = [];
                 for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.mobile:''))
+                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.mobile:'--'))
                 }
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -452,7 +470,7 @@
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -477,7 +495,7 @@
                   return ele
                 })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -494,7 +512,7 @@
             align:'center',
             key:'teachPlace',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.teachPlace?params.row.teachPlace:'');
+              return h('div',{class:'item2'},params.row.teachPlace?params.row.teachPlace:'--');
             }
           },
           {
@@ -502,7 +520,7 @@
             align:'center',
             key:'totalTeacher',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.totalTeacher?params.row.totalTeacher:'');
+              return h('div',{class:'item2'},params.row.totalTeacher?params.row.totalTeacher:'--');
             }
           },
           {
@@ -510,7 +528,7 @@
             align:'center',
             key:'beiz',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.beiz?params.row.beiz:'');
+              return h('div',{class:'item2'},params.row.beiz?params.row.beiz:'--');
             }
           },
           {
@@ -519,7 +537,7 @@
             width:'150',
             align: 'center',
             render: (h, params) => {
-              return h('div', [
+              return h('div', {class:'wrap'},[
                 h('Button', {
                   props: {
                     type: 'success',
@@ -536,6 +554,22 @@
                     }
                   }
                 }, '排课'),
+                h('Button', {
+                  props: {
+                    type: 'success',
+                    size: 'small',
+                    show:this.isShow
+                  },
+                  style: {
+                    marginRight: '5px',
+                    marginBottom: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.headArrange(params.row.classInfoCategoryLinkId)
+                    }
+                  }
+                }, '总部直排'),
                 h('Button', {
                   props: {
                     type: 'primary',
@@ -568,7 +602,7 @@
                     }
                   }
                 }, '驳回'),
-                h('Button', {
+                h('Button',{
                   props: {
                     type: 'info',
                     size: 'small',
@@ -578,12 +612,13 @@
                     marginRight: '5px',
                     marginBottom: '5px'
                   },
-                  on: {
+                  on:{
                     click: () => {
                       this.tag(params.row.classInfoCategoryLinkId)
                     }
                   }
-                }, '添加标记'),
+                },'添加标记')
+                ,
                 h('Button', {
                   props: {
                     type: 'primary',
@@ -599,23 +634,7 @@
                       this.merge(params.row.categoryId,params.row.classInfoId,params.row.classInfoCategoryLinkId)
                     }
                   }
-                }, '合并开班'),
-                h('Button', {
-                  props: {
-                    type: 'primary',
-                    size: 'small',
-                    show:this.isShow
-                  },
-                  style: {
-                    marginRight: '5px',
-                    marginBottom: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      this.headArrange(params.row.classInfoCategoryLinkId)
-                    }
-                  }
-                }, '总部直排')
+                }, '合并开班')
               ]);
             }
           }
@@ -631,20 +650,23 @@
             align: 'center',
             key: 'classInfoName',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.classInfoName?params.row.classInfoName:'')
+              return h('div',{class:'item2'},params.row.classInfoName?params.row.classInfoName:'--')
             }
           },
           {
             title: '班级系列',
             align: 'center',
             key: 'classSeriesName',
+            render:(h,params)=>{
+              return h('div',{class:'item2'},params.row.classSeriesName?params.row.classSeriesName:'--')
+            }
           },
           {
             title: '申请科目',
             align: 'center',
             key: 'applyCategoryName',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.categoryName?params.row.categoryName:'');
+              return h('div',{class:'item2'},params.row.categoryName?params.row.categoryName:'--');
             }
           },
           {
@@ -653,7 +675,7 @@
             key: 'studyTimeSet',
             render: (h, params) => {
               if(params.row.studyTimeSet ===null) {
-                return '--'
+                return h('div',{class:'item2'},'--')
               }else if(params.row.studyTimeSet.length > 0) {
                 return h('div',{class:'studyTime'},(() => {
                   let studyTimeSet = params.row.studyTimeSet;
@@ -664,7 +686,7 @@
                   return ele
                 })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             },
           },
@@ -678,12 +700,12 @@
                   let categoryTeacherDos = params.row.categoryTeacherDos;
                   let ele = [];
                   for (let i = 0; i < categoryTeacherDos.length; i++) {
-                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].categoryName))
+                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].categoryName?categoryTeacherDos[i].categoryName:'--'))
                   }
                   return ele
                 })())
               }else {
-               return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -693,7 +715,7 @@
             key: 'day',
             render:(h,params)=>{
               if(params.row.studyTimeSet ===null) {
-                return '--'
+                return h('div',{class:'item2'},'--')
               }else if(params.row.categoryTeacherDos.length > 0) {
                 return h('div',{class:'day'},(() => {
                   let categoryTeacherDos = params.row.categoryTeacherDos;
@@ -704,7 +726,7 @@
                   return ele
                 })())
               }else {
-               return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -718,12 +740,12 @@
                   let categoryTeacherDos = params.row.categoryTeacherDos;
                   let ele = [];
                   for (let i = 0; i < categoryTeacherDos.length; i++) {
-                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher.name))
+                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.name:'--'))
                   }
                   return ele
                 })())
               }else {
-               return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -737,12 +759,12 @@
                 let categoryTeacherDos = params.row.categoryTeacherDos;
                 let ele = [];
                 for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher.level))
+                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.level:'--'))
                 }
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -756,12 +778,12 @@
                 let categoryTeacherDos = params.row.categoryTeacherDos;
                 let ele = [];
                 for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher.gender))
+                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.gender:'--'))
                 }
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -775,12 +797,12 @@
                 let categoryTeacherDos = params.row.categoryTeacherDos;
                 let ele = [];
                 for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher.mobile))
+                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher?categoryTeacherDos[i].teacher.mobile:'--'))
                 }
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -799,7 +821,7 @@
                 return ele
               })())
               }else {
-                return ''
+                return h('div',{class:'item2'},'--')
               }
             }
           },
@@ -808,7 +830,7 @@
             align: 'center',
             key: 'erp',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.erpNum.allNum?params.row.erpNum.allNum:'');
+              return h('div',{class:'item2'},params.row.erpNum.allNum?params.row.erpNum.allNum:'--');
             }
           },
           {
@@ -816,7 +838,7 @@
             align:'center',
             key:'teachPlace',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.teachPlace?params.row.teachPlace:'');
+              return h('div',{class:'item2'},params.row.teachPlace?params.row.teachPlace:'--');
             }
           },
           {
@@ -824,7 +846,7 @@
             align:'center',
             key:'totalTeacher',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.totalTeacher?params.row.totalTeacher:'');
+              return h('div',{class:'item2'},params.row.totalTeacher?params.row.totalTeacher:'--');
             }
           },
           {
@@ -832,7 +854,7 @@
             align:'center',
             key:'beiz',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.beiz?params.row.beiz:'');
+              return h('div',{class:'item2'},params.row.beiz?params.row.beiz:'--');
             }
           }
         ],
@@ -864,7 +886,8 @@
         currentClassInfoCategoryLinkId:-1,
         categoryList:[],
         classInfoCategoryLinkIdList:[],   //批量提交classInfoCategoryLinkIdList 列表
-        majorClassId:''
+        majorClassId:'',
+        signStr:''    //标记内容
       }
     },
     computed:{
@@ -1088,6 +1111,7 @@
           .then((res)=>{
             if(res.data.code == 0) {
               this.$Message.success('保存成功');
+              this.search1()
             }else {
               this.$Message.error(res.data.message);
             }
@@ -1152,6 +1176,7 @@
               .then((res)=>{
                 if(res.data.code == 0) {
                   this.$Message.success('提交成功');
+                  this.search1();
                 }else {
                   this.$Message.error(res.data.message);
                 }
@@ -1314,76 +1339,11 @@
 
 <style lang="less" rel="stylesheet/less">
     #unarrange {
-        #unarrange_table,#merge_table {
-            border: 1px solid #e9eaec;
-            th{
-                border: 1px solid #e9eaec;
-                min-height: 55px;
-                background-color: #f8f8f9;
-                padding: 10px 5px;
-            }
-            td {
-                border: 1px solid #e9eaec;
-                max-width: 150px;
-                min-height: 45px;
-                font-size: 12px;
-                word-break: break-all;
-                overflow: hidden;
-                .ivu-select-selection{
-                    border: transparent!important;
-                }
-            }
-        }
-        .ivu-checkbox-wrapper {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-        }
-        .unarranfeTable td .ivu-table-cell {
-            height: 100%;
-            .studyTime ,.category,.day,.teacher,.level,.gender,.mobile,.ifNotice{
-                height: 100%;
-                .item:last-of-type {
-                    border-bottom: none;
-                }
-            }
-            .item {
-                height: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: space-around;
-                border-bottom: 1px solid #e9eaec;
-            }
-            .item2 {
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: space-around;
-            }
-        }
-        .jiaban {
-            height: 100%;
-            overflow: hidden;
-            border-bottom: 1px solid green;
-            border-bottom: 1px solid rgb(233, 234, 236);
-            display: flex;
-            justify-content: space-around;
-            .jiaban_content {
-                align-self: center;
-            }
-        }
         .aaa{
             color:#10b321;
         }
         .bbb{
             color:#f3052b;
-        }
-        .operate{
-            color: #2d8cf0;
-            margin: 0 3px;
-            cursor: pointer;
-            margin-bottom: 10px;
         }
         .sumbit_many {
             float: left;
@@ -1396,51 +1356,89 @@
             margin-left: 0;
             margin-right: 0;
         }
-    }
-    /*.thead{
-        text-align: center;
-        .tr{
-            background-color: #f8f8f9;
-            width: 100%;
+        .ivu-poptip-popper {
+          z-index: 9999;
+        }
+        .unarrangeTable {
+          .ivu-table-tbody {
+            overflow: initial;
+          }
+          #merge_table {
+            border: 1px solid #e9eaec;
+            th{
+              border: 1px solid #e9eaec;
+              min-height: 55px;
+              background-color: #f8f8f9;
+              padding: 10px 5px;
+            }
+            td {
+              border: 1px solid #e9eaec;
+              max-width: 150px;
+              min-height: 45px;
+              font-size: 12px;
+              word-break: break-all;
+              overflow: hidden;
+              .ivu-select-selection{
+                border: transparent!important;
+              }
+            }
+          }
+          .ivu-table-cell {
+            height: 100%;
             display: flex;
-            border-top:1px solid #e9eaec;
-            border-left:1px solid #e9eaec;
-            border-bottom:1px solid #e9eaec;
-            justify-content: flex-start;
-            .th{
-                flex:1;
-                border-right:1px solid #e9eaec;
-                display: inline-block;
-                min-width: 30px;
-                min-height: 50px;
-                padding: 14px 5px;
+            justify-content: space-around;
+            /*position:relative;*/
+            .ivu-checkbox-wrapper {
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-around;
             }
-            .operate{
-                min-width: 250px;
+            .wrap {
+              align-self: center;
             }
+            .studyTime ,.category,.day,.teacher,.level,.gender,.mobile,.ifNotice{
+              width: 100%;
+              height: 100%;
+              .item:last-of-type {
+                border-bottom: none;
+              }
+            }
+            .item {
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-around;
+              border-bottom: 1px solid #e9eaec;
+            }
+            .item2 {
+              position: relative;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-around;
+            }
+          }
+        }
+         .ivu-poptip-inner {
+           white-space: pre-wrap;
+         }
+        .icon-sign {
+          position: absolute;
+          top: 5px;
+          left: 1px;
+        }
+        .iconNotShow {
+          display: none;
+        }
+        .iconShow {
+          display: inherit;
         }
     }
-    .tbody{
-        text-align: center;
-        background-color: #fff;
-        border-left:1px solid #e9eaec;
-        border-bottom:1px solid #e9eaec;
-        font-size: 12px;
-        .tr{
-            display: flex;
-            justify-content: flex-start;
-            .td{
-                flex:1;
-                border-right:1px solid #e9eaec;
-                border-bottom:1px solid #e9eaec;
-                min-width: 30px;
-                min-height: 50px;
-                line-height: 2;
-                padding: 15px 5px;
-            }
-            .operate{
-                min-width: 250px;
-            }
-        }
-    }*/
+    .operate{
+      color: #2d8cf0;
+      margin: 0 3px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
 </style>

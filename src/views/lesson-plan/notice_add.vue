@@ -129,7 +129,7 @@
                               已上传的职位表
                             </p>
                             <div v-for="item,index in postInfoListBefore" style="margin-left: 4em;">
-                              <span>{{item.filename}}</span> <a class="operate" :href="url + '/v1/announce/download-attachment?url=' + item.ossUrl + '&filename=' + item.filename" >下载附件</a><span class="operate" @click="deletePostInfo(item,index)">删除附件</span>
+                              <span>{{item.filename}}</span> <a class="operate" :href="url + 'announce/download-attachment?url=' + item.ossUrl + '&filename=' + item.filename" >下载附件</a><span class="operate" @click="deletePostInfo(item,index)">删除附件</span>
                             </div>
                           </div>
                         </Row>
@@ -151,7 +151,7 @@
                               已上传的其他附件
                             </p>
                             <div v-for="item,index in oldExamListBefore" style="margin-left: 4em;">
-                              <span>{{item.filename}}</span> <a class="operate" :href="url + '/v1/announce/download-attachment?url=' + item.ossUrl + '&filename=' + item.filename">下载附件</a><span class="operate" @click="deleteOldExam(item,index)">删除附件</span>
+                              <span>{{item.filename}}</span> <a class="operate" :href="url + 'announce/download-attachment?url=' + item.ossUrl + '&filename=' + item.filename">下载附件</a><span class="operate" @click="deleteOldExam(item,index)">删除附件</span>
                             </div>
                           </div>
                         </Row>
@@ -650,7 +650,7 @@
             },
             downLoad(ossUrl,filename) {
               this.$http({
-                url:this.$store.state.app.baseUrl + '/v1/announce/download-attachment?url=' + ossUrl + '&filename=' + filename,
+                url:this.$store.state.app.baseUrl + 'announce/download-attachment?url=' + ossUrl + '&filename=' + filename,
                 method:'get',
               })
                 .then((res)=>{

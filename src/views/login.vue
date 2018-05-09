@@ -76,8 +76,10 @@ export default {
                         this.$Message.success('登陆成功！');
                         let menus = res.data.data.user.topMenuList;
                         let secondMenuList = res.data.data.user.secondMenuList;
+                        let role = res.data.data.user.roleNameSet[0];
                         localStorage.setItem('secondMenuList',JSON.stringify(secondMenuList));
                         localStorage.setItem('menus',JSON.stringify(menus));
+                        localStorage.setItem('role',role);
                         Cookies.set('user', this.form.userName);
                         Cookies.set('access', 0);
                         Cookies.set('accessToken', res.data.data.accessToken, 1);

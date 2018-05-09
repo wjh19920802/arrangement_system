@@ -72,14 +72,17 @@ export default {
                 }
             }
             if (willpush) {
-              if(this.$route.name == name){
-                  /*window.location.reload()*/
-                // this.$router.go(0)
-              }else{
-                this.$router.push({
-                  name: name
-                });
-              }
+              // if(this.$route.name == name){
+              //     /*window.location.reload()*/
+              //   this.$router.go(0)
+              // }else{
+              //   this.$router.push({
+              //     name: name
+              //   });
+              // }
+              this.$router.push({
+                name: name
+              });
             }
             this.$emit('on-change', name);
         }

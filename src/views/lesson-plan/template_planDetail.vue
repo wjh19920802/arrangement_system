@@ -51,7 +51,7 @@
                         已上传的附件
                       </p>
                       <div v-for="item,index in uploadList" style="margin-left: 4em;">
-                        <span>{{item.filename}}</span> <a class="operate" :href="url + '/v1/announce/download-attachment?url=' + item.ossUrl + '&filename=' + item.filename">下载附件</a><span class="operate" @click="deleteAttachment(item,index)">删除附件</span>
+                        <span>{{item.filename}}</span> <a class="operate" :href="url + 'announce/download-attachment?url=' + item.ossUrl + '&filename=' + item.filename">下载附件</a><span class="operate" @click="deleteAttachment(item,index)">删除附件</span>
                       </div>
                     </div>
                   </div>
@@ -1021,12 +1021,12 @@
           });
           let resetData = this.waitPlanData.minus(this.waitStashData);
           this.waitPlanData.forEach((item)=>{     //已选中之外的数据 _checked 设为false
-            resetData.forEach((item2)=>{
-              if(item.id == item2.id) {
-                item._checked = false;
-              }
-            })
-          });
+          resetData.forEach((item2)=>{
+            if(item.id == item2.id) {
+              item._checked = false;
+            }
+          })
+        });
       },
       addHourPlan () {
         //修改数据源中的值为输入框的值
@@ -1265,7 +1265,7 @@
               this.plannedData = res.data.data.content;
               this.total1 = res.data.data.total;
             } else {
-              this.$Message.error(error.message);
+              this.$Message.error(res.data.message);
             }
           })
           .catch((error)=>{
@@ -1292,7 +1292,7 @@
               });
               this.total2 = res.data.data.total;
             } else {
-              this.$Message.error(error.message);
+              this.$Message.error(res.data.message);
             }
           })
           .catch((error)=>{

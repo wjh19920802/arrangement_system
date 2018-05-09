@@ -391,7 +391,40 @@
       // }
     },
     mounted() {
-      this.search();
+      let url = this.$store.state.app.baseUrl  + 'course/query';
+      let data = Util.deepClone(this.formItem);
+      let checkStates = [];
+      if(data.checkState == 1 || data.checkState == 0) {
+        checkStates = [1,2,3,4,5,6,7];
+      }else if(data.checkState == 2) {
+        checkStates = [3,5,7];
+      }else if(data.checkState == 3) {
+        checkStates = [1];
+      }else if(data.checkState == 4) {
+        checkStates = [2,4,6];
+      }
+      data.checkStates = checkStates;
+      if(data.day == 0 && data.night == 0) {
+        data.classHour = null;
+      }else {
+        data.classHour = data.day + '天' + data.night + '晚';
+      }
+      data.schoolBeginsTime = new Date(data.schoolBeginsTime).getTime();
+      data.pageNumber = this.pageNumber;
+      data.pageSize = this.pageSize;
+      this.$http({
+        method: 'post',
+        url: url,
+        data: data,
+        headers: {'Content-type': 'application/json'}
+      })
+        .then((res)=>{
+          this.data1 = res.data.data.content;
+          this.total = res.data.data.total;
+        })
+        .catch(()=>{
+          this.$Message.error(error.message)
+        })
 
       //获取班级系列
       // 非组合班次

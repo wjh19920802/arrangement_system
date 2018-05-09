@@ -347,7 +347,6 @@
               params.interviewTime[0] = params.interviewTime[0].getTime();
               params.interviewTime[1] = params.interviewTime[1].getTime();
           }
-          console.log(this.$http)
           this.$http({
               method:'post',
               url:this.$store.state.app.baseUrl + 'announcement/query/',
@@ -365,7 +364,7 @@
               .catch((error)=> {
                   this.$Message.error(error.message)
               })
-      },
+      }
     },
     mounted () {
         this.$http(this.$store.state.app.baseUrl + 'area/getUserVisualProvince')
@@ -379,7 +378,6 @@
             }).catch((error)=>{
                 this.$Message.error(error.message);
             });
-        this.search();
     }
   };
 </script>

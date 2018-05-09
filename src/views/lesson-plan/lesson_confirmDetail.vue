@@ -51,7 +51,7 @@
                     已上传的附件
                   </p>
                   <div v-for="item,index in uploadList" style="margin-left: 4em;">
-                    <span>{{item.filename}}</span> <a class="operate" :href="url + '/v1/announce/download-attachment?url=' + item.ossUrl + '&filename=' + item.filename">下载附件</a><span class="operate" @click="deleteAttachment(item,index)">删除附件</span>
+                    <span>{{item.filename}}</span> <a class="operate" :href="url + 'announce/download-attachment?url=' + item.ossUrl + '&filename=' + item.filename">下载附件</a><span class="operate" @click="deleteAttachment(item,index)">删除附件</span>
                   </div>
                 </div>
               </div>

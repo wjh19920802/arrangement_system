@@ -160,7 +160,7 @@ export let baseRouter = [
       access:1,
       component: Main,
       children: [
-        { path: 'teacher_apply_unfinished_index', title: '未申请', access:1,name: 'teacher_unfinished_index', child:['apply_detail'], component: resolve => { require(['@/views/teacher-apply/unfinished.vue'], resolve); } },
+        { path: 'teacher_apply_unfinished_index', title: '未申请', access:1,name: 'teacher_unfinished_index', component: resolve => { require(['@/views/teacher-apply/unfinished.vue'], resolve); } },
       ]
     },
     {

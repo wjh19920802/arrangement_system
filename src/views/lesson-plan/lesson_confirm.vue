@@ -324,7 +324,7 @@
           .catch((error)=> {
             this.$Message.error(error.message)
           })
-      },
+      }
     },
     computed:{
       announceWrittenResultTimeStamp(){
@@ -366,6 +366,7 @@
         .then((res)=>{
           if(res.data.code == 0 ){
             this.provinces = res.data.data;
+            this.search();
           }else {
             this.$Message.error(res.data.message);
           }
@@ -373,7 +374,6 @@
         .catch((error)=>{
           this.$Message.error(error.message);
         });
-      this.search();
     }
   };
 </script>

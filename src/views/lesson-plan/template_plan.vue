@@ -18,7 +18,7 @@
                   <FormItem label="省份" prop="provinceId">
                     <Select v-model="formItem.provinceId">
                       <Option value="">请选择</Option>
-                      <Option v-for="(item,index) in provinces" :key="item.id" :value="item.id">{{item.cityName}}</Option>
+                      <Option v-for="(item,index) in provinces" :key="item.areaid" :value="item.areaid">{{item.name}}</Option>
                     </Select>
                   </FormItem>
                   </Col>
@@ -325,18 +325,17 @@
       }
     },
     mounted(){
-      this.$http(this.$store.state.app.baseUrl + 'area')
+      this.$http(this.$store.state.app.baseUrl + 'area/getUserVisualProvince')
         .then((res)=>{
           if(res.data.code == 0 ){
             this.provinces = res.data.data;
+            this.search();
           }else {
             this.$Message.error(res.data.message);
           }
         }).catch((error)=>{
         this.$Message.error(error.message);
       });
-
-      this.search()
     }
   };
 </script>

@@ -29,6 +29,9 @@
                         <p>
                             <span>学员组成情况：协议人数：{{classInfo.extraData.erpNumCompose.agreementNum}} &nbsp;&nbsp;&nbsp;   非协议人数:{{classInfo.extraData.erpNumCompose.noAgreementNum}}</span>
                         </p>
+                        <p>
+                          <span>备注:  {{classInfo.Beiz?classInfo.Beiz:'--'}}</span>
+                        </p>
                     </div>
                 </div>
             </Card>
@@ -180,7 +183,7 @@
                     <td>{{item.gender}}</td>
                     <td>{{item.level}}</td>
                     <td>{{item.institute}}</td>
-                    <td>{{item.mobile}}</td>
+                    <td>{{item.mobile?item.mobile:'--'}}</td>
                     <td>{{item.major?item.major:'--'}}</td>
                     <td>{{item.minor?item.minor:'--'}}</td>
                     <td>{{item.complaints == null?'--':item.complaints}}</td>
@@ -251,7 +254,7 @@
                 </div>
                 <div style="width: 100%;text-align: center">
                   <Button type="primary" size="large" @click="save">保存备注</Button>
-                  <Button type="primary" size="large">取消</Button>
+                  <Button type="primary" size="large" @click="back">&nbsp;&nbsp;返&nbsp;&nbsp;&nbsp;回&nbsp;&nbsp;</Button>
                 </div>
             </Card>
             <Card id="modify_history" class="margin-top-10">
@@ -283,10 +286,13 @@
             </Col>
             <Col span="18">
               <Select v-model="reason">
-                <Option value=""></Option>
-                <Option value="aaaaa">aaaaa</Option>
-                <Option value="bbbbb">bbbbb</Option>
-                <Option value="ccccc">ccccc</Option>
+                <Option value="">--请选择--</Option>
+                <Option value="修改时间">修改时间</Option>
+                <Option value="车次延误或者取消">车次延误或者取消</Option>
+                <Option value="投诉">投诉</Option>
+                <Option value="授课师资生病">授课师资生病</Option>
+                <Option value="课程调整">课程调整</Option>
+                <Option value="课程调整">其他问题</Option>
               </Select>
             </Col>
           </Row>
@@ -316,6 +322,7 @@
             erpNumCompose:{}
           },
           priceDesc:'',
+          beiz:''
         },
         beiz:'' ,    //备注
         // ruleValidate: {
@@ -828,6 +835,9 @@
           }).catch((error)=>{
           this.$Message.error(error.message);
         });
+      },
+      back () {
+        window.history.go(-1);
       }
     },
     filters: {

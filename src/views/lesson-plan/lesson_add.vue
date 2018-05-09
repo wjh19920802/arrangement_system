@@ -35,8 +35,6 @@
                 <Input v-model="lessonAddNotGroup.rootDirectoryName"></Input>
               </FormItem>
               </Col>
-            </Row>
-            <Row>
               <Col span="12">
               <FormItem label="课时" prop="classHour" class="classHour">
                 <InputNumber :min="1" v-model="lessonAddNotGroup.classHour.day"></InputNumber>
@@ -45,6 +43,8 @@
                 <span style="display: inline-block;width: 10px;text-align: center;margin:0 20px;">晚</span>
               </FormItem>
               </Col>
+            </Row>
+            <Row>
               <Col span="12">
               <FormItem prop="categoryIds" label="科目">
                 <Select multiple v-model="lessonAddNotGroup.categoryIds"  :label-in-value="true" >
@@ -52,20 +52,18 @@
                 </Select>
               </FormItem>
               </Col>
-            </Row>
-            <Row>
               <Col span="12">
               <FormItem prop="schoolBeginsTime" label="预计开课日期">
                 <DatePicker type="date" v-model="lessonAddNotGroup.schoolBeginsTime" placeholder="输入预计开课时间"></DatePicker>
               </FormItem>
               </Col>
+            </Row>
+            <Row>
               <Col span="12">
               <FormItem prop="courseName" label="班级名称">
                 <Input v-model="lessonAddNotGroup.courseName"></Input>
               </FormItem>
               </Col>
-            </Row>
-            <Row>
               <Col span="12">
               <FormItem prop="openClassTime" label="开班时间">
                 <Select v-model="lessonAddNotGroup.openClassTime">
@@ -75,6 +73,8 @@
                 </Select>
               </FormItem>
               </Col>
+            </Row>
+            <Row>
               <Col span="12">
               <FormItem prop="projectTag" label="项目">
                 <Select v-model="lessonAddNotGroup.projectTag">
@@ -84,16 +84,9 @@
                 </Select>
               </FormItem>
               </Col>
-            </Row>
-            <Row>
               <Col span="12">
               <FormItem label="休息天数" prop="dayOfRest" class="dayOfRest">
                 <InputNumber :min="0" v-model="lessonAddNotGroup.dayOfRest"></InputNumber>
-              </FormItem>
-              </Col>
-              <Col span="6" v-if="lessonAddNotGroup.examStyleId == 2">
-              <FormItem prop="interviewGroupNumber" label="面试分组人数" class="interviewGroupNumber">
-                <Input :min="1" v-model="lessonAddNotGroup.interviewGroupNumber"></Input>
               </FormItem>
               </Col>
             </Row>
@@ -104,6 +97,13 @@
                   <Option value="">请选择</Option>
                   <Option v-for="item in erpClassTypeList" :value="item.id" :key="item.id">{{item.classTypeName}}</Option>
                 </Select>
+              </FormItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col span="6" v-if="lessonAddNotGroup.examStyleId == 2">
+              <FormItem prop="interviewGroupNumber" label="面试分组人数" class="interviewGroupNumber">
+                <Input :min="1" v-model="lessonAddNotGroup.interviewGroupNumber"></Input>
               </FormItem>
               </Col>
             </Row>
@@ -181,8 +181,8 @@
                   </FormItem>
                 </div>
                 </Col>
-                <Col span="8">
-                <FormItem prop="mark" label="备注">
+                <Col span="8" class="price_mark">
+                <FormItem label="备注">
                   <Input type="textarea" v-model="item.mark" :rows="1"></Input>
                 </FormItem>
                 </Col>
@@ -250,6 +250,7 @@
                   <th>操作</th>
                 </tr>
                 <tr v-for="item,index in mergedData" style="background-color:rgba(153, 153, 255,0.5)">
+                  <td>{{item.courseName}}</td>
                   <td>{{item.classSeries.classSeriesName}}</td>
                   <td>{{item.rootDirectoryName}}</td>
                   <td>{{item.examStyleId ==1?'笔试':item.examStyleId ==2?'面试':'笔试+面试'}}</td>
@@ -260,7 +261,11 @@
                   <td>{{item.projectId ==1?'公务员(国考)':item.projectId ==2?'公务员(省考)':'事业单位'}}</td>
                   <td>{{item.isClosed ==1?'封闭班':'非封闭班'}}</td>
                   <td>{{item.dayOfRest}}</td>
-                  <td>{{item.coursePrice}}</td>
+                  <td>
+                    <div v-for="i in item.priceInfoArray">
+                      <span>{{i.agreement + '班-' + i.price  + (i.stay==null?'-':'-'+i.stay)  + (i.writtenTf?'-笔试不过退费:'+i.writtenTf:'') + (i.interviewTf?'-面试不过退费:'+i.interviewTf:'')}}</span>
+                    </div>
+                  </td>
                   <td>{{item.interviewGroupNumber}}</td>
                   <td>{{item.classOrientation}}</td>
                   <td>{{item.branchCampusOption}}</td>
@@ -270,6 +275,7 @@
                   </td>
                 </tr>
                 <tr v-for="item,index in searchedData">
+                  <td>{{item.courseName}}</td>
                   <td>{{item.classSeries.classSeriesName}}</td>
                   <td>{{item.rootDirectoryName}}</td>
                   <td>{{item.examStyleId ==1?'笔试':item.examStyleId ==2?'面试':'笔试+面试'}}</td>
@@ -280,15 +286,22 @@
                   <td>{{item.projectId ==1?'公务员(国考)':item.projectId ==2?'公务员(省考)':'事业单位'}}</td>
                   <td>{{item.isClosed == 1?'封闭班':'非封闭班'}}</td>
                   <td>{{item.dayOfRest}}</td>
-                  <td>{{item.coursePrice}}</td>
+                  <td>
+                    <div v-if="item.priceInfoArray.length > 0" v-for="i in item.priceInfoArray">
+                      <span>{{i.agreement + '班-' + i.price  + (i.stay==null?'-':'-'+i.stay)  + (i.writtenTf?'-笔试不过退费:'+i.writtenTf:'') + (i.interviewTf?'-面试不过退费:'+i.interviewTf:'')}}</span>
+                    </div>
+                    <div v-if="item.priceInfoArray.length == 0">
+                      <span>--</span>
+                    </div>
+                  </td>
                   <td>{{item.interviewGroupNumber}}</td>
-                  <td>{{item.classOrientation}}</td>
-                  <td>{{item.branchCampusOption}}</td>
+                  <td>{{item.classOrientation?item.classOrientation:'--'}}</td>
+                  <td>{{item.branchCampusOption?item.branchCampusOption:'--'}}</td>
                   <td class="operate" @click="addToMergedData(index,item.examStyleId)">添加</td>
                 </tr>
               </table>
             </Row>
-            <p style="border-bottom: 1px solid #e9eaec;padding: 14px 16px;line-height: 1;    margin-bottom: 20px;">
+            <p style="border-bottom: 1px solid #e9eaec;padding: 14px 16px;line-height: 1;margin-bottom: 20px;">
               <Icon type="pinpoint" ></Icon>
               价格
               <Button type="primary" style="margin-left: 15px" @click="addInfo">添加</Button>
@@ -325,8 +338,8 @@
                   <InputNumber  v-model="item.interviewTf" :min="0"></InputNumber>
                 </FormItem>
                 </Col>
-                <Col span="8">
-                <FormItem prop="mark" label="备注">
+                <Col span="8" class="price_mark">
+                <FormItem label="备注">
                   <Input type="textarea" v-model="item.mark" :rows="1"></Input>
                 </FormItem>
                 </Col>
@@ -495,7 +508,6 @@
         addGroupRules:{
           courseName:[{required:true,message:'班级名称不能为空',trigger:'blur'}],
           classType:[{required:true,message:'班级类型不能为空',trigger:'change'}],
-          classSeriesId:[{required:true,validator:validateClassSeriesId,trigger:'change'}],
           erpClassTypeId:[{validator:validateAddErp,required:true,trigger:'change'}],
         },
 
@@ -532,6 +544,7 @@
 
         selectedSub:[],     //  选中的科目
         tableHeadData:[
+          {name:'name',value:'班级名称'},
           {name:'classSeriesId',value:'班级系列'}, //班级系列
           {name:'rootDirectoryName',value:'根目录'},    //根目录
           {name:'examStyleId',value:'考试类型'},    //考试类型
@@ -1185,6 +1198,10 @@
       text-align: center;
       display: none;
     }
+  }
+  .price_mark .ivu-form-item-label:before {
+    content: "";
+    display: inline-block;
   }
   .priceIsCom{
     .ivu-input,.ivu-select-selection,.ivu-input-number{

@@ -1,5 +1,5 @@
 <template>
-    <div style="position: relative;">
+    <div id="apply-detail" style="position: relative;">
         <Row>
             <Col span="24">
             <Card>
@@ -57,7 +57,7 @@
                           已上传的附件
                         </p>
                         <div v-for="item,index in uploadList" style="margin-left: 4em;">
-                                <span>{{item.filename}}</span> <a class="operate" :href="url + '/v1/announce/download-attachment?url=' + item.ossUrl + '&filename=' + item.filename">下载附件</a><span class="operate" @click="deleteAttachment(item,index)">删除附件</span>
+                                <span>{{item.filename}}</span> <a class="operate" :href="url + 'announce/download-attachment?url=' + item.ossUrl + '&filename=' + item.filename">下载附件</a><span class="operate" @click="deleteAttachment(item,index)">删除附件</span>
                         </div>
                     </div>
                 </div>
@@ -117,12 +117,12 @@
                     </FormItem>
                 </Row>
                 <Row>
-                  <FormItem label="笔试不过退费">
+                  <FormItem label="笔试不过退费" v-show="priceForm.agreement == 0 && (examStyleId == 1 || examStyleId == 3)" >
                     <InputNumber :min="0" v-model="priceForm.writtenTf"></InputNumber>
                   </FormItem>
                 </Row>
                 <Row>
-                  <FormItem label="面试不过退费">
+                  <FormItem label="面试不过退费" v-show="priceForm.agreement == 1 && (examStyleId == 2 || examStyleId == 3)" >
                     <InputNumber :min="0" v-model="priceForm.interviewTf"></InputNumber>
                   </FormItem>
                 </Row>
@@ -563,6 +563,7 @@
                               click: () => {
                                   this.addIsShow = true;
                                   this.selectedId = params.row.id;
+                                  this.examStyleId = params.row.examStyleId;
                               }
                           }
                       }, '添加')
@@ -982,6 +983,7 @@
         currentName:'',     //当前名称
         changePublishIsShow:false,      //修改开班日期
         currentPublish:'',  //开班日期
+        examStyleId:0,   //当前点击的课程班级类型
         priceForm:{
             agreement:'0',   //是否协议  0 协议 1 非协议
             stay:'0',        //住宿地址  0 基地 1 酒店
@@ -1301,11 +1303,14 @@
         this.modalFlag = false;
       }
     },
+    beforeMount () {
+      // window.scrollTo(0, 0)
+    },
     mounted() {
         this.search1();
         this.search2();
         this.id = this.$route.params.id;
-        // this.uploadList = this.$refs.upload.fileList;
+      // this.uploadList = this.$refs.upload.fileList;
     },
     components:{
         Popup,
@@ -1317,66 +1322,70 @@
 </script>
 
 <style lang="less" rel="stylesheet/less">
+  #apply-detail {
     .subTitle{
-        margin-bottom: 15px;
-        font-size: 16px;
+      margin-bottom: 15px;
+      font-size: 16px;
     }
     .content{
-        padding: 0 10px;
-        margin-bottom: 20px;
-        .info{
-            p{
-                line-height: 2;
-                span{
-                    margin-right: 30px;
-                }
-            }
+      padding: 0 10px;
+      margin-bottom: 20px;
+      .info{
+        p{
+          line-height: 2;
+          span{
+            margin-right: 30px;
+          }
         }
-        .ivu-collapse{
-            margin-top: 15px;
-            .ivu-collapse-header{
-                .ivu-icon-arrow-right-b{
-                    display: none;
-                }
-                .addBtn{
-                    float: right;
-                    position: absolute;
-                    right: 15px;
-                    top: -25px;
-                }
-            }
+      }
+      .ivu-collapse{
+        margin-top: 15px;
+        .ivu-collapse-header{
+          .ivu-icon-arrow-right-b{
+            display: none;
+          }
+          .addBtn{
+            float: right;
+            position: absolute;
+            right: 15px;
+            top: -25px;
+          }
         }
+      }
     }
     i.ivu-icon{
-        margin-right: 10px;
+      margin-right: 10px;
     }
     .waitTable{
-        .notShow{
-            display: none;
-            pointer-events:none;
-        }
+      .notShow{
+        display: none;
+        pointer-events:none;
+      }
     }
     .operate{
-        color: #2d8cf0;
-        margin: 0 3px;
-        cursor: pointer;
-        padding:0 5px 0 ;
+      color: #2d8cf0;
+      margin: 0 3px;
+      cursor: pointer;
+      padding:0 5px 0 ;
     }
     .titleContent{
-        width: 80%;
-        height: 100px;
-        padding: 10px;
-        outline: none;
+      width: 80%;
+      height: 100px;
+      padding: 10px;
+      outline: none;
     }
     .month,.day{
-        width: 50px;
-        text-align: center;
-        margin-right: 25px;
-        margin-left: 25px;
-        outline: none;
+      width: 50px;
+      text-align: center;
+      margin-right: 25px;
+      margin-left: 25px;
+      outline: none;
     }
     .ivu-table-cell{
-        padding: 0!important;
+      padding: 0!important;
     }
-
+    .ivu-collapse-content {
+      overflow: initial;
+    }
+  }
 </style>

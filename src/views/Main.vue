@@ -64,9 +64,9 @@
         </div>
         <div class="single-page-con" :style="{left: shrink?'60px':'200px'}">
             <div class="single-page">
-                <keep-alive :include="cachePage">
+                <div :include="cachePage">
                     <router-view></router-view>
-                </keep-alive>
+                </div>
             </div>
         </div>
     </div>
@@ -248,12 +248,12 @@
             var result = new Array();
             var obj = {};
             for (var i = 0; i < arr.length; i++) {
-              obj[arr[i]] = 1;
+              obj[arr[i].id] = 1;
             }
             for (var j = 0; j < this.length; j++) {
-              if (!obj[this[j]])
+              if (!obj[this[j].id])
               {
-                obj[this[j]] = 1;
+                obj[this[j].id] = 1;
                 result.push(this[j]);
               }
             }

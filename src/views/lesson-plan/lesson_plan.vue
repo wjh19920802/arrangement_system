@@ -316,7 +316,7 @@
         data.interviewTime = this.interviewTimeStamp;
         this.$http({
           method:'post',
-          url:this.$store.state.app.baseUrl + 'announcement/query/',
+          url:this.$store.state.app.baseUrl + 'announcement/queryWithPlaner',
           data: data,
           headers: {'Content-type': 'application/json'}
         })
@@ -327,7 +327,7 @@
           .catch((error)=> {
             this.$Message.error(error.message)
           })
-      },
+      }
     },
     computed:{
       // 转换成时间戳
