@@ -316,7 +316,7 @@
         data.interviewTime = this.interviewTimeStamp;
         this.$http({
           method:'post',
-          url:this.$store.state.app.baseUrl + 'announcement/query/',
+          url:this.$store.state.app.baseUrl + 'announcement/queryWithPlaner',
           data: data,
           headers: {'Content-type': 'application/json'}
         })
@@ -327,14 +327,6 @@
           .catch((error)=> {
             this.$Message.error(error.message)
           })
-      },
-      init () {
-        let vm = this;
-        window.onkeydown = function (e) {
-          if(e.keyCode == 13) {
-            vm.search();
-          }
-        }
       }
     },
     computed:{
@@ -374,7 +366,6 @@
       }
     },
     mounted () {
-      this.init();
       this.$http(this.$store.state.app.baseUrl + 'area/getUserVisualProvince')
         .then((res)=>{
           if(res.data.code == 0 ){

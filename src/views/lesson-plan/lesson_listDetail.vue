@@ -582,21 +582,12 @@
       },
       cancel3(){
 
-      },
-      init () {
-        let vm = this;
-        window.onkeydown = function (e) {
-          if(e.keyCode == 13) {
-            vm.search();
-          }
-        }
       }
     },
     beforeMount() {
         this.id = this.$route.query.announcementId;
     },
     mounted(){
-      this.init();
       this.search();
     },
     components:{

@@ -30,13 +30,11 @@
                 </Select>
               </FormItem>
               </Col>
-              <Col span="12">
-              <FormItem prop="rootDirectoryName" label="根目录">
-                <Input v-model="lessonAddNotGroup.rootDirectoryName"></Input>
-              </FormItem>
-              </Col>
-            </Row>
-            <Row>
+              <!--<Col span="12">-->
+              <!--<FormItem prop="rootDirectoryName" label="根目录">-->
+                <!--<Input v-model="lessonAddNotGroup.rootDirectoryName"></Input>-->
+              <!--</FormItem>-->
+              <!--</Col>-->
               <Col span="12">
               <FormItem label="课时" prop="classHour" class="classHour">
                 <InputNumber :min="1" v-model="lessonAddNotGroup.classHour.day"></InputNumber>
@@ -45,6 +43,8 @@
                 <span style="display: inline-block;width: 10px;text-align: center;margin:0 20px;">晚</span>
               </FormItem>
               </Col>
+            </Row>
+            <Row>
               <Col span="12">
               <FormItem prop="categoryIds" label="科目">
                 <Select multiple v-model="lessonAddNotGroup.categoryIds"  :label-in-value="true" >
@@ -52,20 +52,18 @@
                 </Select>
               </FormItem>
               </Col>
-            </Row>
-            <Row>
               <Col span="12">
               <FormItem prop="schoolBeginsTime" label="预计开课日期">
                 <DatePicker type="date" v-model="lessonAddNotGroup.schoolBeginsTime" placeholder="输入预计开课时间"></DatePicker>
               </FormItem>
               </Col>
+            </Row>
+            <Row>
               <Col span="12">
               <FormItem prop="courseName" label="班级名称">
                 <Input v-model="lessonAddNotGroup.courseName"></Input>
               </FormItem>
               </Col>
-            </Row>
-            <Row>
               <Col span="12">
               <FormItem prop="openClassTime" label="开班时间">
                 <Select v-model="lessonAddNotGroup.openClassTime">
@@ -75,6 +73,8 @@
                 </Select>
               </FormItem>
               </Col>
+            </Row>
+            <Row>
               <Col span="12">
               <FormItem prop="projectTag" label="项目">
                 <Select v-model="lessonAddNotGroup.projectTag">
@@ -84,16 +84,9 @@
                 </Select>
               </FormItem>
               </Col>
-            </Row>
-            <Row>
               <Col span="12">
               <FormItem label="休息天数" prop="dayOfRest" class="dayOfRest">
                 <InputNumber :min="0" v-model="lessonAddNotGroup.dayOfRest"></InputNumber>
-              </FormItem>
-              </Col>
-              <Col span="6" v-if="lessonAddNotGroup.examStyleId == 2">
-              <FormItem prop="interviewGroupNumber" label="面试分组人数" class="interviewGroupNumber">
-                <Input :min="1" v-model="lessonAddNotGroup.interviewGroupNumber"></Input>
               </FormItem>
               </Col>
             </Row>
@@ -104,6 +97,13 @@
                   <Option value="">请选择</Option>
                   <Option v-for="item in erpClassTypeList" :value="item.id" :key="item.id">{{item.classTypeName}}</Option>
                 </Select>
+              </FormItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col span="6" v-if="lessonAddNotGroup.examStyleId == 2">
+              <FormItem prop="interviewGroupNumber" label="面试分组人数" class="interviewGroupNumber">
+                <Input :min="1" v-model="lessonAddNotGroup.interviewGroupNumber"></Input>
               </FormItem>
               </Col>
             </Row>
@@ -393,13 +393,13 @@
       'search2'
     ],
     data() {
-      const validateRoot = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('根目录不能为空'));
-        }else {
-          this.checkExist(callback)
-        }
-      };
+      // const validateRoot = (rule, value, callback) => {
+      //   if (value === '') {
+      //     callback(new Error('根目录不能为空'));
+      //   }else {
+      //     this.checkExist(callback)
+      //   }
+      // };
 
       const validateSeries = (rule, value, callback) => {
         if (value === '') {
@@ -476,7 +476,7 @@
           classType:[{required:true,message:'班级类型不能为空',trigger:'change'}],
           classSeriesId:[{validator:validateSeries,required:true,trigger:'change'}],
           examStyleId:[{required:true,message:'考试类型不能为空',trigger:'change'}],
-          rootDirectoryName:[{validator:validateRoot,required:true,trigger:'blur'}],
+          // rootDirectoryName:[{validator:validateRoot,required:true,trigger:'blur'}],
           categoryIds:[{required:true,type:'array',message:'科目不能为空',trigger:'change'}],
           schoolBeginsTime:[{required:true,type:'date',message:'预计开课日期不能为空',trigger:'change'}],
           openClassTime:[{required:true,message:'开班日期不能为空',trigger:'change'}],

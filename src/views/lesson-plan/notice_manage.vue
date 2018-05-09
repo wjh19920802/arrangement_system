@@ -347,7 +347,6 @@
               params.interviewTime[0] = params.interviewTime[0].getTime();
               params.interviewTime[1] = params.interviewTime[1].getTime();
           }
-          console.log(this.$http)
           this.$http({
               method:'post',
               url:this.$store.state.app.baseUrl + 'announcement/query/',
@@ -365,18 +364,9 @@
               .catch((error)=> {
                   this.$Message.error(error.message)
               })
-      },
-      init () {
-        let vm = this;
-        window.onkeydown = function (e) {
-          if(e.keyCode == 13) {
-            vm.search();
-          }
-        }
       }
     },
     mounted () {
-        this.init();
         this.$http(this.$store.state.app.baseUrl + 'area/getUserVisualProvince')
             .then((res)=>{
                 if(res.data.code == 0 ){
@@ -388,7 +378,6 @@
             }).catch((error)=>{
                 this.$Message.error(error.message);
             });
-        this.search();
     }
   };
 </script>

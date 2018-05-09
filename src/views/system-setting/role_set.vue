@@ -292,11 +292,19 @@
           })
       },
       save () {
+        if(!this.formItem.role){
+          this.$Message.error('请选择至少一个角色！')
+          return
+        }
+        if(!this.areaChosenList.length){
+          this.$Message.error('所选地区不能为空！')
+          return
+        }
         console.log(this.menuChosenLast)
         console.log(this.$refs.menuTree.flatState)
         this.$http({
           method:'post',
-          url:this.$store.state.app.baseUrl + `sysPermission/updateUserPermission?uid=${this.data1[0].id === null ? '' : this.data1[0].id}&roleId=${this.formItem.role}`,
+          url:this.$store.state.app.baseUrl + `sysPermission/updateUserPermission?isName=${this.data1[0].isName === null ? '' : this.data1[0].isName}&roleId=${this.formItem.role}`,
           data: {
             deptIds: this.areaChosenList,
             permissionIds: this.menuChosenLast,

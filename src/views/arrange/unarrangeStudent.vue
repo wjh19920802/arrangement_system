@@ -281,7 +281,19 @@
             align: 'center',
             key: 'classInfoName',
             render:(h,params)=>{
-              return h('div',{class:'item2'},params.row.classInfoName?params.row.classInfoName:'--')
+              return h('div',{class:'item2'},[
+                h('div',{width:'8px',height:'8px'},[
+                  h('Icon',{
+                    props:{
+                      type:'information-circled',
+                      size:'10px',
+                      color:'red'
+                    },
+                    class:params.row.signs.length>0?'icon-sign iconShow':'icon-sign iconNotShow'
+                  })
+                ]),
+                h('div',params.row.classInfoName?params.row.classInfoName:'--'),
+              ])
             }
           },
           {
@@ -590,43 +602,22 @@
                     }
                   }
                 }, '驳回'),
-                h('span',{
+                h('Button',{
+                  props: {
+                    type: 'info',
+                    size: 'small',
+                    show:this.isShow
+                  },
+                  style: {
+                    marginRight: '5px',
+                    marginBottom: '5px'
+                  },
                   on:{
-                    mouseover: () => {
-                      for(let i = 0;i<params.row.signs.length;i++) {
-                        this.signStr += i+1 + '.标记对象:' +  params.row.signs[i].signType + ';备注:' + params.row.signs[i].signNote + '    ';
-                      }
-                    },
-                    mouseout: () => {
-                      this.signStr = '';
+                    click: () => {
+                      this.tag(params.row.classInfoCategoryLinkId)
                     }
                   }
-                },[
-                  h('Poptip', {
-                    props:{
-                      trigger:'hover',
-                      content:this.signStr,
-                      placement:'top-end',
-                    },
-                  }, [
-                    h('Button',{
-                      props: {
-                        type: 'info',
-                        size: 'small',
-                        show:this.isShow
-                      },
-                      style: {
-                        marginRight: '5px',
-                        marginBottom: '5px'
-                      },
-                      on:{
-                        click: () => {
-                          this.tag(params.row.classInfoCategoryLinkId)
-                        }
-                      }
-                    },'添加标记')
-                  ])
-                ])
+                },'添加标记')
                 ,
                 h('Button', {
                   props: {
@@ -1185,6 +1176,7 @@
               .then((res)=>{
                 if(res.data.code == 0) {
                   this.$Message.success('提交成功');
+                  this.search1();
                 }else {
                   this.$Message.error(res.data.message);
                 }
@@ -1420,6 +1412,7 @@
               border-bottom: 1px solid #e9eaec;
             }
             .item2 {
+              position: relative;
               height: 100%;
               display: flex;
               align-items: center;
@@ -1430,6 +1423,17 @@
          .ivu-poptip-inner {
            white-space: pre-wrap;
          }
+        .icon-sign {
+          position: absolute;
+          top: 5px;
+          left: 1px;
+        }
+        .iconNotShow {
+          display: none;
+        }
+        .iconShow {
+          display: inherit;
+        }
     }
     .operate{
       color: #2d8cf0;
