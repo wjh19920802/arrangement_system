@@ -30,11 +30,11 @@
                 </Select>
               </FormItem>
               </Col>
-              <!--<Col span="12">-->
-              <!--<FormItem prop="rootDirectoryName" label="根目录">-->
-                <!--<Input v-model="lessonAddNotGroup.rootDirectoryName"></Input>-->
-              <!--</FormItem>-->
-              <!--</Col>-->
+              <Col span="12">
+              <FormItem prop="rootDirectoryName" label="根目录">
+                <Input v-model="lessonAddNotGroup.rootDirectoryName"></Input>
+              </FormItem>
+              </Col>
               <Col span="12">
               <FormItem label="课时" prop="classHour" class="classHour">
                 <InputNumber :min="1" v-model="lessonAddNotGroup.classHour.day"></InputNumber>
@@ -393,13 +393,13 @@
       'search2'
     ],
     data() {
-      // const validateRoot = (rule, value, callback) => {
-      //   if (value === '') {
-      //     callback(new Error('根目录不能为空'));
-      //   }else {
-      //     this.checkExist(callback)
-      //   }
-      // };
+      const validateRoot = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('根目录不能为空'));
+        }else {
+          this.checkExist(callback)
+        }
+      };
 
       const validateSeries = (rule, value, callback) => {
         if (value === '') {
@@ -476,7 +476,7 @@
           classType:[{required:true,message:'班级类型不能为空',trigger:'change'}],
           classSeriesId:[{validator:validateSeries,required:true,trigger:'change'}],
           examStyleId:[{required:true,message:'考试类型不能为空',trigger:'change'}],
-          // rootDirectoryName:[{validator:validateRoot,required:true,trigger:'blur'}],
+          rootDirectoryName:[{validator:validateRoot,required:true,trigger:'blur'}],
           categoryIds:[{required:true,type:'array',message:'科目不能为空',trigger:'change'}],
           schoolBeginsTime:[{required:true,type:'date',message:'预计开课日期不能为空',trigger:'change'}],
           openClassTime:[{required:true,message:'开班日期不能为空',trigger:'change'}],
