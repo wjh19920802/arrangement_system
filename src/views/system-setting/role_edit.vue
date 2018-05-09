@@ -1,72 +1,35 @@
 <template>
     <div>
         <Card>
-            <div class="title">修改权限</div>
-            <Form :model="formItem" :label-width="100">
-                <FormItem label="用户名" prop="username">
-                    {{info.username}}
-                    <input type="hidden" v-model="formItem.username">
+            <div class="title">
+                <p>修改角色默认权限</p>
+            </div>
+            <Form :label-width="100">
+
+                <FormItem label="角色名称" prop="username">
+                    <Input v-model="roleName" readonly disabled style="width:40%"></Input>
                 </FormItem>
-                <FormItem label="真实姓名" prop="realname">
-                    {{info.realname}}
-                    <input type="hidden" v-model="formItem.realname">
+                <FormItem label="权限设置" prop="auth">
+                    <div style="border: 1px solid #f0f0f0">
+                        <Tree :data="menuListTree" show-checkbox ref="menuTree"></Tree>
+                    </div>
+                    <span style="color: red; font-size: 12px">* 请慎重修改权限！</span>
                 </FormItem>
-                <FormItem label="选择角色" prop="realname">
-                    <Select v-model="info.role" style="width:200px">
-                       <Option v-for="i in roles" :value="i.code" :key="i.code">{{ i.name }}</Option>
+
+                <!--<FormItem label="选择角色" prop="realname">
+                    <Select v-model="" style="width:40%">
+                       <Option v-for="i in rolesList" :value="i.code" :key="i.code">{{ i.name }}</Option>
                     </Select>
-                </FormItem>
-                <FormItem label="菜单及功能" prop="province">
-                  <div style="border: 1px solid #f0f0f0">
-                    <Tree :data="menuListTree" show-checkbox ref="menuTree"></Tree>
-                  </div>
-                  <!--<table id="functionTable" border="1" width="100%" style="border-collapse:collapse;text-align: center;">
-                    <tr v-for="area in areaList">
-                      <td width="150">
-                        <Checkbox>{{area.name}}</Checkbox>
-                      </td>
-                      <td>
-                        <div class="flex" v-for="secondArea in area.childrens">
-                          <td class="secondArea">
-                            <Checkbox>{{secondArea.name}}</Checkbox>
-                          </td>
-                          <td class="thirdArea">
-                            <span v-for="thirdArea in secondArea.childrens">
-                              <Checkbox>{{thirdArea.name}}</Checkbox>
-                            </span>
-                          </td>
-                        </div>
-                      </td>
-                    </tr>
-                  </table>-->
-                </FormItem>
-                <FormItem label="管辖地区" prop="province">
-                  <div style="border: 1px solid #f0f0f0">
-                    <Tree :data="areaListTree" show-checkbox ref="areaTree"></Tree>
-                  </div>
-                  <table id="areaTable" border="1" width="100%" style="border-collapse:collapse;text-align: center;">
-                    <tr v-for="area in areaList">
-                      <td width="150">
-                        <Checkbox>{{area.name}}</Checkbox>
-                      </td>
-                      <td>
-                        <div class="flex" v-for="secondArea in area.childrens">
-                          <td class="secondArea">
-                            <Checkbox>{{secondArea.name}}</Checkbox>
-                          </td>
-                          <td class="thirdArea">
-                            <span v-for="thirdArea in secondArea.childrens">
-                              <Checkbox>{{thirdArea.name}}</Checkbox>
-                            </span>
-                          </td>
-                        </div>
-                      </td>
-                    </tr>
-                  </table>
-                </FormItem>
+                </FormItem>-->
+                <!--<FormItem label="管辖地区" prop="province">
+                  <Select multiple v-model="formItem.province" :select="formItem.province">
+                    &lt;!&ndash;<Option value="">全国</Option>&ndash;&gt;
+                    <Option :value="item.areaid" v-for="item,index in provinces" :key="index">{{item.name}}</Option>
+                  </Select>
+                </FormItem>-->
                 <FormItem>
-                    <Button type="primary" @click="save">保存</Button>
-                    <!--<Button type="ghost" style="margin-left: 8px">重置</Button>-->
+                    <Button type="primary" @click="save">提交</Button>
+                    <Button type="ghost" @click="back">返回</Button>
                 </FormItem>
             </Form>
         </Card>
@@ -74,83 +37,118 @@
 </template>
 
 <script>
-  import area from './area.json'
   export default {
     data () {
       return {
-        formItem: {
-          username: '',
-          realname: '',
-          role: ''
-        },
-        roles: [{
-          code: 0,
-          name: '管理员'
-        }],
-        info: {
-          username: '星期五',
-          realname: '王祖贤',
-          role: '',
-          province: []
-        },
-        // 地区数据
         menuList: [],
-        menuChosenList: [5,6],
-        areaList: area.data
+        menuChosenList: [],
       }
     },
     computed: {
+      roleId () {
+        return this.$route.query.id
+      },
+      roleName () {
+        return this.$route.query.role
+      },
       menuListTree () {
         let that = this
-        function getTree(tree) {
+        function getTree1(tree) {
           let arr = [];
           if (!!tree && tree.length !== 0) {
             tree.forEach(item => {
-              console.log(that.menuChosenList.indexOf(item.id))
               let obj = {};
               obj.title = item.permissionName;
               //obj.attr = item.attr; // 其他你想要添加的属性
               obj.expand = false;
               obj.checked = that.menuChosenList.indexOf(item.id)>=0 ? true : false;
               obj.selected = false;
-              obj.children = getTree(item.menus); // 递归调用
+              obj.children = getTree1(item.menus); // 递归调用
+              obj.id = item.id
               arr.push(obj);
             });
           }
           return arr;
         }
-        return getTree(this.menuList)
+        return getTree1(this.menuList)
       },
-      areaListTree () {
-        function getTree(tree) {
-          let arr = [];
-          if (!!tree && tree.length !== 0) {
-            tree.forEach(item => {
-              let obj = {};
-              obj.title = item.name;
-              //obj.attr = item.attr; // 其他你想要添加的属性
-              obj.expand = false;
-              obj.selected = false;
-              obj.children = getTree(item.childrens); // 递归调用
-              arr.push(obj);
-            });
+      menuChosenLast () {
+        let menuArr = []
+        this.$refs.menuTree.getCheckedNodes().map((item,index)=>{
+          console.log(item)
+          if(!item.children.length){
+            menuArr.push(item.id)
           }
-          return arr;
-        }
-        return getTree(this.areaList)
-      }
+        })
+        return menuArr
+      },
     },
     methods: {
-      getMenuList () {
+      save () {
+        if(this.menuChosenLast.length == 0){
+          this.$Modal.confirm({
+            title: '提醒',
+            content: '当前未选择任何权限，是否确认修改?',
+            onOk: () => {
+              this.$http({
+                method:'post',
+                url:this.$store.state.app.baseUrl + `/sysPermission/setRoleDefaultPermission`,
+                data: {
+                  roleId: this.roleId,
+                  permissionIds: this.menuChosenLast,
+                },
+                headers: {'Content-type': 'application/json'}
+              })
+                .then((res)=>{
+                  console.log(res.data.data)
+                  if(res.data.code == 0 ){
+                    this.$Message.success('提交成功！');
+                  }else{
+                    this.$Message.error(res.data.message);
+                  }
+                })
+                .catch((error)=>{
+                  this.$Message.error(error.message)
+                })
+            }
+          })
+        }else{
+          this.$http({
+            method:'post',
+            url:this.$store.state.app.baseUrl + `/sysPermission/setRoleDefaultPermission`,
+            data: {
+              roleId: this.roleId,
+              permissionIds: this.menuChosenLast,
+            },
+            headers: {'Content-type': 'application/json'}
+          })
+            .then((res)=>{
+              console.log(res.data.data)
+              if(res.data.code == 0 ){
+                this.$Message.success('提交成功！');
+              }else{
+                this.$Message.error(res.data.message);
+              }
+            })
+            .catch((error)=>{
+              this.$Message.error(error.message)
+            })
+        }
+      },
+      back () {
+        this.$router.go(-1)
+      },
+      getRoleMenu () {
         this.$http({
           method:'get',
-          url:this.$store.state.app.baseUrl + 'menu/findAll',
+          url:this.$store.state.app.baseUrl + 'menu/findByRoleId?roleId='+this.roleId,
           headers: {'Content-type': 'application/json'}
         })
           .then((res)=>{
             console.log(res.data.data)
             if(res.data.code == 0 ){
-              this.menuList = res.data.data
+              this.menuList = res.data.data.menuTree
+              this.menuChosenList = res.data.data.defaultPermissionIds
             }else{
               this.$Message.error(res.data.message);
             }
@@ -158,40 +156,19 @@
           .catch((error)=>{
             this.$Message.error(error.message)
           })
-      },
-      save () {
-        console.log(this.$refs.menuTree.getCheckedNodes())
-        console.log(this.$refs.areaTree.getCheckedNodes())
       }
     },
     mounted () {
-      console.log(area.data)
-      this.getMenuList()
+      this.getRoleMenu()
     }
   }
 </script>
 
 <style lang="less" rel="stylesheet/less" scoped>
-  #areaTable{
-    border: 1px solid #f0f0f0;
-    td {
-      border: 1px solid #f0f0f0;
-      font-size: 12px;
-      .ivu-select-selection{
-        border: transparent!important;
-      }
+    .ivu-tree{
+        margin: 18px 36px;
+        li{
+            margin: 0 0!important;
+        }
     }
-    .secondArea{
-      flex:1;
-    }
-    .thirdArea{
-      flex:3;
-    }
-  }
-  .ivu-tree{
-    margin: 18px 36px;
-    li{
-      margin: 0 0!important;
-    }
-  }
 </style>
