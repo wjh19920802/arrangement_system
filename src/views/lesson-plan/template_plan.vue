@@ -16,7 +16,7 @@
                   </Col>
                   <Col span="12">
                   <FormItem label="省份" prop="provinceId">
-                    <Select v-model="formItem.provinceId">
+                    <Select v-model="provinceId">
                       <Option value="">请选择</Option>
                       <Option v-for="(item,index) in provinces" :key="item.areaid" :value="item.areaid">{{item.name}}</Option>
                     </Select>
@@ -120,6 +120,7 @@
         },
         // 地区数据
         provinces: [],
+        provinceId:'',
         // 表格头部及配置
         columns: [
           {
@@ -303,6 +304,14 @@
         if(params.interviewTime.length>0 && params.interviewTime[0] != '' && params.interviewTime[1] != '') {
           params.interviewTime[0] = params.interviewTime[0].getTime();
           params.interviewTime[1] = params.interviewTime[1].getTime();
+        }
+        params.provinceIdList = [];
+        if(this.provinceId == '') {
+          this.provinces.forEach((item)=>{
+            params.provinceIdList.push(item.areaid)
+          })
+        }else {
+          params.provinceIdList = [this.provinceId];
         }
         let data={
           ...params,

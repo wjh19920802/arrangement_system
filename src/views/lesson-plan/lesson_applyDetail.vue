@@ -134,7 +134,7 @@
             </Form>
         </Modal>
         <Modal @on-ok="changeName" v-model="changeNameIsShow">
-            <textarea type="text" v-model="currentName" class="titleContent" ></textarea>
+            <Input type="text" v-model="currentName" class="titleContent" style="width: 90%;"></Input>
         </Modal>
         <Modal @on-ok="changePublish" v-model="changePublishIsShow">
             <!--<input type="number" min="0" max="12" class="month">月<input type="number" min="0" max="31" class="day">日-->
@@ -213,7 +213,7 @@
           {
             title: '班级名称',
             align: 'center',
-            key: 'courseName',
+            key: 'courseName'
           },
           {
             title: '班级类型',
@@ -422,7 +422,7 @@
                   align: 'center',
                   key: 'courseName',
                   render:(h,params)=>{
-                      return h('div',{class:'title'},[
+                      return h('div',{class:params.row.courseNameRepeat === false?'repeated':''},[
                           (()=>{
                               let title = params.row.courseName;
                               return title
@@ -432,6 +432,7 @@
                                   click: () => {
                                       //获取当前点击的行的index
                                       this.changeNameId = params.row.id;
+                                      this.projectId = params.row.projectId;
                                       this.changeNameIsShow = true;
                                       this.currentName = params.row.courseName;
                                   }
@@ -981,6 +982,7 @@
         addIsShow:false,                //添加价格弹窗
         changeNameIsShow:false,         //修改名称
         currentName:'',     //当前名称
+        projectId:'',
         changePublishIsShow:false,      //修改开班日期
         currentPublish:'',  //开班日期
         examStyleId:0,   //当前点击的课程班级类型
@@ -1007,7 +1009,8 @@
         lessonData:null,
         scheduleData:[],
         scheduleIsShow:false,           //课程表
-        modalFlag:false      // 点击modal4的时候为true 否则为false
+        modalFlag:false, // 点击modal4的时候为true 否则为false
+        repeatData:[]
       }
     },
     methods: {
@@ -1085,10 +1088,7 @@
           });
           this.alreadyStashData = this.selectedData.filter((item)=>{
             return item._checked;
-          })
-        console.log(this.alreadyStashData)
-        console.log(this.selectedData)
-
+          });
       },
       cancel () {
 
@@ -1097,10 +1097,8 @@
         if(this.waitStashData.length > 0) {
           this.waitStashData.forEach((item)=>{
             item.courseModelId = item.id;
+            item.schoolBeginsTime = new Date(item.schoolBeginsTime).getTime();
           });
-          this.selectedData = this.waitStashData.concat(this.selectedData);
-          this.total2 = this.total2 + this.selectedData.length;
-          this.hasToSelectedData = this.hasToSelectedData.concat(this.waitStashData);
           //添加到已选课程中的元素 不可选
           this.waitStashData.forEach((item1)=>{
             this.waitData.forEach((item)=>{
@@ -1111,9 +1109,46 @@
               }
             })
           });
-          this.waitStashData.splice(0,this.waitStashData.length);
+
+          //校验名称是否重复
+          this.$http({
+            method:'post',
+            url:this.$store.state.app.baseUrl + 'course/checkBaseModelCourseName',
+            data:this.waitStashData
+          })
+            .then((res)=>{
+              if(res.data.code == 0) {
+                this.repeatData = res.data.data;   //名称重复的数据
+                if(this.repeatData.length > 0) {
+                  this.$Message.error({
+                    content: '红色字体的课程名称已存在，请及时修改',
+                    duration: 20,
+                    closable: true
+                  });
+                  this.waitStashData.forEach((item)=>{
+                    this.repeatData.forEach((item1)=>{
+                      if(item.id == item1.id) {
+                        item.courseNameRepeat = false
+                        item.schoolBeginsTime = Util.formateDate(item.schoolBeginsTime);
+                      }
+                    })
+                  })
+                }
+                this.selectedData = this.waitStashData.concat(this.selectedData);
+                this.total2 = this.total2 + this.selectedData.length;
+                this.hasToSelectedData = this.hasToSelectedData.concat(this.waitStashData);
+              } else {
+                this.$Message.error(res.data.message);
+              }
+            })
+            .catch((error)=>{
+              this.$Message.error(error.message);
+            })
+
+
+          // this.waitStashData.splice(0,this.waitStashData.length);
         }
-        console.log(this.selectedData)
+
 
       },
       removeLesson () {
@@ -1176,12 +1211,37 @@
           console.log(this.selectedData);
         },
       changeName () {
-        //修改数据源中的值为输入框的值
-          this.selectedData.forEach((item)=>{
-             if(item.id == this.changeNameId) {
-                item.courseName = this.currentName;
+        this.$http({
+          method:'get',
+          url:this.$store.state.app.baseUrl + 'course/checkCourseName',
+          params:{
+            courseName:this.currentName,
+            projectId:this.projectId,
+          },
+          headers: {'Content-type': 'application/json'}
+        })
+          .then((res)=>{
+            if(res.data.code == 0) {
+              if(res.data.data == false) {
+                this.$Message.error('课程名称已存在！')
+              }else {
+                //修改数据源中的值为输入框的值
+                this.selectedData.forEach((item)=>{
+                  if(item.id == this.changeNameId) {
+                    item.courseNameRepeat = true;
+                    item.courseName = this.currentName;
+                  }
+                })
+              }
+            }else{
+              this.$Message.error(res.data.message);
             }
           })
+          .catch((error)=>{
+            this.$Message.error(error.message);
+          })
+
+
       },
       changePublish () {
             this.selectedData.forEach((item)=>{
@@ -1213,7 +1273,6 @@
                   pageNumber:this.pageNumber1,
                   pageSize:this.pageSize1,
                   checkState:7,
-                  announcementId:this.$route.params.id,
                   provinceId:this.$route.query.provinceId
               }
           })
@@ -1386,6 +1445,9 @@
     }
     .ivu-collapse-content {
       overflow: initial;
+    }
+    .repeated {
+      color:red;
     }
   }
 </style>
