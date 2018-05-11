@@ -42,12 +42,10 @@
                     <span v-if="item.classType == '组合班次'" class="operate" @click="showChild(item.courseModelId)">查看子班次</span>
                 </td>
                 <td style="padding: 5px;">
-                    <Select v-model="item.provinceIdList" multiple @on-change="change">
-                        <Option v-for="item2 in provinces" :value="item2.id" :key="item2.id">{{item2.cityName}}</Option>
-                    </Select>
+                  <span class="operate" @click="showProvinces(item.provinceIdList)">查看</span>
                 </td>
                 <td>
-                  <div class="operate" @click="changeProvince(item.id,item.provinceIdList)">
+                  <div class="operate" @click="changeProvince(item.id,provinceIdList)">
                     确定
                   </div>
                 </td>
@@ -91,6 +89,11 @@
         <Modal v-model="provinceNotice" title="提示" width="500px" @on-ok="ok">
           <h3>确定修改适用省份吗？</h3>
         </Modal>
+        <Modal v-model="showProvinceList" title="提示" width="500px">
+          <Select v-model="provinceIdList" multiple @on-change="change">
+            <Option v-for="item2 in provinces" :value="item2.id" :key="item2.id">{{item2.cityName}}</Option>
+          </Select>
+        </Modal>
       <Page :total="total" :current="pageNumber" :page-size="pageSize" @on-change="changePage" show-total style="text-align: center;margin-top: 10px;"></Page>
     </Card>
 </template>
@@ -103,6 +106,7 @@
             return{
                 modal1:false,
                 provinceNotice:false,
+                showProvinceList:false,
                 currentId:-1,
                 provinceIdList:[],
                 tableHeadData:[
@@ -301,8 +305,11 @@
                     this.$Message.error(res.data.message);
                   }
                 })
+            },
+            showProvinces (provinceIdList) {
+              this.provinceIdList = provinceIdList;
+              this.showProvinceList = true;
             }
-
         },
         filters:{
           formateDate : function(timeStamp){
@@ -362,8 +369,5 @@
             margin: 0 3px;
             cursor: pointer;
         }
-    }
-    .ivu-select-multiple .ivu-tag {
-      margin: 0!important;
     }
 </style>
