@@ -134,7 +134,7 @@
             </Form>
         </Modal>
         <Modal @on-ok="changeName" v-model="changeNameIsShow">
-            <textarea type="text" v-model="currentName" class="titleContent" ></textarea>
+            <Input type="text" v-model="currentName" class="titleContent" style="width: 90%;"></Input>
         </Modal>
         <Modal @on-ok="changePublish" v-model="changePublishIsShow">
             <!--<input type="number" min="0" max="12" class="month">月<input type="number" min="0" max="31" class="day">日-->
@@ -213,7 +213,7 @@
           {
             title: '班级名称',
             align: 'center',
-            key: 'courseName',
+            key: 'courseName'
           },
           {
             title: '班级类型',
@@ -235,7 +235,7 @@
               }
             }
           },
-          {
+        /*  {
             title: '根目录',
             align: 'center',
             key: 'rootDirectoryName',
@@ -246,7 +246,7 @@
                 return '--'
               }
             }
-          },
+          },*/
           {
             title: '课时',
             align: 'center',
@@ -422,7 +422,7 @@
                   align: 'center',
                   key: 'courseName',
                   render:(h,params)=>{
-                      return h('div',{class:'title'},[
+                      return h('div',{class:params.row.courseNameRepeat === false?'repeated':''},[
                           (()=>{
                               let title = params.row.courseName;
                               return title
@@ -453,14 +453,10 @@
                   align: 'center',
                   key: 'classSeries',
                 render:(h,params)=>{
-                    if(params.row.classType == 2){
                       return params.row.classSeries.classSeriesName
-                    }else {
-                      return '--'
-                    }
                 }
               },
-              {
+            /*  {
                   title: '根目录',
                   align: 'center',
                   key: 'rootDirectoryName',
@@ -471,7 +467,7 @@
                     return '--'
                   }
                 }
-              },
+              },*/
               {
                   title: '课时',
                   align: 'center',
@@ -813,11 +809,11 @@
               }
             }
           },
-          {
+         /* {
             title: '根目录',
             align: 'center',
             key: 'rootDirectoryName'
-          },
+          },*/
           {
             title: '课时',
             align: 'center',
@@ -1098,10 +1094,8 @@
         if(this.waitStashData.length > 0) {
           this.waitStashData.forEach((item)=>{
             item.courseModelId = item.id;
+            item.schoolBeginsTime = new Date(item.schoolBeginsTime).getTime();
           });
-          this.selectedData = this.waitStashData.concat(this.selectedData);
-          this.total2 = this.total2 + this.selectedData.length;
-          this.hasToSelectedData = this.hasToSelectedData.concat(this.waitStashData);
           //添加到已选课程中的元素 不可选
           this.waitStashData.forEach((item1)=>{
             this.waitData.forEach((item)=>{
@@ -1112,7 +1106,44 @@
               }
             })
           });
-          this.waitStashData.splice(0,this.waitStashData.length);
+
+          //校验名称是否重复
+          this.$http({
+            method:'post',
+            url:this.$store.state.app.baseUrl + 'course/checkBaseModelCourseName',
+            data:this.waitStashData
+          })
+            .then((res)=>{
+              if(res.data.code == 0) {
+                this.repeatData = res.data.data;   //名称重复的数据
+                if(this.repeatData.length > 0) {
+                  this.$Message.info({
+                    content: '红色字体的课程名称已存在，请及时修改',
+                    duration: 20,
+                    closable: true
+                  });
+                  this.waitStashData.forEach((item)=>{
+                    this.repeatData.forEach((item1)=>{
+                      if(item.id == item1.id) {
+                        item.courseNameRepeat = false
+                        item.schoolBeginsTime = Util.formateDate(item.schoolBeginsTime);
+                      }
+                    })
+                  })
+                }
+              } else {
+                this.$Message.error(res.data.message);
+              }
+              this.selectedData = this.waitStashData.concat(this.selectedData);
+              this.total2 = this.total2 + this.selectedData.length;
+              this.hasToSelectedData = this.hasToSelectedData.concat(this.waitStashData);
+            })
+            .catch((error)=>{
+              this.$Message.error(error.message);
+            })
+
+
+          // this.waitStashData.splice(0,this.waitStashData.length);
         }
         console.log(this.selectedData)
 
@@ -1183,12 +1214,37 @@
           // });
         },
       changeName () {
-        //修改数据源中的值为输入框的值
-          this.selectedData.forEach((item)=>{
-             if(item.id == this.changeNameId) {
-                item.courseName = this.currentName;
+        this.$http({
+          method:'get',
+          url:this.$store.state.app.baseUrl + 'course/checkCourseName',
+          params:{
+            courseName:this.currentName,
+            projectId:this.projectId,
+          },
+          headers: {'Content-type': 'application/json'}
+        })
+          .then((res)=>{
+            if(res.data.code == 0) {
+              if(res.data.data == false) {
+                this.$Message.error('课程名称已存在！')
+              }else {
+                //修改数据源中的值为输入框的值
+                this.selectedData.forEach((item)=>{
+                  if(item.id == this.changeNameId) {
+                    item.courseNameRepeat = true;
+                    item.courseName = this.currentName;
+                  }
+                })
+              }
+            }else{
+              this.$Message.error(res.data.message);
             }
           })
+          .catch((error)=>{
+            this.$Message.error(error.message);
+          })
+
+
       },
       changePublish () {
             this.selectedData.forEach((item)=>{
@@ -1220,6 +1276,7 @@
                   pageNumber:this.pageNumber1,
                   pageSize:this.pageSize1,
                   checkState:7,
+                  // announcementId:this.$route.params.id,
                   provinceId:this.$route.query.provinceId
               }
           })
@@ -1392,6 +1449,9 @@
     }
     .ivu-collapse-content {
       overflow: initial;
+    }
+    .repeated {
+      color:red;
     }
   }
 </style>

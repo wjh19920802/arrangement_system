@@ -190,14 +190,14 @@
               return params.row.classSeries?params.row.classSeries.classSeriesName:'--'
             }
           },
-          {
+         /* {
             title: '根目录',
             align: 'center',
             key: 'rootDirectoryName',
             render:(h,params)=>{
               return params.row.rootDirectoryName?params.row.rootDirectoryName:'--'
             }
-          },
+          },*/
           {
             title: '课时',
             align: 'center',

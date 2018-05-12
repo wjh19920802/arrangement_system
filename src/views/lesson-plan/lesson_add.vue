@@ -30,11 +30,11 @@
                 </Select>
               </FormItem>
               </Col>
-              <Col span="12">
-              <FormItem prop="rootDirectoryName" label="根目录">
-                <Input v-model="lessonAddNotGroup.rootDirectoryName"></Input>
-              </FormItem>
-              </Col>
+              <!--<Col span="12">-->
+              <!--<FormItem prop="rootDirectoryName" label="根目录">-->
+                <!--<Input v-model="lessonAddNotGroup.rootDirectoryName"></Input>-->
+              <!--</FormItem>-->
+              <!--</Col>-->
               <Col span="12">
               <FormItem label="课时" prop="classHour" class="classHour">
                 <InputNumber :min="1" v-model="lessonAddNotGroup.classHour.day"></InputNumber>
@@ -60,7 +60,7 @@
             </Row>
             <Row>
               <Col span="12">
-              <FormItem prop="courseName" label="班级名称">
+              <FormItem prop="courseName" label="课程名称">
                 <Input v-model="lessonAddNotGroup.courseName"></Input>
               </FormItem>
               </Col>
@@ -99,6 +99,22 @@
                 </Select>
               </FormItem>
               </Col>
+              <Col span="12">
+              <FormItem prop="writeMan" label="主办人-笔试：" class="writeMan" v-if="lessonAddNotGroup.examStyleId == 1 && this.createModel">
+                <Select v-model="lessonAddNotGroup.writeMan" style="width:200px" placeholder="选择人员">
+                  <Option value="">请选择</Option>
+                  <Option v-for="item,index in writeManList" :value="item.planerId" :key="item.planerName">{{ item.planerName }}</Option>
+                </Select>
+              </FormItem>
+              </Col>
+              <Col span="12">
+              <FormItem prop="writeMan" label="主办人-面试：" class="faceMan" v-if="lessonAddNotGroup.examStyleId == 2 && this.createModel">
+                <Select v-model="lessonAddNotGroup.faceMan" style="width:200px" placeholder="选择人员">
+                  <Option value="">请选择</Option>
+                  <Option v-for="item,index in faceManList" :value="item.planerId" :key="item.planerName">{{ item.planerName }}</Option>
+                </Select>
+              </FormItem>
+              </Col>
             </Row>
             <Row>
               <Col span="6" v-if="lessonAddNotGroup.examStyleId == 2">
@@ -107,28 +123,11 @@
               </FormItem>
               </Col>
             </Row>
-            <Row v-show="this.createModel" class="zhubanren">
-              <Col span="12">
-              <FormItem prop="writeMan" label="主办人-笔试：" class="writeMan">
-                <Select v-model="lessonAddNotGroup.writeMan" style="width:200px" placeholder="选择人员">
-                  <Option value="">请选择</Option>
-                  <Option v-for="item,index in writeManList" :value="item.planerId" :key="item.planerName">{{ item.planerName }}</Option>
-                </Select>
-              </FormItem>
-              </Col>
-              <Col span="12">
-              <FormItem prop="faceMan" label="主办人-面试：" class="faceMan">
-                <Select v-model="lessonAddNotGroup.faceMan" style="width:200px" placeholder="选择人员">
-                  <Option value="">请选择</Option>
-                  <Option v-for="item,index in faceManList" :value="item.planerId" :key="item.planerName">{{ item.planerName }}</Option>
-                </Select>
-              </FormItem>
-              </Col>
-            </Row>
             <p style="border-bottom: 1px solid #e9eaec;padding: 14px 16px;line-height: 1;    margin-bottom: 20px;">
               <Icon type="pinpoint" ></Icon>
               价格
               <Button type="primary" style="margin-left: 15px" @click="addInfo">添加</Button>
+              <span style="font-size: 12px;color:red;">(请填写价格，否则将提交默认值)</span>
             </p>
             <Row v-for="item,index in lessonAddNotGroup.priceInfoArray" :key="index" class="priceItem">
               <Row>
@@ -224,21 +223,21 @@
               </FormItem>
               </Col>
               <Col span="6">
-              <FormItem label="班级系列" prop="classSeriesId">
-                <Select v-model="lessonAddGroup.childrenClassSeriesId" @on-change="searchRootByClassSeries">
+              <FormItem label="班级系列" prop="childrenClassSeriesId">
+                <Select v-model="lessonAddGroup.childrenClassSeriesId">
                   <Option value="">请选择</Option>
                   <Option v-for="seriesItem in classSeriesIdGroup" :key="seriesItem.id" :value="seriesItem.id">{{seriesItem.classSeriesName}}</Option>
                 </Select>
               </FormItem>
               </Col>
-              <Col span="6">
+              <!--<Col span="6">
               <FormItem label="根目录" prop="rootDirectoryName">
                 <Select  v-model="lessonAddGroup.rootDirectoryName">
                   <Option value="">请选择</Option>
                   <Option v-for="rootItem in rootDirectoryNameGroup" :key="rootItem.id" :value="rootItem.rootDirectoryName">{{rootItem.rootDirectoryName}}</Option>
                 </Select>
               </FormItem>
-              </Col>
+              </Col>-->
               <Col span="6" style="text-align: center">
               <Button type="success" style="margin-right: 40px;" @click="searchChild">搜索</Button>
               </Col>
@@ -252,7 +251,7 @@
                 <tr v-for="item,index in mergedData" style="background-color:rgba(153, 153, 255,0.5)">
                   <td>{{item.courseName}}</td>
                   <td>{{item.classSeries.classSeriesName}}</td>
-                  <td>{{item.rootDirectoryName}}</td>
+                  <!--<td>{{item.rootDirectoryName}}</td>-->
                   <td>{{item.examStyleId ==1?'笔试':item.examStyleId ==2?'面试':'笔试+面试'}}</td>
                   <td>{{item.classHour}}</td>
                   <td>{{item.categoryName}}</td>
@@ -277,7 +276,7 @@
                 <tr v-for="item,index in searchedData">
                   <td>{{item.courseName}}</td>
                   <td>{{item.classSeries.classSeriesName}}</td>
-                  <td>{{item.rootDirectoryName}}</td>
+                  <!--<td>{{item.rootDirectoryName}}</td>-->
                   <td>{{item.examStyleId ==1?'笔试':item.examStyleId ==2?'面试':'笔试+面试'}}</td>
                   <td>{{item.classHour}}</td>
                   <td>{{item.categoryName}}</td>
@@ -365,7 +364,7 @@
             </Row>
             <Row>
               <Col span="6">
-              <FormItem prop="courseName" label="班级名称">
+              <FormItem prop="courseName" label='课程名称'>
                 <Input v-model="lessonAddGroup.courseName"></Input>
               </FormItem>
               </Col>
@@ -393,9 +392,9 @@
       'search2'
     ],
     data() {
-      const validateRoot = (rule, value, callback) => {
+      const validateCourseName = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('根目录不能为空'));
+          callback(new Error('课程名称不能为空'));
         }else {
           this.checkExist(callback)
         }
@@ -432,13 +431,26 @@
           callback();
         }
       };
+
+      const validateSponsor = (rule, value, callback) => {
+        if(value == '') {
+          if(this.lessonAddNotGroup.examStyleId == 1) {
+            callback(new Error('笔试主办人不能为空'));
+          }else if (this.lessonAddNotGroup.examStyleId == 2) {
+            callback(new Error('面试主办人不能为空'));
+          }
+        }else {
+          callback();
+        }
+
+      }
       return {
         disabled:false,
         lessonAddNotGroup: {
           courseName:'',     //班级名称
           classType: '',   //班级类型
           classSeriesId: '', //班级系列
-          rootDirectoryName: '',    //根目录
+          // rootDirectoryName: '',    //根目录
           examStyleId:'',    //考试类型
           //课时
           classHour:{
@@ -460,7 +472,7 @@
               agreement:'协议',   //是否协议  0 协议 1 非协议
               stay:'基地',        //住宿地址  0 基地 1 酒店
               price:0,       // 价格
-              isClosed:1,      //是否封闭班 1 是 0 否
+              isClosed:'1',      //是否封闭班 1 是 0 否
               writtenTf:0,     //面试不过退费
               interviewTf:0,     //笔试不过退费
               mark:''
@@ -472,17 +484,16 @@
           faceMan:''
         },  //非组合班次
         addNotGroupRules: {
-          courseName:[{required:true,message:'班级名称不能为空',trigger:'blur'}],
+          courseName:[{validator:validateCourseName,required:true,trigger:'blur'}],
           classType:[{required:true,message:'班级类型不能为空',trigger:'change'}],
           classSeriesId:[{validator:validateSeries,required:true,trigger:'change'}],
           examStyleId:[{required:true,message:'考试类型不能为空',trigger:'change'}],
-          rootDirectoryName:[{validator:validateRoot,required:true,trigger:'blur'}],
+          // rootDirectoryName:[{validator:validateRoot,required:true,trigger:'blur'}],
           categoryIds:[{required:true,type:'array',message:'科目不能为空',trigger:'change'}],
           schoolBeginsTime:[{required:true,type:'date',message:'预计开课日期不能为空',trigger:'change'}],
           openClassTime:[{required:true,message:'开班日期不能为空',trigger:'change'}],
           projectTag:[{required:true,message:'项目不能为空',trigger:'change'}],
-          writeMan:[{required:false,message:'笔试主办人不能为空',trigger:'change'}],
-          faceMan:[{required:false,message:'面试主办人不能为空',trigger:'change'}],
+          writeMan:[{validator:validateSponsor,required:true,trigger:'change'}],
           erpClassTypeId:[{validator:validateErp,required:true,trigger:'change'}]
         },
 
@@ -490,7 +501,7 @@
           examStyleId:'',
           classType: '',   //班级类型
           childrenClassSeriesId: '', //班级系列
-          rootDirectoryName: '',    //根目录
+          // rootDirectoryName: '',    //根目录
           priceInfoArray:[
             {
               agreement:'协议',   //是否协议  0 协议 1 非协议
@@ -506,8 +517,9 @@
           courseName:'',     //班级名称
         },      //组合班次
         addGroupRules:{
-          courseName:[{required:true,message:'班级名称不能为空',trigger:'blur'}],
+          courseName:[{validator:validateCourseName,required:true,trigger:'blur'}],
           classType:[{required:true,message:'班级类型不能为空',trigger:'change'}],
+          classSeriesId:[{required:true,validator:validateClassSeriesId,trigger:'change'}],
           erpClassTypeId:[{validator:validateAddErp,required:true,trigger:'change'}],
         },
 
@@ -539,14 +551,14 @@
         classSeriesIdNotGroup: [],    //班级系列  非组合班次
         classSeriesIdGroupSelf:[],    //组合班次自身的班级系列
         categoryName: [],    //科目名称
-        rootDirectoryNameGroup:[],      //组合班次根目录名称
+        // rootDirectoryNameGroup:[],      //组合班次根目录名称
         erpClassTypeList:[],
 
         selectedSub:[],     //  选中的科目
         tableHeadData:[
           {name:'name',value:'班级名称'},
           {name:'classSeriesId',value:'班级系列'}, //班级系列
-          {name:'rootDirectoryName',value:'根目录'},    //根目录
+          // {name:'rootDirectoryName',value:'根目录'},    //根目录
           {name:'examStyleId',value:'考试类型'},    //考试类型
           {name:'classHour',value:'课时'},
           {name:'categoryName',value:'科目'},
@@ -594,7 +606,7 @@
                 data.studyStyleId = 1;
                 data.isShow = 1;
 
-                if(this.lessonAddNotGroup.writeMan == '' || this.lessonAddNotGroup.faceMan == '') {
+                if(this.lessonAddNotGroup.writeMan == '' && this.lessonAddNotGroup.faceMan == '') {
                   this.$Message.error('请选择主办人');
                   this.disabled = false;
                   return;
@@ -750,8 +762,7 @@
                   courseName:this.lessonAddGroup.courseName,
                   interviewTf:this.lessonAddGroup.interviewTf,
                   writtenTf:this.lessonAddGroup.writtenTf,
-                  subCourses:this.mergedData,
-                  projectId:this.$route.query.projectId
+                  subCourses:this.mergedData
                 };
 
                 if(this.mergedData.length == 0) {
@@ -788,7 +799,7 @@
           }
         }
       },
-      searchRootByClassSeries(){       //根据班级系列获取根目录
+     /* searchRootByClassSeries(){       //根据班级系列获取根目录
         this.$http({
           method:'get',
           url:this.$store.state.app.baseUrl + 'classSeries/findRootDirectory',
@@ -804,7 +815,7 @@
           .catch((error)=>{
           this.$Message.error(error.message)
           })
-      },
+      },*/
       searchClassSeries() {       //根据笔试面试获取班级系列
         if(this.isShow) {   //非组合班次
           this.examStyle = this.lessonAddNotGroup.examStyleId;
@@ -848,46 +859,101 @@
             })
         }
 
+         // 创建母版 需要指定规划人
+        if(this.createModel) {
+          if(this.isShow) { //非组合
+            this.$http({
+              method:'get',
+              url:this.$store.state.app.baseUrl + 'course/CoursePlaner',
+              params:{
+                examStyleId:this.lessonAddNotGroup.examStyleId
+              }
+            })
+              .then((res)=>{
+                if(res.data.code == 0) {
+                  this.writeManList = res.data.data;
+                } else {
+                  this.$Message.error(res.data.message);
+                }
+              })
+              .catch((error)=>{
+                this.$Message.error(error.message);
+              })
+          }
+        }
+
       },
       checkExist (callback) {     //根目录查重
-        let rootDirectoryName = this.lessonAddNotGroup.rootDirectoryName;
+        let courseName = this.lessonAddNotGroup.courseName;
+        if(this.lessonAddNotGroup.classType == 2 || (this.lessonAddNotGroup.classType == '' && this.lessonAddGroup.classType == '')) {
+          courseName = this.lessonAddNotGroup.courseName;
+        }else if(this.lessonAddGroup.classType == 1) {
+          courseName = this.lessonAddGroup.courseName;
+        }
         let projectId = this.$route.query.projectId;
-        this.$http({
-          method:'get',
-          url:this.$store.state.app.baseUrl + 'rootDirectory/checkExist',
-          params:{
-            rootDirectoryName:rootDirectoryName,
-            projectId:projectId,
-          },
-          headers: {'Content-type': 'application/json'}
-        })
-          .then((res)=>{
-            if(res.data.code == 0) {
-              if(res.data.data == true) {
-                callback(new Error('根目录已存在'));
-              }else {
-                callback();
+        if(this.createModel) {   //母版
+          this.$http({
+            method:'get',
+            url:this.$store.state.app.baseUrl + 'courseModel/checkCourseName',
+            params:{
+              courseModelName:courseName,
+              projectId:projectId,
+            },
+            headers: {'Content-type': 'application/json'}
+          })
+            .then((res)=>{
+              if(res.data.code == 0) {
+                if(res.data.data == false) {
+                  callback(new Error('母版名称已存在'));
+                }else {
+                  callback();
+                }
+              }else{
+                this.$Message.error(res.data.message);
               }
-            }else{
-              this.$Message.error(res.data.message);
-            }
+            })
+            .catch((error)=>{
+              this.$Message.error(error.message);
+            })
+        }else {    //课程
+          this.$http({
+            method:'get',
+            url:this.$store.state.app.baseUrl + 'course/checkCourseName',
+            params:{
+              courseName:courseName,
+              projectId:projectId,
+            },
+            headers: {'Content-type': 'application/json'}
           })
-          .catch((error)=>{
-            this.$Message.error(error.message);
-          })
+            .then((res)=>{
+              if(res.data.code == 0) {
+                if(res.data.data == false) {
+                  callback(new Error('课程名称已存在'));
+                }else {
+                  callback();
+                }
+              }else{
+                this.$Message.error(res.data.message);
+              }
+            })
+            .catch((error)=>{
+              this.$Message.error(error.message);
+            })
+        }
+
       },
       searchChild () {
         let classType = 2;
         let examStyle = this.lessonAddGroup.examStyleId;
         let classSeries = this.lessonAddGroup.childrenClassSeriesId;
-        let rootDirectoryName = this.lessonAddGroup.rootDirectoryName;
+        // let rootDirectoryName = this.lessonAddGroup.rootDirectoryName;
         let announcementId = this.$route.params.id;
         let checkStates=[7];
         let data = {
           classType:classType,
           examStyle:examStyle,
           classSeries:classSeries,
-          rootDirectoryName:rootDirectoryName,
+          // rootDirectoryName:rootDirectoryName,
           announcementId:announcementId,
           checkStates:checkStates
         };
@@ -1033,43 +1099,6 @@
 
     },
     mounted(){
-      if(this.createModel) {
-        this.$http({
-          method:'get',
-          url:this.$store.state.app.baseUrl + 'course/CoursePlaner',
-          params:{
-            examStyleId:1
-          }
-        })
-          .then((res)=>{
-            if(res.data.code == 0) {
-              this.writeManList = res.data.data;
-            } else {
-              this.$Message.error(res.data.message);
-            }
-          })
-          .catch((error)=>{
-            this.$Message.error(error.message);
-          })
-
-        this.$http({
-          method:'get',
-          url:this.$store.state.app.baseUrl + 'course/CoursePlaner',
-          params:{
-            examStyleId:2
-          }
-        })
-          .then((res)=>{
-            if(res.data.code == 0) {
-              this.faceManList = res.data.data;
-            } else {
-              this.$Message.error(res.data.message);
-            }
-          })
-          .catch((error)=>{
-            this.$Message.error(error.message);
-          })
-      }
 
       let projectId = this.$route.query.projectId;
       //获取科目

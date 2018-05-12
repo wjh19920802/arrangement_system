@@ -104,6 +104,7 @@
                     <Col span="12" v-if="isShow">
                     <FormItem label="班次日期" prop="studyTimeList">
                       <DatePicker type="date" multiple placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd"></DatePicker>
+                      <DatePicker type="daterange"  placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd"></DatePicker>
                       <span style="color: orange;">请添加{{lessonDays}}天的课程日期</span>
                     </FormItem>
                     </Col>
@@ -499,9 +500,9 @@
     methods: {
       timestampToTime(timestamp) {
         var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
-        let Y = date.getFullYear() + '.';
-        let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '.';
-        let D = date.getDate() + ' ';
+        let Y = date.getFullYear() + '/';
+        let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '/';
+        let D = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
         //h = date.getHours() + ':';
         //m = date.getMinutes() + ':';
         //s = date.getSeconds();
@@ -663,6 +664,11 @@
               if(res.data.code == 0) {
                 vm.getLessonClasses()
                 vm.newLesson = res.data.data ? res.data.data : []
+                vm.newLesson.forEach((item1)=>{
+                  item1.studyTimeList.forEach((item2,index)=>{
+                    item1.studyTimeList[index] = vm.timestampToTime(item2);
+                  })
+                })
                 if(res.data.data.length){
                   vm.$Message.error('有未添加成功的班次')
                 }else{
