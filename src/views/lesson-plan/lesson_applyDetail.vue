@@ -104,6 +104,14 @@
                     </FormItem>
                 </Row>
                 <Row>
+                  <FormItem  label="是否封闭班">
+                    <Select v-model="priceForm.isClosed">
+                      <Option value="1">是</Option>
+                      <Option value="0">否</Option>
+                    </Select>
+                  </FormItem>
+                </Row>
+                <Row v-show="priceForm.isClosed == 1">
                     <FormItem  label="住宿地址">
                         <Select v-model="priceForm.stay">
                             <Option value="0">基地</Option>
@@ -282,8 +290,8 @@
                     params.row.priceInfoArray.forEach((item)=>{
                       let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                       let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                      let isClosed = item.isClosed == 1?'封闭班-':'非封闭班-';
-                      let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'-':'-'+item.stay)  + writtenTf + interviewTf;
+                      let isClosed = item.isClosed == 1?'封闭班-':item.isClosed === '0'?'非封闭班-':'';
+                      let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'':'-'+item.stay)  + writtenTf + interviewTf;
                       price.push(str)
                     });
                       let ele = [];
@@ -524,8 +532,8 @@
                           params.row.priceInfoArray.forEach((item)=>{
                             let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                             let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                            let isClosed = item.isClosed == 1?'封闭班-':'非封闭班-';
-                            let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'-':'-'+item.stay)  + writtenTf + interviewTf;
+                            let isClosed = item.isClosed == 1?'封闭班-':item.isClosed === '0'?'非封闭班-':'';
+                            let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'':'-'+item.stay)  + writtenTf + interviewTf;
                               price.push(str)
                           });
                           if(price) {
@@ -851,8 +859,8 @@
                 params.row.priceInfoArray.forEach((item)=>{
                   let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                   let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                  let isClosed = item.isClose == 1?'封闭班-':'非封闭班-';
-                  let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'-':'-'+item.stay)  + writtenTf + interviewTf;
+                  let isClosed = item.isClosed == 1?'封闭班-':item.isClosed === '0'?'非封闭班-':'';
+                  let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'':'-'+item.stay)  + writtenTf + interviewTf;
                   price.push(str)
                 });
                 let ele = [];

@@ -85,18 +85,18 @@
               </FormItem>
               </Col>
               <Col span="12">
-              <FormItem label="休息天数" prop="dayOfRest" class="dayOfRest">
-                <InputNumber :min="0" v-model="lessonAddNotGroup.dayOfRest"></InputNumber>
-              </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span="12">
               <FormItem prop="erpClassTypeId" label="erp班级类型">
                 <Select v-model="lessonAddNotGroup.erpClassTypeId">
                   <Option value="">请选择</Option>
                   <Option v-for="item in erpClassTypeList" :value="item.id" :key="item.id">{{item.classTypeName}}</Option>
                 </Select>
+              </FormItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col span="12">
+              <FormItem label="休息天数" prop="dayOfRest" class="dayOfRest">
+                <InputNumber :min="0" v-model="lessonAddNotGroup.dayOfRest"></InputNumber>
               </FormItem>
               </Col>
               <Col span="12">
@@ -734,7 +734,7 @@
                     if(res.data.code == 0) {
                       this.$Message.success('提交成功!');
                       this.$refs['lessonAddNotGroup'].resetFields();
-                      this.lessonAddNotGroup.priceInfoArray.splice(0,this.lessonAddNotGroup.priceInfoArray.length,{agreement:'协议', stay:'基地', price:0,  writtenTf:0,interviewTf:0});
+                      this.lessonAddNotGroup.priceInfoArray.splice(0,this.lessonAddNotGroup.priceInfoArray.length,{agreement:'协议', stay:'基地', price:0,isClosed:'1', writtenTf:0,interviewTf:0});
                       this.lessonAddNotGroup.categoryIds.splice(0,this.lessonAddNotGroup.categoryIds.length);
                       this.search2();
                     }else {
@@ -1227,6 +1227,9 @@
       font-size: 12px;
       text-align: center;
       display: none;
+    }
+    .ivu-input-number {
+      width: 100%!important;
     }
   }
   .price_mark .ivu-form-item-label:before {
