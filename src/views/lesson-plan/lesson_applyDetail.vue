@@ -213,7 +213,7 @@
           {
             title: '班级名称',
             align: 'center',
-            key: 'courseName'
+            key: 'courseName',
           },
           {
             title: '班级类型',
@@ -282,7 +282,8 @@
                     params.row.priceInfoArray.forEach((item)=>{
                       let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                       let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                      let str = item.agreement + '班-' + item.price  + (item.stay==null?'-':'-'+item.stay)  + writtenTf + interviewTf;
+                      let isClosed = item.isClosed == 1?'封闭班-':'非封闭班-';
+                      let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'-':'-'+item.stay)  + writtenTf + interviewTf;
                       price.push(str)
                     });
                       let ele = [];
@@ -430,8 +431,8 @@
                               class: ['operate','notShow'],
                               on: {
                                   click: () => {
-                                      //获取当前点击的行的index
-                                      this.changeNameId = params.row.id;
+                                      //获取当前点击的行的班级编码
+                                      this.changeNameId = params.row.classCode;
                                       this.changeNameIsShow = true;
                                       this.currentName = params.row.courseName;
                                   }
@@ -492,7 +493,7 @@
                               on: {
                                   click: () => {
                                       //确定当前点击的行的index
-                                      this.changeNameId = params.row.id;
+                                      this.changeNameId = params.row.classCode;
                                       //显示弹窗
                                       this.changePublishIsShow = true;
                                       this.currentPublish = params.row.schoolBeginsTime;
@@ -523,7 +524,8 @@
                           params.row.priceInfoArray.forEach((item)=>{
                             let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                             let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                            let str = item.agreement + '班-' + item.price  + (item.stay==null?'-':'-'+item.stay)  + writtenTf + interviewTf;
+                            let isClosed = item.isClosed == 1?'封闭班-':'非封闭班-';
+                            let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'-':'-'+item.stay)  + writtenTf + interviewTf;
                               price.push(str)
                           });
                           if(price) {
@@ -849,7 +851,8 @@
                 params.row.priceInfoArray.forEach((item)=>{
                   let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                   let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                  let str = item.agreement + '班-' + item.price  + (item.stay==null?'-':'-'+item.stay)  + writtenTf + interviewTf;
+                  let isClosed = item.isClose == 1?'封闭班-':'非封闭班-';
+                  let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'-':'-'+item.stay)  + writtenTf + interviewTf;
                   price.push(str)
                 });
                 let ele = [];
@@ -983,6 +986,7 @@
         priceForm:{
             agreement:'0',   //是否协议  0 协议 1 非协议
             stay:'0',        //住宿地址  0 基地 1 酒店
+            isClosed:'1',
             price:0 ,      // 价格
             writtenTf:0,
             interviewTf:0,
@@ -1066,13 +1070,15 @@
           let price = this.priceForm.price;
           let writtenTf = this.priceForm.writtenTf;
           let interviewTf = this.priceForm.interviewTf;
+          let isClosed = this.priceForm.isClosed == '1'?'封闭班':'非封闭班';
 
           obj={
             agreement:agreement,
             stay:stay,
             price:price,
             writtenTf:writtenTf,
-            interviewTf:interviewTf
+            interviewTf:interviewTf,
+            isClosed:isClosed
           };
           this.selectedData.forEach((item)=>{
             if(item.id == this.selectedId) {
@@ -1083,9 +1089,6 @@
           this.alreadyStashData = this.selectedData.filter((item)=>{
             return item._checked;
           })
-        console.log(this.alreadyStashData)
-        console.log(this.selectedData)
-
       },
       cancel () {
 
@@ -1094,12 +1097,14 @@
         if(this.waitStashData.length > 0) {
           this.waitStashData.forEach((item)=>{
             item.courseModelId = item.id;
+            item.id = null;
+
             item.schoolBeginsTime = new Date(item.schoolBeginsTime).getTime();
           });
           //添加到已选课程中的元素 不可选
           this.waitStashData.forEach((item1)=>{
             this.waitData.forEach((item)=>{
-              if(item.id == item1.id) {
+              if(item.classCode == item1.classCode) {
                 item._disabled = true;
                 this.$set(item);
                 this.$forceUpdate()
@@ -1145,15 +1150,13 @@
 
           // this.waitStashData.splice(0,this.waitStashData.length);
         }
-        console.log(this.selectedData)
-
       },
       removeLesson () {
         if(this.alreadyStashData.length > 0) {
             //已选课程中移除
           for(let i=0;i<this.alreadyStashData.length;i++){
               for(let j=0;j<this.selectedData.length;j++){
-                if(this.selectedData[j].id == this.alreadyStashData[i].id){
+                if(this.selectedData[j].classCode == this.alreadyStashData[i].classCode){
                     this.selectedData.splice(j,1);
                     j--;
                 }
@@ -1162,22 +1165,48 @@
             //从母版添加的课程列表中移除
           for(let i=0;i<this.alreadyStashData.length;i++){
               for(let j=0;j<this.hasToSelectedData.length;j++){
-                  if(this.hasToSelectedData[j].id == this.alreadyStashData[i].id){
+                  if(this.hasToSelectedData[j].classCode == this.alreadyStashData[i].classCode){
                       this.hasToSelectedData.splice(j,1);
                       j--;
                   }
               }
           }
           //已选课程中移除的元素 在待选中变为可选
+          let courseIds = [];
           this.alreadyStashData.forEach((item,index)=>{
-            this.waitData.forEach((item2)=>{
-              if(item.id == item2.id) {
-                item2._disabled = false;
-                this.$set(item2);
-                this.$forceUpdate()
-              }
+            if(item.id == null) {
+              this.waitData.forEach((item2)=>{
+                if(item.classCode == item2.classCode) {
+                  item2._disabled = false;
+                  this.$set(item2);
+                  this.$forceUpdate()
+                }
+              })
+            }else {
+              courseIds.push(item.id)
+            }
+          });
+          if(courseIds.length > 0) {
+            let urlParams = '';
+            courseIds.forEach((item)=>{
+              urlParams += 'courseIds=' + item + '&'
+            });
+            urlParams = urlParams.substring(0,urlParams.length-1);
+            this.$http({
+              method:'get',
+              url:this.$store.state.app.baseUrl + 'course/batchDelTempCourse?' + urlParams
             })
-          })
+              .then((res)=>{
+                if(res.data.code == 0) {
+                  this.search1();
+                } else {
+                  this.$Message.error(error.message);
+                }
+              })
+              .catch((error)=>{
+                this.$Message.error(error.message);
+              })
+          }
           this.total2 = this.total2 - this.alreadyStashData.length;
 
           this.alreadyStashData.splice(0,this.alreadyStashData.length);
@@ -1188,14 +1217,6 @@
       },
       getAlreadySelectedData (selection,row) {
           this.alreadyStashData = selection ;   //获取已选课程中选中的元素
-
-          // this.selectedData.forEach((item)=>{     //已选中的数据 _checked 设为true
-          //   this.alreadyStashData.forEach((item2)=>{
-          //     if(item.id == item2.id) {
-          //       item._checked = true;
-          //     }
-          //   })
-          // });
         //已选中数据 _checked为true  其余为false
           this.alreadyStashData.forEach((item)=>{
             item._checked = true;
@@ -1204,16 +1225,9 @@
           restDate.forEach((item)=>{
             item._checked = false;
           })
-          // let resetData = this.selectedData.minus(this.selectedData);
-          // this.selectedData.forEach((item)=>{     //已选中之外的数据 _checked 设为false
-          //     resetData.forEach((item2)=>{
-          //     if(item.id == item2.id) {
-          //       item._checked = false;
-          //     }
-          //   })
-          // });
         },
       changeName () {
+        //修改数据源中的值为输入框的值
         this.$http({
           method:'get',
           url:this.$store.state.app.baseUrl + 'course/checkCourseName',
@@ -1230,7 +1244,7 @@
               }else {
                 //修改数据源中的值为输入框的值
                 this.selectedData.forEach((item)=>{
-                  if(item.id == this.changeNameId) {
+                  if(item.classCode == this.changeNameId) {
                     item.courseNameRepeat = true;
                     item.courseName = this.currentName;
                   }
@@ -1248,7 +1262,7 @@
       },
       changePublish () {
             this.selectedData.forEach((item)=>{
-                if(item.id == this.changeNameId) {
+                if(item.classCode == this.changeNameId) {
                     item.schoolBeginsTime = Util.formateDate(this.currentPublish.getTime());
                 }
           })
@@ -1295,6 +1309,7 @@
                         });
                     }
                     this.total1 = res.data.data.total;
+                    this.search2()
                 } else {
                   this.$Message.error(res.data.message)
                 }
@@ -1324,6 +1339,15 @@
                           this.$set(item,'_checked',false);
                       });
                       this.total2 = res.data.data.total;
+
+                      //根据母版创建过的课程 被驳回了在已选列表中 母版列表应该置灰
+                    this.waitData.forEach((item1)=>{
+                      this.selectedData.forEach((item2)=>{
+                        if(item2.classCode == item1.classCode) {
+                          this.$set(item1,'_disabled',true);
+                        }
+                      })
+                    })
                   } else {
                     this.$Message.error(res.data.message);
                   }
@@ -1373,7 +1397,6 @@
     },
     mounted() {
         this.search1();
-        this.search2();
         this.id = this.$route.params.id;
       // this.uploadList = this.$refs.upload.fileList;
     },

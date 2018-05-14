@@ -201,7 +201,7 @@
             </Row>
           </div>
         </Form>
-        <Form ref="lessonAddGroup" :rules="addGroupRules" :model="lessonAddGroup" :label-width="80">
+        <Form ref="lessonAddGroup" :rules="addGroupRules" :model="lessonAddGroup" :label-width="150">
           <div class="" v-if="!isShow">
             <Row>
               <Col span="6">
@@ -1169,7 +1169,7 @@
       }
     }
     .ivu-form-item-label {
-      text-align: center;
+      text-align: right;
       padding-left: 10px;
     }
     .classclassHourPlan{
