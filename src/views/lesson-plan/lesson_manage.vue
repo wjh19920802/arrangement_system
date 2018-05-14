@@ -11,7 +11,7 @@
                     <Row>
                         <Col span="12">
                         <FormItem label="班级编码" prop="code">
-                            <Input v-model="formItem.code" placeholder=""></Input>
+                            <Input v-model="formItem.classCode" placeholder=""></Input>
                         </FormItem>
                         </Col>
                         <Col span="12">
@@ -40,13 +40,23 @@
                         </Col>
                     </Row>
                     <Row>
-                        <Col span="12">
+                        <!--<Col span="12">
                         <FormItem label="根目录" prop="rootDirectoryName">
                             <Select v-model="formItem.rootDirectoryName">
                                 <Option value="">请选择</Option>
                                 <Option value="1">题海实战班</Option>
                                 <Option value="2">讲练结合班</Option>
                             </Select>
+                        </FormItem>
+                        </Col>-->
+                        <Col span="12">
+                        <FormItem label="项目类型" prop="projectId">
+                          <Select v-model="formItem.projectId">
+                            <Option value="">请选择</Option>
+                            <Option value="1">公务员（国考）</Option>
+                            <Option value="2">公务员（省考）</Option>
+                            <Option value="4">事业单位</Option>
+                          </Select>
                         </FormItem>
                         </Col>
                         <Col span="12">
@@ -60,7 +70,7 @@
                         <Col span="12">
                         <FormItem label="科目" prop="categoryNames">
                         <Select v-model="formItem.categoryNames" multiple>
-                            <Option v-for="item in subjects" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                            <Option v-for="item in subjects" :value="item.categoryName" :key="item.value">{{ item.categoryName }}</Option>
                         </Select>
                         </FormItem>
                         </Col>
@@ -144,7 +154,7 @@
             courseName: '',
             classType: '',
             classSeries: '',
-            rootDirectoryName: '',
+            projectId: '',
             classHour: '',
             day: 0,
             night: 0,
@@ -158,10 +168,7 @@
         pageNumber:1,
         pageSize:20,
         total:0,
-          subjects: [
-              {value:'0',label:'公基'},
-              {value:'1',label:'行测'}
-          ],
+        subjects: [],
         // 表格头部及配置
         columns: [
           {
@@ -439,7 +446,23 @@
           }
         })
         .catch((error)=>{
+          this.$Message.error(error.message)
+        })
 
+      //获取一级科目列表
+
+      this.$http({
+        method:'get',
+        url:this.$store.state.app.baseUrl + 'category/findAllTopCategory',
+        headers: {'Content-type': 'application/json'}
+      })
+        .then((res)=>{
+          if(res.data.code == 0) {
+            this.subjects = res.data.data;
+          }
+        })
+        .catch((error)=>{
+          this.$Message.error(error.message)
         })
     },
     created () {

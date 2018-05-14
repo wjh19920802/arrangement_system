@@ -9,10 +9,11 @@
                 <th v-for="item in tableHeadData">{{item.value}}</th>
             </tr>
             <tr v-for="item in templateData">
+                <td>{{item.courseName}}</td>
                 <td>{{item.classCode}}</td>
                 <td>{{item.classType==1?'组合班次':'非组合班次'}}</td>
                 <td>{{item.classSeries?item.classSeries.classSeriesName:''}}</td>
-                <td>{{item.rootDirectoryName}}</td>
+                <!--<td>{{item.rootDirectoryName}}</td>-->
                 <td>{{item.classHour}}</td>
                 <td>
                   <div v-for="i in item.categorys">
@@ -62,6 +63,7 @@
                 <th v-for="item in childrenHeadData">{{item.value}}</th>
             </tr>
                 <tr v-for="item in childrenData">
+                <td>{{item.courseName}}</td>
                 <td>{{item.classCode}}</td>
                 <td>{{item.classType==1?'组合班次':'非组合班次'}}</td>
                 <td>{{item.classSeries.classSeriesName}}</td>
@@ -111,6 +113,10 @@
                 provinceIdList:[],
                 tableHeadData:[
                     {
+                      name:'courseName',
+                      value:'课程名称'
+                    },
+                    {
                       name:'classCode',
                       value:'班级编码'
                     },
@@ -122,10 +128,10 @@
                       name:'classSeriesId',
                       value:'班级系列'
                     },
-                    {
-                      name:'rootDirectoryName',
-                      value:'根目录'
-                    },
+                    // {
+                    //   name:'rootDirectoryName',
+                    //   value:'根目录'
+                    // },
                     {
                       name:'classHour',
                       value:'课时'
@@ -179,10 +185,12 @@
                   }
                   ],
                 templateData: [],
-                childrenHeadData:[{name:'classCode',value:'班级编码'},
+                childrenHeadData:[
+                    {name:'courseName',value:'课程名称'},
+                    {name:'classCode',value:'班级编码'},
                     {name:'classType',value:'班级类型'},
                     {name:'classSeriesId',value:'班级系列'},
-                    {name:'rootDirectoryName',value:'根目录'},
+                    // {name:'rootDirectoryName',value:'根目录'},
                     {name:'classHour',value:'课时'},
                     {name:'categoryIds',value:'科目'},
                     {name:'schoolBeginsTime',value:'预计开课日期'},

@@ -16,22 +16,22 @@
                 </p>
                 <Form :label-width="100" label-position="right" :rules="formRules" ref="formItem" :model="formItem">
                 <Row>
-                  <Col span="6">
+                  <!--<Col span="6">
                     <FormItem label="班级名称" prop="className">
                       <Input v-model="formItem.className" placeholder="请输入班级名称"></Input>
                     </FormItem>
-                  </Col>
-                  <Col span="12" offset="2">
+                  </Col>-->
+                  <Col span="24">
                   <FormItem label="上课地区" prop="area">
                     <Row>
-                      <Col span="11" v-show="announceProvince != 2">
+                      <Col span="9" v-show="announceProvince != 2">
                       <FormItem prop="studyCity">
                         <Select ref="city" v-model="formItem.studyCity" @on-change="getThirdTree">
                           <Option v-for="ite,ind in secondTree" :key="ind" :value="ite.areaid">{{ite.name}}</Option>
                         </Select>
                       </FormItem>
                       </Col>
-                      <Col span="11" offset="2">
+                      <Col span="9" offset="2">
                       <FormItem prop="studyCenter">
                         <Select ref="school" v-model="formItem.studyCenter">
                           <Option v-for="(ite,ind) in thirdTree" :key="ind" :value="ite.areaid">{{ite.name}}</Option>
@@ -247,14 +247,14 @@
               return params.row.classType==1 ? '---' : params.row.classSeries.classSeriesName
             }
           },
-          {
+          /*{
             title: '根目录',
             align: 'center',
             key: 'rootDirectoryName',
             render: (h,params) => {
               return params.row.classType==1 ? '---' : params.row.rootDirectoryName
             }
-          },
+          },*/
           {
             title: '课时',
             align: 'center',
@@ -393,14 +393,14 @@
         ],
         data1: [],
         columns2: [
-          {
+         /* {
             title: '上课期数',
             align: 'center',
             key: 'period',
-            /*render: (h,params) => {
+            /!*render: (h,params) => {
               return h('div', '第 '+(params.index+1)+' 期')
-            }*/
-          },
+            }*!/
+          },*/
           {
             title: '班次编码',
             align: 'center',

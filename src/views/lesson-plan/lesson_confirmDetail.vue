@@ -203,7 +203,7 @@
               }
             }
           },
-          {
+         /* {
             title: '根目录',
             align: 'center',
             key: 'rootDirectoryName',
@@ -214,7 +214,7 @@
                 return '--'
               }
             }
-          },
+          },*/
           {
             title: '课时',
             align: 'center',
@@ -415,7 +415,7 @@
                     }
                   }
               },
-              {
+             /* {
                   title: '根目录',
                   align: 'center',
                   key: 'rootDirectoryName',
@@ -426,7 +426,7 @@
                       return '--'
                     }
                   }
-              },
+              },*/
               {
                   title: '课时',
                   align: 'center',
@@ -627,11 +627,11 @@
               }
             }
           },
-          {
+         /* {
             title: '根目录',
             align: 'center',
             key: 'rootDirectoryName'
-          },
+          },*/
           {
             title: '课时',
             align: 'center',

@@ -307,7 +307,7 @@
             </p>
             <Row v-for="item,index in lessonAddGroup.priceInfoArray" :key="index" class="priceItem">
               <Row>
-                <Col span="8">
+                <Col span="6">
                 <FormItem prop="agreement" label="是否协议">
                   <Select v-model="item.agreement">
                     <Option value="协议">协议</Option>
@@ -320,7 +320,12 @@
                   <InputNumber :min="0" v-model="item.price"></InputNumber>
                 </FormItem>
                 </Col>
-                <Col span="4" offset="6">
+                <Col span="6" class="price_mark">
+                <FormItem label="备注">
+                  <Input type="textarea" v-model="item.mark" :rows="1"></Input>
+                </FormItem>
+                </Col>
+                <Col span="4">
                 <Row type="flex" justify="space-around">
                   <Button type="error"  @click="delInfo(index)">删除</Button>
                 </Row>
@@ -335,11 +340,6 @@
                 <Col span="8" v-if="tfIsShow == 2 || tfIsShow == 3">
                 <FormItem prop="interviewTf" label="面试不过退费">
                   <InputNumber  v-model="item.interviewTf" :min="0"></InputNumber>
-                </FormItem>
-                </Col>
-                <Col span="8" class="price_mark">
-                <FormItem label="备注">
-                  <Input type="textarea" v-model="item.mark" :rows="1"></Input>
                 </FormItem>
                 </Col>
               </Row>
