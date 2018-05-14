@@ -430,8 +430,8 @@
                               class: ['operate','notShow'],
                               on: {
                                   click: () => {
-                                      //获取当前点击的行的index
-                                      this.changeNameId = params.row.id;
+                                      //获取当前点击的行的班级编码
+                                      this.changeNameId = params.row.classCode;
                                       this.changeNameIsShow = true;
                                       this.currentName = params.row.courseName;
                                   }
@@ -496,7 +496,7 @@
                               on: {
                                   click: () => {
                                       //确定当前点击的行的index
-                                      this.changeNameId = params.row.id;
+                                      this.changeNameId = params.row.classCode;
                                       //显示弹窗
                                       this.changePublishIsShow = true;
                                       this.currentPublish = params.row.schoolBeginsTime;
@@ -1087,9 +1087,6 @@
           this.alreadyStashData = this.selectedData.filter((item)=>{
             return item._checked;
           })
-        console.log(this.alreadyStashData)
-        console.log(this.selectedData)
-
       },
       cancel () {
 
@@ -1098,6 +1095,8 @@
         if(this.waitStashData.length > 0) {
           this.waitStashData.forEach((item)=>{
             item.courseModelId = item.id;
+            item.id = null;
+
           });
           this.selectedData = this.waitStashData.concat(this.selectedData);
           this.total2 = this.total2 + this.selectedData.length;
@@ -1105,7 +1104,7 @@
           //添加到已选课程中的元素 不可选
           this.waitStashData.forEach((item1)=>{
             this.waitData.forEach((item)=>{
-              if(item.id == item1.id) {
+              if(item.classCode == item1.classCode) {
                 item._disabled = true;
                 this.$set(item);
                 this.$forceUpdate()
@@ -1114,15 +1113,13 @@
           });
           this.waitStashData.splice(0,this.waitStashData.length);
         }
-        console.log(this.selectedData)
-
       },
       removeLesson () {
         if(this.alreadyStashData.length > 0) {
             //已选课程中移除
           for(let i=0;i<this.alreadyStashData.length;i++){
               for(let j=0;j<this.selectedData.length;j++){
-                if(this.selectedData[j].id == this.alreadyStashData[i].id){
+                if(this.selectedData[j].classCode == this.alreadyStashData[i].classCode){
                     this.selectedData.splice(j,1);
                     j--;
                 }
@@ -1131,7 +1128,7 @@
             //从母版添加的课程列表中移除
           for(let i=0;i<this.alreadyStashData.length;i++){
               for(let j=0;j<this.hasToSelectedData.length;j++){
-                  if(this.hasToSelectedData[j].id == this.alreadyStashData[i].id){
+                  if(this.hasToSelectedData[j].classCode == this.alreadyStashData[i].classCode){
                       this.hasToSelectedData.splice(j,1);
                       j--;
                   }
@@ -1139,14 +1136,41 @@
           }
           //已选课程中移除的元素 在待选中变为可选
           this.alreadyStashData.forEach((item,index)=>{
-            this.waitData.forEach((item2)=>{
-              if(item.id == item2.id) {
-                item2._disabled = false;
-                this.$set(item2);
-                this.$forceUpdate()
-              }
-            })
+            if(item.id == null) {
+              this.waitData.forEach((item2)=>{
+                if(item.classCode == item2.classCode) {
+                  item2._disabled = false;
+                  this.$set(item2);
+                  this.$forceUpdate()
+                }
+              })
+            }else {
+              let courseIds = [];
+              courseIds.push(item.id)
+              this.$http({
+                method:'post',
+                url:this.$store.state.app.baseUrl + 'course/batchDelTempCourse',
+                data:{
+                  // examStyleId:templateStyle,
+                  pageNumber:this.pageNumber1,
+                  pageSize:this.pageSize1,
+                  checkState:7,
+                  provinceId:this.$route.query.provinceId
+                }
+              })
+                .then((res)=>{
+                  if(res.data.code == 0) {
+
+                  } else {
+
+                  }
+                })
+                .catch((error)=>{
+                  this.$Message.error(error.message);
+                })
+            }
           })
+
           this.total2 = this.total2 - this.alreadyStashData.length;
 
           this.alreadyStashData.splice(0,this.alreadyStashData.length);
@@ -1157,14 +1181,6 @@
       },
       getAlreadySelectedData (selection,row) {
           this.alreadyStashData = selection ;   //获取已选课程中选中的元素
-
-          // this.selectedData.forEach((item)=>{     //已选中的数据 _checked 设为true
-          //   this.alreadyStashData.forEach((item2)=>{
-          //     if(item.id == item2.id) {
-          //       item._checked = true;
-          //     }
-          //   })
-          // });
         //已选中数据 _checked为true  其余为false
           this.alreadyStashData.forEach((item)=>{
             item._checked = true;
@@ -1173,26 +1189,18 @@
           restDate.forEach((item)=>{
             item._checked = false;
           })
-          // let resetData = this.selectedData.minus(this.selectedData);
-          // this.selectedData.forEach((item)=>{     //已选中之外的数据 _checked 设为false
-          //     resetData.forEach((item2)=>{
-          //     if(item.id == item2.id) {
-          //       item._checked = false;
-          //     }
-          //   })
-          // });
         },
       changeName () {
         //修改数据源中的值为输入框的值
           this.selectedData.forEach((item)=>{
-             if(item.id == this.changeNameId) {
+             if(item.classCode == this.changeNameId) {
                 item.courseName = this.currentName;
             }
           })
       },
       changePublish () {
             this.selectedData.forEach((item)=>{
-                if(item.id == this.changeNameId) {
+                if(item.classCode == this.changeNameId) {
                     item.schoolBeginsTime = Util.formateDate(this.currentPublish.getTime());
                 }
           })
@@ -1237,6 +1245,7 @@
                         });
                     }
                     this.total1 = res.data.data.total;
+                    this.search2()
                 } else {
                   this.$Message.error(res.data.message)
                 }
@@ -1265,6 +1274,15 @@
                           this.$set(item,'_checked',false);
                       });
                       this.total2 = res.data.data.total;
+
+                      //根据母版创建过的课程 被驳回了在已选列表中 母版列表应该置灰
+                    this.waitData.forEach((item1)=>{
+                      this.selectedData.forEach((item2)=>{
+                        if(item2.classCode == item1.classCode) {
+                          this.$set(item1,'_disabled',true);
+                        }
+                      })
+                    })
                   } else {
                     this.$Message.error(res.data.message);
                   }
@@ -1314,7 +1332,6 @@
     },
     mounted() {
         this.search1();
-        this.search2();
         this.id = this.$route.params.id;
       // this.uploadList = this.$refs.upload.fileList;
     },
