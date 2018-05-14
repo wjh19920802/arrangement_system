@@ -205,14 +205,17 @@
           <div class="" v-if="!isShow">
             <Row>
               <Col span="6">
-              <FormItem prop="classType" label="子班级班级类型">
+              <FormItem prop="classType" label="班级类型">
                 <Select v-model="lessonAddGroup.classType" @on-change="changeGroup">
                   <Option v-for="item in classType" :key="item.value" :value="item.value">{{item.label}}</Option>
                 </Select>
               </FormItem>
               </Col>
-              <Col span="6" style="text-align: center;height: 30px;line-height: 30px;"><h3> 请选择子班次:</h3></Col>
             </Row>
+            <p style="border-bottom: 1px solid #e9eaec;padding: 14px 16px;line-height: 1;margin-bottom: 20px;">
+              <Icon type="pinpoint" ></Icon>
+              子班次筛选条件：
+            </p>
             <Row>
               <Col span="6">
               <FormItem prop="examStyleId" label="考试类型">
@@ -302,7 +305,7 @@
             </Row>
             <p style="border-bottom: 1px solid #e9eaec;padding: 14px 16px;line-height: 1;margin-bottom: 20px;">
               <Icon type="pinpoint" ></Icon>
-              价格
+              组合班次价格
               <Button type="primary" style="margin-left: 15px" @click="addInfo">添加</Button>
             </p>
             <Row v-for="item,index in lessonAddGroup.priceInfoArray" :key="index" class="priceItem">
