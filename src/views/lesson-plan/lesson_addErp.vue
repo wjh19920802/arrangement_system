@@ -104,7 +104,7 @@
                     <Col span="12" v-if="isShow">
                     <FormItem label="班次日期" prop="studyTimeList">
                       <DatePicker type="date" multiple placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd"></DatePicker>
-                      <DatePicker type="daterange"  placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd"></DatePicker>
+                      <!--<DatePicker type="daterange"  placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd"></DatePicker>-->
                       <span style="color: orange;">请添加{{lessonDays}}天的课程日期</span>
                     </FormItem>
                     </Col>

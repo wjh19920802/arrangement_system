@@ -284,6 +284,7 @@
         data.announceWrittenResultTime = this.announceWrittenResultTimeStamp;
         data.writtenTime = this.writtenTimeStamp;
         data.interviewTime = this.interviewTimeStamp;
+        data.courseCheckStates = [7];
         this.$http({
           method:'post',
           url:this.$store.state.app.baseUrl + 'announcement/query/',

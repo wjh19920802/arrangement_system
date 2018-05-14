@@ -328,7 +328,7 @@
         this.search();
       },
       search () {
-            let url = this.$store.state.app.baseUrl  + 'course/query';
+            let url = this.$store.state.app.baseUrl  + 'course/queryForCourseList';
             let data = Util.deepClone(this.formItem);
             let checkStates = [];
             if(data.checkState == 1 || data.checkState == 0) {

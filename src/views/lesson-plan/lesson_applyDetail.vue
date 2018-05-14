@@ -1117,7 +1117,7 @@
               if(res.data.code == 0) {
                 this.repeatData = res.data.data;   //名称重复的数据
                 if(this.repeatData.length > 0) {
-                  this.$Message.info({
+                  this.$Message.error({
                     content: '红色字体的课程名称已存在，请及时修改',
                     duration: 20,
                     closable: true
@@ -1131,12 +1131,12 @@
                     })
                   })
                 }
+                this.selectedData = this.waitStashData.concat(this.selectedData);
+                this.total2 = this.total2 + this.selectedData.length;
+                this.hasToSelectedData = this.hasToSelectedData.concat(this.waitStashData);
               } else {
                 this.$Message.error(res.data.message);
               }
-              this.selectedData = this.waitStashData.concat(this.selectedData);
-              this.total2 = this.total2 + this.selectedData.length;
-              this.hasToSelectedData = this.hasToSelectedData.concat(this.waitStashData);
             })
             .catch((error)=>{
               this.$Message.error(error.message);
@@ -1219,7 +1219,7 @@
           url:this.$store.state.app.baseUrl + 'course/checkCourseName',
           params:{
             courseName:this.currentName,
-            projectId:this.projectId,
+            projectId:this.$route.query.projectId,
           },
           headers: {'Content-type': 'application/json'}
         })
@@ -1277,7 +1277,8 @@
                   pageSize:this.pageSize1,
                   checkState:7,
                   // announcementId:this.$route.params.id,
-                  provinceId:this.$route.query.provinceId
+                  provinceId:this.$route.query.provinceId,
+                  projectId:this.$route.query.projectId
               }
           })
               .then((res)=>{
@@ -1311,7 +1312,8 @@
                   checkStates:[0,2],
                   pageNumber:this.pageNumber2,
                   pageSize:this.pageSize2,
-                  announcementId:this.$route.params.id
+                  announcementId:this.$route.params.id,
+                  projectId:this.$route.query.projectId
               }
           })
               .then((res)=>{

@@ -106,12 +106,12 @@ export let baseRouter = [
       access:1,
       component: Main,
       children: [
-        { path: 'manage', title: '课程列表',access:1,name: 'lesson_manage', child:['lesson_listDetail'], component: resolve => { require(['@/views/lesson-plan/lesson_manage.vue'], resolve); } },
+        { path: 'manage', title: '课程列表',access:1,name: 'lesson_manage', child:['lesson_listDetail'],component: resolve => { require(['@/views/lesson-plan/lesson_manage.vue'], resolve); } },
         { path: 'apply', title: '课程申请', access:1,name: 'lesson_apply', child:['lesson_applyDetail'], component: resolve => { require(['@/views/lesson-plan/lesson_apply.vue'], resolve); } },
-        { path: 'examine', title: '课程审核', access:1,name: 'lesson_examine', child:['lesson_examineDetail'], component: resolve => { require(['@/views/lesson-plan/lesson_examine.vue'], resolve); } },
+        { path: 'examine', title: '课程审核', access:1,name: 'lesson_examine', child:['lesson_examineDetail'],component: resolve => { require(['@/views/lesson-plan/lesson_examine.vue'], resolve); } },
         { path: 'plan', title: '课程规划',access:1, name: 'lesson_plan', child:['lesson_planDetail'], component: resolve => { require(['@/views/lesson-plan/lesson_plan.vue'], resolve); } },
         { path: 'confirm', title: '课程确认', access:1,name: 'lesson_confirm', child:['lesson_confirmDetail'], component: resolve => { require(['@/views/lesson-plan/lesson_confirm.vue'], resolve); } },
-        { path: 'classes-apply', title: '班次申请',access:1, name: 'classes_apply', child:['lesson_erpDetail', 'lesson_addErp'], component: resolve => { require(['@/views/lesson-plan/class_apply.vue'], resolve); } },
+        { path: 'classes-apply', title: '班次申请',access:1, name: 'classes_apply',child:['lesson_erpDetail', 'lesson_addErp'], component: resolve => { require(['@/views/lesson-plan/class_apply.vue'], resolve); } },
       ]
     },
     {
