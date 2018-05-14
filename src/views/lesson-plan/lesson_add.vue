@@ -202,7 +202,7 @@
             </Row>
           </div>
         </Form>
-        <Form ref="lessonAddGroup" :rules="addGroupRules" :model="lessonAddGroup" :label-width="80">
+        <Form ref="lessonAddGroup" :rules="addGroupRules" :model="lessonAddGroup" :label-width="150">
           <div class="" v-if="!isShow">
             <Row>
               <Col span="6">
@@ -460,7 +460,7 @@
               agreement:'协议',   //是否协议  0 协议 1 非协议
               stay:'基地',        //住宿地址  0 基地 1 酒店
               price:0,       // 价格
-              isClosed:1,      //是否封闭班 1 是 0 否
+              isClosed:'1',      //是否封闭班 1 是 0 否
               writtenTf:0,     //面试不过退费
               interviewTf:0,     //笔试不过退费
               mark:''
@@ -1140,7 +1140,7 @@
       }
     }
     .ivu-form-item-label {
-      text-align: center;
+      text-align: right;
       padding-left: 10px;
     }
     .classclassHourPlan{

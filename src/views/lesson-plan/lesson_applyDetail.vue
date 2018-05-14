@@ -282,7 +282,8 @@
                     params.row.priceInfoArray.forEach((item)=>{
                       let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                       let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                      let str = item.agreement + '班-' + item.price  + (item.stay==null?'-':'-'+item.stay)  + writtenTf + interviewTf;
+                      let isClosed = item.isClosed == 1?'封闭班-':'非封闭班-';
+                      let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'-':'-'+item.stay)  + writtenTf + interviewTf;
                       price.push(str)
                     });
                       let ele = [];
@@ -527,7 +528,8 @@
                           params.row.priceInfoArray.forEach((item)=>{
                             let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                             let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                            let str = item.agreement + '班-' + item.price  + (item.stay==null?'-':'-'+item.stay)  + writtenTf + interviewTf;
+                            let isClosed = item.isClosed == 1?'封闭班-':'非封闭班-';
+                            let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'-':'-'+item.stay)  + writtenTf + interviewTf;
                               price.push(str)
                           });
                           if(price) {
@@ -853,7 +855,8 @@
                 params.row.priceInfoArray.forEach((item)=>{
                   let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                   let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                  let str = item.agreement + '班-' + item.price  + (item.stay==null?'-':'-'+item.stay)  + writtenTf + interviewTf;
+                  let isClosed = item.isClose == 1?'封闭班-':'非封闭班-';
+                  let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'-':'-'+item.stay)  + writtenTf + interviewTf;
                   price.push(str)
                 });
                 let ele = [];
@@ -987,6 +990,7 @@
         priceForm:{
             agreement:'0',   //是否协议  0 协议 1 非协议
             stay:'0',        //住宿地址  0 基地 1 酒店
+            isClosed:'1',
             price:0 ,      // 价格
             writtenTf:0,
             interviewTf:0,
@@ -1070,13 +1074,15 @@
           let price = this.priceForm.price;
           let writtenTf = this.priceForm.writtenTf;
           let interviewTf = this.priceForm.interviewTf;
+          let isClosed = this.priceForm.isClosed == '1'?'封闭班':'非封闭班';
 
           obj={
             agreement:agreement,
             stay:stay,
             price:price,
             writtenTf:writtenTf,
-            interviewTf:interviewTf
+            interviewTf:interviewTf,
+            isClosed:isClosed
           };
           this.selectedData.forEach((item)=>{
             if(item.id == this.selectedId) {
@@ -1135,6 +1141,7 @@
               }
           }
           //已选课程中移除的元素 在待选中变为可选
+          let courseIds = [];
           this.alreadyStashData.forEach((item,index)=>{
             if(item.id == null) {
               this.waitData.forEach((item2)=>{
@@ -1145,32 +1152,30 @@
                 }
               })
             }else {
-              let courseIds = [];
               courseIds.push(item.id)
-              this.$http({
-                method:'post',
-                url:this.$store.state.app.baseUrl + 'course/batchDelTempCourse',
-                data:{
-                  // examStyleId:templateStyle,
-                  pageNumber:this.pageNumber1,
-                  pageSize:this.pageSize1,
-                  checkState:7,
-                  provinceId:this.$route.query.provinceId
+            }
+          });
+          if(courseIds.length > 0) {
+            let urlParams = '';
+            courseIds.forEach((item)=>{
+              urlParams += 'courseIds=' + item + '&'
+            });
+            urlParams = urlParams.substring(0,urlParams.length-1);
+            this.$http({
+              method:'get',
+              url:this.$store.state.app.baseUrl + 'course/batchDelTempCourse?' + urlParams
+            })
+              .then((res)=>{
+                if(res.data.code == 0) {
+                  this.search1();
+                } else {
+                  this.$Message.error(error.message);
                 }
               })
-                .then((res)=>{
-                  if(res.data.code == 0) {
-
-                  } else {
-
-                  }
-                })
-                .catch((error)=>{
-                  this.$Message.error(error.message);
-                })
-            }
-          })
-
+              .catch((error)=>{
+                this.$Message.error(error.message);
+              })
+          }
           this.total2 = this.total2 - this.alreadyStashData.length;
 
           this.alreadyStashData.splice(0,this.alreadyStashData.length);
