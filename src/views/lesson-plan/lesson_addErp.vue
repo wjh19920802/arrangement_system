@@ -31,7 +31,7 @@
                         </Select>
                       </FormItem>
                       </Col>
-                      <Col span="9" offset="2">
+                      <Col span="9" :offset="announceProvince != 2 ? 2 : 0">
                       <FormItem prop="studyCenter">
                         <Select ref="school" v-model="formItem.studyCenter">
                           <Option v-for="(ite,ind) in thirdTree" :key="ind" :value="ite.areaid">{{ite.name}}</Option>
