@@ -1321,7 +1321,7 @@
           method:'post',
           url:this.$store.state.app.baseUrl + 'course/query',
           data:{
-            checkStates:[5],
+            checkStates:[5,7],
             pageNumber:this.pageNumber1,
             pageSize:this.pageSize1,
             announcementId:this.$route.params.id

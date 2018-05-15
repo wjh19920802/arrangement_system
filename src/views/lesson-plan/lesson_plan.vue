@@ -290,9 +290,9 @@
       search () {
         let data = Util.deepClone(this.formItem);
         if(data.checkStates == 0 || data.checkStates == 1) {  //全部   待规划 已规划 被驳回
-          data.courseCheckStates = [3,4,5];
+          data.courseCheckStates = [3,4,5,7];
         }else if(data.checkStates == 2) {
-          data.courseCheckStates = [5];           //已规划
+          data.courseCheckStates = [5,7];           //已规划
         }else if(data.checkStates == 3) {
           data.courseCheckStates = [3];           //待规划
         }else if(data.checkStates == 4) {
