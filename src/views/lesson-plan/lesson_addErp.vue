@@ -105,10 +105,10 @@
                       <FormItem label="班次日期" prop="studyTimeList">
                       <Row>
                           <Col span="6" style="padding-right: 5px">
-                          <DatePicker ref="addDate" type="daterange" placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd" placeholder="选择时间范围"></DatePicker>
+                          <DatePicker ref="addDate" type="daterange" placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd" placeholder="添加一段时间"></DatePicker>
                           </Col>
                           <Col span="6" style="padding-right: 5px">
-                          <DatePicker ref="addDate" type="date" placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd" placeholder="选择时间一天"></DatePicker>
+                          <DatePicker ref="addDate" type="date" placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd" placeholder="单独添加一天"></DatePicker>
                           </Col>
                       </Row>
                       <div class="chosen">
