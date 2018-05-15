@@ -4,25 +4,13 @@
         <Row>
           <Col span="24">
             <div class="title">
-                <p>查找用户</p>
+                <p>用户信息</p>
             </div>
-            <Form :label-width="100">
-              <Row>
-                <Col span="8">
-                <FormItem label="IS账号" prop="realname">
-                  <Input v-model="isname" placeholder="输入is账号查询" autofocus></Input>
-                </FormItem>
-                </Col>
-                <Col span="4" style="margin-left: 10px">
-                <Button type="primary" @click="search">查询</Button>
-                </Col>
-              </Row>
-              <Table border ref="paperTable" :columns="columns" :data="data1" ></Table>
-            </Form>
+            <Table border ref="paperTable" :columns="columns" :data="data1" ></Table>
           </Col>
         </Row>
       </Card>
-      <Card class="margin-top-10" v-show="roleSetIsShow">
+      <Card class="margin-top-10">
         <div class="title">
           <p>设置</p>
         </div>
@@ -78,7 +66,6 @@
   export default {
       data () {
         return {
-          isname: '',
           userInfo: {},
           columns: [
             {
@@ -93,32 +80,8 @@
               title: '电话',
               align: 'center',
               key: 'tel',
-            },{
-              title: '操作',
-              align: 'center',
-              key: 'operate',
-              render: (h, params) => {
-                return h('div', [
-                  h('Button', {
-                    props: {
-                      type: 'primary',
-                      size: 'small'
-                    },
-                    style: {
-                      marginRight: '5px'
-                    },
-                    on: {
-                      click: () => {
-                        this.roleSetIsShow = true
-                        this.getAreaList()
-                      }
-                    }
-                  }, '分配权限')
-                ]);
-              }
             }],
           data1: [],
-          roleSetIsShow: false,
           formItem: {
             role: '',
           },
@@ -130,6 +93,9 @@
       }
     },
     computed: {
+      isname () {
+        return this.$route.params.id
+      },
       roleOptionList () {
         let roleArr = []
         if(this.roleList.length){
@@ -215,7 +181,6 @@
     methods: {
       // 1、 搜索is账号
       search () {
-        this.roleSetIsShow = false
         this.$http({
           method:'get',
           url:this.$store.state.app.baseUrl + 'sysPermission/userPermission?isName='+this.isname,
@@ -281,6 +246,7 @@
                 }else{
                   this.menuChosenList = res.data.data.defaultPermissionIds
                 }
+                this.getAreaList()
               }else{
                 this.$Message.error(res.data.message);
               }
@@ -339,34 +305,10 @@
             this.$Message.error(error.message)
           })
       },
-      allFirst () {
-        this.areaChosenList = this.deepUniqueArr(this.areaChosenList.concat(this.firstArr))
-      },
-      deepUniqueArr (arr) {
-        var hash = {};
-        arr = arr.reduce(function(item, next) {
-          hash[next.id] ? '' : hash[next.id] = true && item.push(next);
-          return item
-        }, [])
-        return arr
-      },
-      onScroll () {
-        let pageContent = window.document.getElementsByClassName('single-page-con')[0]
-        console.log(window.innerHeight,'inner');//在谷歌浏览器中请使用 innerHeight以替换clientHeight
-        console.log(pageContent.scrollTop,'scrollTop');
-        console.log(pageContent.scrollHeight);//以上三个属性打印出来之后当滚动条滚到底部 1 + 2 = 3。
-        if(window.innerHeight + pageContent.scrollTop == pageContent.scrollHeight+117){
-
-        }
-      }
     },
     mounted () {
-      //console.log(area.data)
+      this.search()
       //this.getMenuList()
-      this.$nextTick(function () {
-        let pageContent = window.document.getElementsByClassName('single-page-con')[0]
-        pageContent.addEventListener('scroll', this.onScroll)
-      })
     }
   }
 </script>

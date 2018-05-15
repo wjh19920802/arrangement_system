@@ -101,16 +101,40 @@
                   </Col>
                   </Row>
                   <Row>
-                    <Col span="12" v-if="isShow">
-                    <FormItem label="班次日期" prop="studyTimeList">
+                    <Col span="20" v-if="isShow">
+                      <FormItem label="班次日期" prop="studyTimeList">
+                      <Row>
+                          <Col span="6" style="padding-right: 5px">
+                          <DatePicker ref="addDate" type="daterange" placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd" placeholder="选择时间范围"></DatePicker>
+                          </Col>
+                          <Col span="6" style="padding-right: 5px">
+                          <DatePicker ref="addDate" type="date" placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd" placeholder="选择时间一天"></DatePicker>
+                          </Col>
+                      </Row>
+                      <div class="chosen">
+                        <span :class="{chosenItem: true, chosenClass: item.children}" v-for="item,index in formItem.studyTimeList">
+                          {{item}}
+                          <span @click="removeClass(index)" class="removeIcon"><Icon type="close-circled" size="14" ></Icon></span>
+                        </span>
+                      </div>
+                      <span style="color: orange;">请添加 {{lessonDays}} 天的课程日期，当前已添加 {{formItem.studyTimeList.length}} 天，重复天数会被过滤</span>
+                      </FormItem>
+
+                    <!--<FormItem label="班次日期" prop="studyTimeList">
+                      <DatePicker type="daterange" placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd"></DatePicker>
                       <DatePicker type="date" multiple placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd"></DatePicker>
                       <!--<DatePicker type="daterange"  placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd"></DatePicker>-->
                       <span style="color: orange;">请添加{{lessonDays}}天的课程日期</span>
-                    </FormItem>
+                    </FormItem>-->
                     </Col>
-                    <Col span="6">
-                    <Button type="success" style="margin-left: 20px;margin-bottom: 20px;" @click="addLesson">添加班次</Button>
-                    </Col>
+
+                  </Row>
+                  <Row>
+                      <Col span="6">
+                      <FormItem>
+                          <Button type="success" @click="addLesson">添加班次</Button>
+                      </FormItem>
+                      </Col>
                   </Row>
               </Form>
                 <Table  :columns="lessonColumns" :data="newLesson" ></Table>
@@ -508,8 +532,33 @@
         //s = date.getSeconds();
         return Y+M+D;
       },
+      getRangeTime (t) {
+        return new Date(t).getTime()
+      },
+      deepUniqueArr (arr) {
+        var hash = {};
+        arr = arr.reduce(function(item, next) {
+          hash[next] ? '' : hash[next] = true && item.push(next);
+          return item
+        }, [])
+        return arr
+      },
+      removeClass (i) {
+        this.formItem.studyTimeList.splice(i,1)
+      },
       changeDate(dateList) {
-        this.formItem.studyTimeList = dateList.split(',');
+        //this.formItem.studyTimeList = dateList.split(',');
+        console.log(dateList)
+        if(!dateList)return
+        if(Object.prototype.toString.call(dateList)=='[object Array]'){
+          let days = (this.getRangeTime(dateList[1]) - this.getRangeTime(dateList[0])) / 86400000 +1
+          for(let i= 0 ; i<days; i++){
+            this.formItem.studyTimeList.push(this.timestampToTime(this.getRangeTime(dateList[0])+86400000*i))
+          }
+        }else{
+          this.formItem.studyTimeList.push(dateList)
+        }
+        this.formItem.studyTimeList = this.deepUniqueArr(this.formItem.studyTimeList)
       },
       addLesson () {
         console.log(new Date(this.formItem.studyTimeList[0]))
@@ -806,6 +855,35 @@
                 padding: 0 10px;
                 line-height: 50px;
             }
+        }
+    }
+    .chosen{
+        margin-top: 20px;
+        border:1px solid #f0f0f0;
+        padding: 15px 8px;
+        display: flex;
+        flex-wrap: wrap;
+        .chosenItem{
+            padding:3px 5px;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            border:1px solid #f0f0f0;
+            margin-top: 5px;
+            margin-right: 8px;
+            line-height: 1.5;
+            /*white-space:nowrap;*/
+        }
+        .chosenClass{
+            background-color: #ffffff;
+            border:1px solid #f0f0f0;
+            /*white-space:nowrap;*/
+        }
+        .removeIcon{
+            cursor: pointer;
+            color: #ccc;
+        }
+        .removeIcon:hover{
+            color: #aaa;
         }
     }
 </style>

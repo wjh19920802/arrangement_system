@@ -63,6 +63,7 @@ export const otherRouter = {
         { path: '/role/role_edit', title: '修改权限', name: 'role_edit', component: resolve => { require(['@/views/system-setting/role_edit.vue'], resolve);} },
         { path: '/add/:id', title: '母版添加', name: 'template_add', component: resolve => { require(['@/views/lesson-plan/template_add.vue'], resolve); } },
         { path: '/role/role_edit', title: '修改角色默认权限', name: 'role_edit', component: resolve => { require(['@/views/system-setting/role_edit.vue'], resolve);} },
+        { path: '/role/user_edit/:id', title: '修改用户权限', name: 'user_edit', component: resolve => { require(['@/views/system-setting/user_edit.vue'], resolve);} },
     ]
 };
 
@@ -140,7 +141,7 @@ export let baseRouter = [
         { path: 'teachers_manage_index', title: '师资列表', access:1,name: 'teacher_manage_index', child:['teacher_detail'], component: resolve => { require(['@/views/teacher-manage/manage.vue'], resolve); } },
       ]
     },
-    {
+    /*{
       path: '/teacher/add',
       icon: 'person-add',
       name: 'teachers_add',
@@ -150,7 +151,7 @@ export let baseRouter = [
       children: [
         { path: 'teachers_add_index', title: '添加师资', access:1,name: 'teacher_add_index', component: resolve => { require(['@/views/teacher-manage/add.vue'], resolve); } },
       ]
-    },
+    },*/
     {
       path: '/teacher_apply/unfinished',
       icon: 'ios-paper-outline',
@@ -270,8 +271,8 @@ export let baseRouter = [
       component: Main,
       children: [
         { path: 'role_list', title: '角色列表', name: 'role_list', component: resolve => { require(['@/views/system-setting/role_list.vue'], resolve);} },
+        { path: 'role_member', title: '用户列表', name: 'role_member', component: resolve => { require(['@/views/system-setting/role_member.vue'], resolve);} },
         { path: 'role_set', title: '分配角色',access:1, name: 'role_set', component: resolve => { require(['@/views/system-setting/role_set.vue'], resolve);} },
-        // { path: 'role_member', title: '角色人员列表', name: 'role_member', component: resolve => { require(['@/views/system-setting/role_member.vue'], resolve);} }
       ]
     }
 ];
