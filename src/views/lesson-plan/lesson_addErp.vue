@@ -268,7 +268,7 @@
             align: 'center',
             key: 'classSeries',
             render: (h,params) => {
-              return params.row.classType==1 ? '---' : params.row.classSeries.classSeriesName
+              return params.row.classType==1 ? '---' : params.row.classSeries ? params.row.classSeries.classSeriesName : ''
             }
           },
           /*{
