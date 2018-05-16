@@ -68,7 +68,7 @@
             align: 'center',
             key: 'classSeries',
             render:(h,params)=>{
-              return params.row.classSeries ? params.row.classSeries.classSeriesName : ''
+              return params.row.classSeries ? params.row.classSeries.classSeriesName : '--'
             }
           },
           // {
@@ -305,7 +305,10 @@
           {
             title: '班级系列',
             align: 'center',
-            key: 'classSeriesName'
+            key: 'classSeriesName',
+            render:(h,params)=>{
+              return params.row.classSeries ? params.row.classSeries.classSeriesName : '--'
+            }
           },
           /*{
             title: '根目录',

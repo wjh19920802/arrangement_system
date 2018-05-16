@@ -268,7 +268,7 @@
             align: 'center',
             key: 'classSeries',
             render: (h,params) => {
-              return params.row.classType==1 ? '---' : params.row.classSeries ? params.row.classSeries.classSeriesName : ''
+              return params.row.classSeries ? params.row.classSeries.classSeriesName : '--'
             }
           },
           /*{
@@ -601,7 +601,23 @@
               .catch((error)=> {
                 this.$Message.error('获取地区列表失败，请刷新重试')
               })*/
-            this.newLesson.push(newRow)
+            this.$http({
+              method:'post',
+              url: this.$store.state.app.baseUrl + 'classInfo/checkName/course/' + this.lessonId ,
+              data:{studyCenter:newRow.studyCenter,periodName:newRow.periodName},
+              headers: {'Content-type': 'application/json'}
+            })
+              .then((res)=> {
+                console.log(res,'获取课程下的已有班次')
+                if(res.data.code == 0) {
+                  this.newLesson.push(newRow)
+                } else {
+                  this.$Message.error(res.data.message)
+                }
+              })
+              .catch((error)=> {
+                this.$Message.error(error.message)
+              })
           }
         })
       },

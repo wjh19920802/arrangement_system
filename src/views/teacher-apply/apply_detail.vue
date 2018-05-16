@@ -180,8 +180,11 @@
           {
             title: '班主任名称',
             align: 'center',
-            key: 'headteacherName',
-            //sortable: true
+            key: 'headteacher',
+            //sortable: true,
+            render:(h,params)=>{
+              return params.row.isName + params.row.headteacherName
+            }
           },{
             title: '联系电话',
             align: 'center',

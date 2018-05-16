@@ -91,6 +91,12 @@ export default {
                           //   name: 'home_index'
                           // });
                           history.go(0) || window.location.reload();
+                            /*if(Cookies.get('url')) {
+                              window.location.href = Cookies.get('url');
+                              Cookies.remove('url');
+                            }else {
+                              history.go(0);
+                            }*/
                         },1000)
                       }else {
                         this.switcher = true

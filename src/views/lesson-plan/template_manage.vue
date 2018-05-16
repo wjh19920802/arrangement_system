@@ -1,103 +1,232 @@
 <template>
+  <div>
+    <Card>
+      <p slot="title">
+        <Icon type="pinpoint"></Icon>
+        查询条件
+      </p>
+      <Form :model="formItem" :label-width="90">
+        <Row>
+          <Col span="12">
+          <FormItem label="班级编码" prop="code">
+            <Input v-model="formItem.classCode" placeholder=""></Input>
+          </FormItem>
+          </Col>
+          <Col span="12">
+          <FormItem label="课程名称" prop="courseName">
+            <Input v-model="formItem.courseName" placeholder=""></Input>
+          </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="12">
+          <FormItem label="班级类型" prop="classType">
+            <RadioGroup v-model="formItem.classType" type="button" size="small">
+              <Radio label="">全部</Radio>
+              <Radio label="1">组合班次</Radio>
+              <Radio label="2">非组合班次</Radio>
+            </RadioGroup>
+          </FormItem>
+          </Col>
+          <Col span="12">
+          <FormItem label="班级系列" prop="classSeries">
+            <Select v-model="formItem.classSeriesId">
+              <Option value="">请选择</Option>
+              <Option v-for="item in classSeries" :key="item.id" :value="item.id">{{item.classSeriesName}}</Option>
+            </Select>
+          </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <!--<Col span="12">
+          <FormItem label="根目录" prop="rootDirectoryName">
+              <Select v-model="formItem.rootDirectoryName">
+                  <Option value="">请选择</Option>
+                  <Option value="1">题海实战班</Option>
+                  <Option value="2">讲练结合班</Option>
+              </Select>
+          </FormItem>
+          </Col>-->
+          <Col span="12">
+          <FormItem label="项目类型" prop="projectId">
+            <Select v-model="formItem.projectId">
+              <Option value="">请选择</Option>
+              <Option value="1">公务员（国考）</Option>
+              <Option value="2">公务员（省考）</Option>
+              <Option value="4">事业单位</Option>
+            </Select>
+          </FormItem>
+          </Col>
+          <Col span="12">
+          <FormItem label="母版可见省份" prop="userVisibleArea">
+            <Select v-model="formItem.userVisibleArea" multiple>
+              <Option v-for="item in provinces"  :key="item.id" :value="item.id">{{item.cityName}}</Option>
+            </Select>
+          </FormItem>
+          </Col>
+        </Row>
+          <!--<Col span="12">-->
+          <!--<FormItem label="课时" prop="classHour">-->
+            <!--<InputNumber :min="1" v-model="formItem.day"></InputNumber> 天-->
+            <!--<InputNumber :min="0" v-model="formItem.night"></InputNumber> 晚-->
+          <!--</FormItem>-->
+          <!--</Col>-->
+          <!--<Col span="12">-->
+          <!--<FormItem label="科目" prop="categoryNames">-->
+            <!--<Select v-model="formItem.categoryNames" multiple>-->
+              <!--<Option v-for="item in subjects" :value="item.categoryName" :key="item.value">{{ item.categoryName }}</Option>-->
+            <!--</Select>-->
+          <!--</FormItem>-->
+          <!--</Col>-->
+        <Row>
+          <Col span="12">
+          <FormItem label="预计开课时间">
+            <Row>
+              <Col span="24">
+              <FormItem>
+                <DatePicker type="date" placeholder="" v-model="formItem.schoolBeginsTime"></DatePicker>
+              </FormItem>
+              </Col>
+              <!--<Col span="7" offset="1">-->
+              <!--<Select v-model="formItem.moon">-->
+                <!--<Option value="">请选择</Option>-->
+                <!--<Option value="上午">上午</Option>-->
+                <!--<Option value="下午">下午</Option>-->
+              <!--</Select>-->
+              <!--</Col>-->
+            </Row>
+          </FormItem>
+          </Col>
+          <!--<Col span="12">
+          <FormItem label="项目" prop="projectTag">
+            <RadioGroup v-model="formItem.projectTag" type="button" size="small">
+              <Radio label="">全部</Radio>
+              <Radio label="普通项目">普通</Radio>
+              <Radio label="公开课">公开课</Radio>
+              <Radio label="一对一项目">一对一</Radio>
+            </RadioGroup>
+          </FormItem>
+          </Col>-->
+          <Col span="12">
+          <FormItem label="审核状态" prop="checkStates">
+            <RadioGroup v-model="formItem.checkState" type="button" size="small">
+              <Radio label="1">全部</Radio>
+              <Radio label="2">已规划</Radio>
+              <Radio label="3">待规划</Radio>
+            </RadioGroup>
+          </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="1">
+          <FormItem>
+            <Button type="primary" @click="search">查询</Button>
+            <!--<Button type="ghost" style="margin-left: 8px">重置</Button>-->
+          </FormItem>
+          </Col>
+        </Row>
+      </Form>
+    </Card>
     <Card id="template_manage">
-        <p slot="title">
-            <Icon type="pinpoint"></Icon>
-            母版列表
-        </p>
-        <table id="template_table" border="1" width="100%" style="border-collapse:collapse;text-align: center;">
-            <tr>
-                <th v-for="item in tableHeadData">{{item.value}}</th>
-            </tr>
-            <tr v-for="item in templateData">
-                <td>{{item.courseName}}</td>
-                <td>{{item.classCode}}</td>
-                <td>{{item.classType==1?'组合班次':'非组合班次'}}</td>
-                <td>{{item.classSeries?item.classSeries.classSeriesName:''}}</td>
-                <!--<td>{{item.rootDirectoryName}}</td>-->
-                <td>{{item.classHour}}</td>
-                <td>
-                  <div v-for="i in item.categorys">
-                    {{i.categoryName}}
-                  </div>
-                </td>
-                <td>{{item.schoolBeginsTime | formateDate}}</td>
-                <td>{{item.openClassTime}}</td>
-                <td>{{item.projectTag}}</td>
-                <td>
-                  <div v-for="item2 in item.priceInfoArray">{{item2.agreement + '班-' + item2.price + '-' + item2.stay  + (item2.writtenTf?'-笔试不过退费:'+item2.writtenTf:'') + (item2.interviewTf?'-面试不过退费:'+item2.interviewTf:'')}}&nbsp;&nbsp;</div>
-                </td>
-                <td>{{item.dayOfRest}}</td>
-                <td>{{item.interviewGroupNumber}}</td>
-                <td>
-                    <!--<div  v-for="item2 in item.classHourPlans">{{item2.classHourDetail}}</div>-->
-                    <div v-for="item2 in item.classHourPlans">{{item2.categoryName + ':' + item2.day + '天' + item2.night + '晚'}}</div>
-                </td>
-                <td>
-                    <Button type="success" size="small" v-show="item.isShow">已启用</Button>
-                    <Button type="error" size="small" v-show="!item.isShow">已禁用</Button>
-                </td>
-                <td>
-                    <span v-if="!item.isShow" class="operate"  @click="enable(item)">启用</span>
-                    <span v-if="item.isShow" class="operate"  @click="disable(item)">禁用</span>
+      <p slot="title">
+        <Icon type="pinpoint"></Icon>
+        母版列表
+      </p>
+      <table id="template_table" border="1" width="100%" style="border-collapse:collapse;text-align: center;">
+        <tr>
+          <th v-for="item in tableHeadData">{{item.value}}</th>
+        </tr>
+        <tr v-for="item in templateData">
+          <td>{{item.courseName}}</td>
+          <td>{{item.classCode}}</td>
+          <td>{{item.classType==1?'组合班次':'非组合班次'}}</td>
+          <td>{{item.classSeries?item.classSeries.classSeriesName:'--'}}</td>
+          <!--<td>{{item.rootDirectoryName}}</td>-->
+          <td>{{item.classHour}}</td>
+          <td>
+            <div v-for="i in item.categorys">
+              {{i.categoryName}}
+            </div>
+          </td>
+          <td>{{item.schoolBeginsTime | formateDate}}</td>
+          <td>{{item.openClassTime}}</td>
+          <td>{{item.projectTag}}</td>
+          <td>
+            <div v-for="item2 in item.priceInfoArray">{{item2.agreement + '班-' + item2.price + '-' + item2.stay  + (item2.writtenTf?'-笔试不过退费:'+item2.writtenTf:'') + (item2.interviewTf?'-面试不过退费:'+item2.interviewTf:'')}}&nbsp;&nbsp;</div>
+          </td>
+          <td>{{item.dayOfRest}}</td>
+          <td>{{item.interviewGroupNumber}}</td>
+          <td>
+            <!--<div  v-for="item2 in item.classHourPlans">{{item2.classHourDetail}}</div>-->
+            <div v-for="item2 in item.classHourPlans">{{item2.categoryName + ':' + item2.day + '天' + item2.night + '晚'}}</div>
+          </td>
+          <td>
+            <Button type="success" size="small" v-show="item.isShow">已启用</Button>
+            <Button type="error" size="small" v-show="!item.isShow">已禁用</Button>
+          </td>
+          <td>
+            <span v-if="!item.isShow" class="operate"  @click="enable(item)">启用</span>
+            <span v-if="item.isShow" class="operate"  @click="disable(item)">禁用</span>
 
-                    <span v-if="item.classType == '组合班次'" class="operate" @click="showChild(item.courseModelId)">查看子班次</span>
-                </td>
-                <td style="padding: 5px;">
-                  <span class="operate" @click="showProvinces(item.provinceIdList)">查看</span>
-                </td>
-                <td>
-                  <div class="operate" @click="changeProvince(item.id,provinceIdList)">
-                    确定
-                  </div>
-                </td>
-            </tr>
+            <span v-if="item.classType == '组合班次'" class="operate" @click="showChild(item.courseModelId)">查看子班次</span>
+          </td>
+          <td style="padding: 5px;">
+            <span class="operate" @click="showProvinces(item.provinceIdList)">查看</span>
+          </td>
+          <td>
+            <div class="operate" @click="changeProvince(item.id,provinceIdList)">
+              确定
+            </div>
+          </td>
+        </tr>
+      </table>
+      <Modal
+        v-model="modal1"
+        title="子班次"
+        class="childrenModal"
+        width="1000px"
+      >
+        <table id="children_table" border="1" width="100%" style="border-collapse:collapse;text-align: center;">
+          <tr>
+            <th v-for="item in childrenHeadData">{{item.value}}</th>
+          </tr>
+          <tr v-for="item in childrenData">
+            <td>{{item.courseName}}</td>
+            <td>{{item.classCode}}</td>
+            <td>{{item.classType==1?'组合班次':'非组合班次'}}</td>
+            <td>{{item.classSeries.classSeriesName}}</td>
+            <td>{{item.rootDirectoryName}}</td>
+            <td>{{item.classHour}}</td>
+            <td>
+              <div v-for="i in item.categoryName.split(',')">
+                {{i}}
+              </div>
+            </td>
+            <td>{{item.schoolBeginsTime  | formateDate}}</td>
+            <td>{{item.openClassTime}}</td>
+            <td>{{item.projectTag}}</td>
+            <td>
+              <div v-for="item2 in item.coursePrice.split(',')">{{item2}}&nbsp;&nbsp;</div>
+            </td>
+            <td>{{item.dayOfRest}}</td>
+            <td>{{item.interviewGroupNumber}}</td>
+            <td>
+              <div v-for="item2 in item.classHourPlans">{{item2.categoryName + ':' + item2.day + '天' + item2.night + '晚'}}</div>
+            </td>
+          </tr>
         </table>
-        <Modal
-                v-model="modal1"
-                title="子班次"
-                class="childrenModal"
-                width="1000px"
-        >
-            <table id="children_table" border="1" width="100%" style="border-collapse:collapse;text-align: center;">
-                <tr>
-                <th v-for="item in childrenHeadData">{{item.value}}</th>
-            </tr>
-                <tr v-for="item in childrenData">
-                <td>{{item.courseName}}</td>
-                <td>{{item.classCode}}</td>
-                <td>{{item.classType==1?'组合班次':'非组合班次'}}</td>
-                <td>{{item.classSeries.classSeriesName}}</td>
-                <td>{{item.rootDirectoryName}}</td>
-                <td>{{item.classHour}}</td>
-                <td>
-                  <div v-for="i in item.categoryName.split(',')">
-                    {{i}}
-                  </div>
-                </td>
-                <td>{{item.schoolBeginsTime  | formateDate}}</td>
-                <td>{{item.openClassTime}}</td>
-                <td>{{item.projectTag}}</td>
-                <td>
-                  <div v-for="item2 in item.coursePrice.split(',')">{{item2}}&nbsp;&nbsp;</div>
-                </td>
-                <td>{{item.dayOfRest}}</td>
-                <td>{{item.interviewGroupNumber}}</td>
-                <td>
-                  <div v-for="item2 in item.classHourPlans">{{item2.categoryName + ':' + item2.day + '天' + item2.night + '晚'}}</div>
-                </td>
-            </tr>
-            </table>
-        </Modal>
-        <Modal v-model="provinceNotice" title="提示" width="500px" @on-ok="ok">
-          <h3>确定修改适用省份吗？</h3>
-        </Modal>
-        <Modal v-model="showProvinceList" title="提示" width="500px">
-          <Select v-model="provinceIdList" multiple @on-change="change">
-            <Option v-for="item2 in provinces" :value="item2.id" :key="item2.id">{{item2.cityName}}</Option>
-          </Select>
-        </Modal>
+      </Modal>
+      <Modal v-model="provinceNotice" title="提示" width="500px" @on-ok="ok">
+        <h3>确定修改适用省份吗？</h3>
+      </Modal>
+      <Modal v-model="showProvinceList" title="提示" width="500px">
+        <Select v-model="provinceIdList" multiple @on-change="change">
+          <Option v-for="item2 in provinces" :value="item2.id" :key="item2.id">{{item2.cityName}}</Option>
+        </Select>
+      </Modal>
       <Page :total="total" :current="pageNumber" :page-size="pageSize" @on-change="changePage" show-total style="text-align: center;margin-top: 10px;"></Page>
     </Card>
+  </div>
 </template>
 
 <script>
@@ -106,6 +235,23 @@
         name: "template_manage",
         data(){
             return{
+                formItem: {
+                  classCode: '',
+                  courseName: '',
+                  classType: '',
+                  classSeriesId: '',
+                  projectId: '',
+                  classHour: '',
+                  day: 0,
+                  night: 0,
+                  categoryNames: [],
+                  schoolBeginsTime: '',
+                  // moon: '',
+                  projectTag: '',
+                  checkState: 0,
+                  userVisibleArea:[]
+                },
+                classSeries:[],
                 modal1:false,
                 provinceNotice:false,
                 showProvinceList:false,
@@ -270,7 +416,7 @@
               this.pageNumber = page;
               this.search();
             },
-            search() {
+           /* search() {
               let data = {};
               data.checkStates = [7];
               data.pageSize = this.pageSize;
@@ -288,6 +434,40 @@
                   }else {
                     this.$Message.error(res.data.message);
                   }
+                })
+            },*/
+            search () {
+              let url = this.$store.state.app.baseUrl  + 'courseModel/query';
+              let data = Util.deepClone(this.formItem);
+              let checkStates = [];
+              if(data.checkState == 1 || data.checkState == 0) {
+                checkStates = [3,7];
+              }else if(data.checkState == 2) {
+                checkStates = [7];
+              }else if(data.checkState == 3) {
+                checkStates = [3];
+              }
+              data.checkStates = checkStates;
+              if(data.day == 0 && data.night == 0) {
+                data.classHour = null;
+              }else {
+                data.classHour = data.day + '天' + data.night + '晚';
+              }
+              data.schoolBeginsTime = new Date(data.schoolBeginsTime).getTime();
+              data.pageNumber = this.pageNumber;
+              data.pageSize = this.pageSize;
+              this.$http({
+                method: 'post',
+                url: url,
+                data: data,
+                headers: {'Content-type': 'application/json'}
+              })
+                .then((res)=>{
+                  this.templateData = res.data.data.content;
+                  this.total = res.data.data.total;
+                })
+                .catch(()=>{
+                  this.$Message.error(error.message)
                 })
             },
             changeProvince (courseModelId,provinceIdList) {
@@ -319,6 +499,41 @@
               this.showProvinceList = true;
             }
         },
+        computed:{
+          announceWrittenResultTimeStamp(){
+            if(this.formItem.announceWrittenResultTime.length>0 ) {
+              if(this.formItem.announceWrittenResultTime[0] != '' && this.formItem.announceWrittenResultTime[1] != '') {
+                return [this.formItem.announceWrittenResultTime[0].getTime(),this.formItem.announceWrittenResultTime[1].getTime()];
+              }else {
+                return [];
+              }
+            }else {
+              return [];
+            }
+          },
+          writtenTimeStamp(){
+            if(this.formItem.writtenTime.length>0) {
+              if(this.formItem.writtenTime[0] != '' && this.formItem.writtenTime[1] != '') {
+                return [this.formItem.writtenTime[0].getTime(),this.formItem.writtenTime[1].getTime()];
+              }else {
+                return [];
+              }
+            }else {
+              return [];
+            }
+          },
+          interviewTimeStamp(){
+            if(this.formItem.interviewTime.length>0) {
+              if(this.formItem.interviewTime[0] != '' && this.formItem.interviewTime[1] != '') {
+                return [this.formItem.interviewTime[0].getTime(),this.formItem.interviewTime[1].getTime()];
+              }else {
+                return [];
+              }
+            }else {
+              return [];
+            }
+          }
+        },
         filters:{
           formateDate : function(timeStamp){
             if(timeStamp == '' || timeStamp == undefined){
@@ -345,6 +560,21 @@
               }else {
                 this.$Message.error(res.data.message);
               }
+            })
+
+          // 非组合班次
+          this.$http({
+            method:'get',
+            url:this.$store.state.app.baseUrl + 'classSeries/findByExamStyle',
+            headers: {'Content-type': 'application/json'}
+          })
+            .then((res)=>{
+              if(res.data.code == 0) {
+                this.classSeries = res.data.data;
+              }
+            })
+            .catch((error)=>{
+              this.$Message.error(error.message)
             })
         }
     }

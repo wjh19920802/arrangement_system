@@ -72,6 +72,16 @@ new Vue({
 
       axios.interceptors.response.use((response)=>{
         this.$Spin.hide();
+        /*console.log('response',response);
+        if(response.data.code == 403) {
+          Cookies.set('url',window.location.href);
+          let vm = this;
+          setTimeout(function(){
+            vm.$router.push({
+              name:'login'
+            });
+          },1500)
+        }*/
         return response;
       },(error)=>{
         //对返回的错误进行一些处理

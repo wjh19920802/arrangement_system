@@ -346,11 +346,7 @@
             align: 'center',
             key: 'classSeries',
             render:(h,params)=>{
-              if(params.row.classType == 2){
-                return params.row.classSeries.classSeriesName
-              }else {
-                return ''
-              }
+              return params.row.classSeries.classSeriesName
             }
           },
           /*{

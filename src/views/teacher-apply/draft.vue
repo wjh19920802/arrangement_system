@@ -110,7 +110,7 @@
                     </Col>
                 </Row>
                 <Row>
-                    <Table border ref="mergeList" :columns="columns2" :data="data2" @on-selection-change="selectOtherLessons"></Table>
+                    <Table border ref="mergeList" :columns="columns3" :data="data2" @on-selection-change="selectOtherLessons"></Table>
                     <div style="margin: 10px;overflow: hidden">
                       <Button @click="handleSelectAll(true,'mergeList')">全选</Button>
                       <Button type="primary" @click="mergeLessons">合并班次</Button>
@@ -264,6 +264,46 @@
         pageSize2:20,
         // 合并班次 的 数据
         columns2: [
+          {
+            title: '班级名称',
+            align: 'center',
+            width: '20%',
+            key: 'className',
+            sortable: true
+          },
+          {
+            title: '省份',
+            align: 'center',
+            key: 'studyProvince'
+          },
+          {
+            title: '项目类型',
+            align: 'center',
+            key: 'projectName'
+          },
+          {
+            title: '上课时间',
+            align: 'center',
+            key: 'days',
+            render: (h,params) => {
+              return this.timestampToTime(params.row.beginTime) + '-' + this.timestampToTime(params.row.endTime)
+            }
+          },
+          {
+            title: '上课天数',
+            align: 'center',
+            key: 'classHour',
+          },
+          {
+            title: 'ERP人数',
+            align: 'center',
+            key: 'erp',
+            render: (h,params) => {
+              return params.row.erpNumCompose?params.row.erpNumCompose.allNum: 0
+            }
+          },
+        ],
+        columns3: [
           {
             type: 'selection',
             width: 60,

@@ -9,12 +9,17 @@
                 </p>
                 <Form :model="formItem" :label-width="100">
                     <Row>
-                        <Col span="6">
+                        <Col span="8">
+                        <FormItem label="教师姓名" prop="headerTeacherName">
+                          <Input v-model="formItem.headerTeacherName" placeholder=""></Input>
+                        </FormItem>
+                        </Col>
+                        <Col span="8">
                         <FormItem label="班级名称" prop="classInfoName">
                             <Input v-model="formItem.classInfoName" placeholder=""></Input>
                         </FormItem>
                         </Col>
-                        <Col span="6">
+                        <Col span="8">
                         <FormItem label="省份" prop="province">
                             <Select v-model="formItem.province">
                                 <Option value="">请选择</Option>
@@ -22,7 +27,9 @@
                             </Select>
                         </FormItem>
                         </Col>
-                        <Col span="6">
+                    </Row>
+                    <Row>
+                        <Col span="8">
                         <FormItem label="审批状态" prop="checkState">
                             <Select v-model="formItem.checkState">
                                 <Option value="">请选择</Option>
@@ -33,19 +40,17 @@
                             </Select>
                         </FormItem>
                         </Col>
-                        <Col span="6">
+                        <Col span="8">
                         <FormItem label="项目类型" prop="projectId">
-                            <Select v-model="formItem.projectId" @on-change="findCategory">
-                                <Option value="">请选择</Option>
-                                <Option value="1">公务员（国考）</Option>
-                                <Option value="2">公务员（省考）</Option>
-                                <Option value="4">事业单位</Option>
-                            </Select>
+                          <Select v-model="formItem.projectId" @on-change="findCategory">
+                            <Option value="">请选择</Option>
+                            <Option value="1">公务员（国考）</Option>
+                            <Option value="2">公务员（省考）</Option>
+                            <Option value="4">事业单位</Option>
+                          </Select>
                         </FormItem>
                         </Col>
-                    </Row>
-                    <Row>
-                        <Col span="6">
+                        <Col span="8">
                         <FormItem label="考试类型" prop="examStyleId">
                             <Select v-model="formItem.examStyleId">
                                 <Option value="">请选择</Option>
@@ -55,7 +60,9 @@
                             </Select>
                         </FormItem>
                         </Col>
-                        <Col span="6">
+                    </Row>
+                    <Row>
+                        <Col span="8">
                         <FormItem label="科目" prop="categoryId">
                             <Select v-model="formItem.categoryId">
                                 <Option value="">请选择</Option>
@@ -63,7 +70,7 @@
                             </Select>
                         </FormItem>
                         </Col>
-                        <Col span="12">
+                        <Col span="16">
                         <FormItem label="开课时间">
                             <DatePicker type="daterange" placeholder="" v-model="formItem.openClassTime"></DatePicker>
                         </FormItem>
@@ -152,6 +159,7 @@
     data () {
       return {
         formItem: {
+          headerTeacherName:'',
           classInfoName: '',
           province: '',
           checkState: '',
@@ -191,12 +199,16 @@
             key: 'studyTimeSet',
             render: (h, params) => {
               return h('div',{class:'studyTime'},(() => {
-                let studyTimeSet = params.row.studyTimeSet;
-                let ele = [];
-                for (let i = 0; i < studyTimeSet.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.studyTimeSet.length+'%'}}, this.formateDate(studyTimeSet[i])))
+                if(params.row.studyTimeSet.length > 0) {
+                  let studyTimeSet = params.row.studyTimeSet;
+                  let ele = [];
+                  for (let i = 0; i < studyTimeSet.length; i++) {
+                    ele.push(h('div',{class:'item',style:{height:100/params.row.studyTimeSet.length+'%'}}, this.formateDate(studyTimeSet[i])))
+                  }
+                  return ele
+                }else {
+                  return '--'
                 }
-                return ele
               })())
             },
           },
@@ -206,12 +218,16 @@
             key: 'day',
             render:(h,params)=>{
               return h('div',{class:'day'},(() => {
-                let categoryTeacherDos = params.row.categoryTeacherDos;
-                let ele = [];
-                for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, this.formateDate(categoryTeacherDos[i].day) + ' ' + this.numberToTime(categoryTeacherDos[i].beginTime) + '-' + this.numberToTime(categoryTeacherDos[i].endTime)))
+                if(params.row.categoryTeacherDos.length > 0) {
+                  let categoryTeacherDos = params.row.categoryTeacherDos;
+                  let ele = [];
+                  for (let i = 0; i < categoryTeacherDos.length; i++) {
+                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, this.formateDate(categoryTeacherDos[i].day) + ' ' + this.numberToTime(categoryTeacherDos[i].beginTime) + '-' + this.numberToTime(categoryTeacherDos[i].endTime)))
+                  }
+                  return ele
+                }else {
+                  return '--'
                 }
-                return ele
               })())
             }
           },
@@ -221,12 +237,16 @@
             key: 'categoryName',
             render:(h,params)=>{
               return h('div',{class:'category'},(() => {
-                let categoryTeacherDos = params.row.categoryTeacherDos;
-                let ele = [];
-                for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].categoryName))
+                if(params.row.categoryTeacherDos.length > 0) {
+                  let categoryTeacherDos = params.row.categoryTeacherDos;
+                  let ele = [];
+                  for (let i = 0; i < categoryTeacherDos.length; i++) {
+                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].categoryName))
+                  }
+                  return ele
+                }else {
+                  return '--'
                 }
-                return ele
               })())
             }
           },
@@ -236,12 +256,16 @@
             key: 'name',
             render:(h,params)=>{
               return h('div',{class:'teacher'},(() => {
-                let categoryTeacherDos = params.row.categoryTeacherDos;
-                let ele = [];
-                for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher.name))
+                if(params.row.categoryTeacherDos.length > 0) {
+                  let categoryTeacherDos = params.row.categoryTeacherDos;
+                  let ele = [];
+                  for (let i = 0; i < categoryTeacherDos.length; i++) {
+                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher.name))
+                  }
+                  return ele
+                }else {
+                  return '--'
                 }
-                return ele
               })())
             }
           },
@@ -251,12 +275,16 @@
             key: 'mobile',
             render:(h,params)=>{
               return h('div',{class:'mobile'},(() => {
-                let categoryTeacherDos = params.row.categoryTeacherDos;
-                let ele = [];
-                for (let i = 0; i < categoryTeacherDos.length; i++) {
-                  ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher.mobile))
+                if(params.row.categoryTeacherDos.length > 0) {
+                  let categoryTeacherDos = params.row.categoryTeacherDos;
+                  let ele = [];
+                  for (let i = 0; i < categoryTeacherDos.length; i++) {
+                    ele.push(h('div',{class:'item',style:{height:100/params.row.categoryTeacherDos.length+'%'}}, categoryTeacherDos[i].teacher.mobile))
+                  }
+                  return ele
+                }else {
+                  return '--'
                 }
-                return ele
               })())
             }
           },
@@ -369,6 +397,7 @@
       searchData(){
         let form = this.formItem
         return {
+          headerTeacherName:form.headerTeacherName,
           classInfoName:form.classInfoName,
           examStyleId:form.examStyleId,
           openClassTime:form.openClassTime[0]?[form.openClassTime[0].getTime(),form.openClassTime[1].getTime()]:[],
@@ -383,6 +412,7 @@
       searchDataPage () {
         let form = this.currentInfo
         return {
+          headerTeacherName:form.headerTeacherName,
           classInfoName:form.classInfoName,
           examStyleId:form.examStyleId,
           openClassTime:form.openClassTime[0]?[form.openClassTime[0].getTime(),form.openClassTime[1].getTime()]:[],
