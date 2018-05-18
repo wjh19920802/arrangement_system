@@ -15,7 +15,7 @@
                         </Col>
                         <Col span="6">
                         <FormItem label="角色" prop="role">
-                            <Select v-model="formItem.role" :select="formItem.role" @on-change="getMenuList">
+                            <Select v-model="formItem.role" :select="formItem.role">
                                 <Option value="">请选择</Option>
                                 <Option v-for="r,index in roleList" :key="index" :value="r.id">{{r.roleName}}</Option>
                             </Select>
@@ -25,8 +25,8 @@
                         <FormItem label="状态" prop="status">
                             <Select v-model="formItem.status" :select="formItem.status">
                                 <Option value="">请选择</Option>
-                                <Option value="1">启用</Option>
-                                <Option value="0">禁用</Option>
+                                <Option value="true">启用</Option>
+                                <Option value="false">禁用</Option>
                             </Select>
                         </FormItem>
                         </Col>
@@ -44,6 +44,9 @@
                     <p>用户列表</p>
                 </div>
                 <Table border ref="paperTable" :columns="columns" :data="data1" ></Table>
+                <div style="margin: 10px;overflow: hidden">
+                    <Page :total="total" :current="pageNumber" :page-size="pageSize" @on-change="changePage" show-total ></Page>
+                </div>
             </Card>
             </Col>
         </Row>
@@ -146,7 +149,10 @@
               ]);
             }
           }],
-        data1: []
+        data1: [],
+        total: 0,
+        pageNumber: 1,
+        pageSize: 20
       }
     },
     computed: {
@@ -207,7 +213,7 @@
           .then((res)=> {
           if(res.data.code == 0 ){
             this.data1 = res.data.data.content || [];
-            this.total = res.data.total;
+            this.total = res.data.data.total;
           }else{
             this.$Message.error(res.data.message);
           }
@@ -226,7 +232,7 @@
           .then((res)=> {
           if(res.data.code == 0 ){
             this.data1 = res.data.data.content || [];
-            this.total = res.data.total;
+            this.total = res.data.data.total;
           }else{
             this.$Message.error(res.data.message);
           }

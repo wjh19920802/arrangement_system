@@ -1,5 +1,27 @@
 <template>
     <div>
+        <Modal class="modal1"
+                v-model="modal1"
+                width="50%"
+                @on-ok="confirmChangeDate"
+                title="修改班次日期">
+            <Row>
+                <Col span="6" style="padding-right: 5px">
+                <DatePicker :options="optionsDate" ref="addDate" type="daterange" placement="bottom-start" @on-change="addChangingDate" format="yyyy/MM/dd" placeholder="添加一段时间"></DatePicker>
+                </Col>
+                <Col span="6" style="padding-right: 5px">
+                <DatePicker :options="optionsDate" ref="addDate" type="date" placement="bottom-start" @on-change="addChangingDate" format="yyyy/MM/dd" placeholder="单独添加一天"></DatePicker>
+                </Col>
+            </Row>
+            <div class="chosen">
+                        <span :class="{chosenItem: true, chosenClass: item.children}" v-for="item,index in changingDateArr">
+                          {{timestampToTime(item)}}
+                          <span v-if="item > new Date()" @click="removeChangingDate(index)" class="removeIcon"><Icon type="close-circled" size="14" ></Icon></span>
+                        </span>
+            </div>
+            <div style="color: orange;">请添加 {{lessonDays}} 天的课程日期，当前已添加 {{changingDateArr.length}} 天，重复天数会被过滤</div>
+            <div style="color: red;">* 今天及之前的课程日期无法修改</div>
+        </Modal>
         <Row>
             <Col span="24">
             <Card>
@@ -105,10 +127,10 @@
                       <FormItem label="班次日期" prop="studyTimeList">
                       <Row>
                           <Col span="6" style="padding-right: 5px">
-                          <DatePicker ref="addDate" type="daterange" placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd" placeholder="添加一段时间"></DatePicker>
+                          <DatePicker :options="optionsDate" ref="addDate" type="daterange" placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd" placeholder="添加一段时间"></DatePicker>
                           </Col>
                           <Col span="6" style="padding-right: 5px">
-                          <DatePicker ref="addDate" type="date" placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd" placeholder="单独添加一天"></DatePicker>
+                          <DatePicker :options="optionsDate" ref="addDate" type="date" placement="bottom-start" @on-change="changeDate" format="yyyy/MM/dd" placeholder="单独添加一天"></DatePicker>
                           </Col>
                       </Row>
                       <div class="chosen">
@@ -117,7 +139,8 @@
                           <span @click="removeClass(index)" class="removeIcon"><Icon type="close-circled" size="14" ></Icon></span>
                         </span>
                       </div>
-                      <span style="color: orange;">请添加 {{lessonDays}} 天的课程日期，当前已添加 {{formItem.studyTimeList.length}} 天，重复天数会被过滤</span>
+                      <div style="color: orange;">请添加 {{lessonDays}} 天的课程日期，当前已添加 {{formItem.studyTimeList.length}} 天，重复天数会被过滤</div>
+                      <div style="color: red;">* 今天及之前的课程日期无法选用</div>
                       </FormItem>
 
                     <!--<FormItem label="班次日期" prop="studyTimeList">
@@ -429,38 +452,50 @@
             title: '班次编码',
             align: 'center',
             key: 'classCode',
+            width: '15%'
           },
           {
             title: '班级名称',
             align: 'center',
             key: 'className',
+            width: '20%'
           },
           {
             title: '上课省份',
             align: 'center',
-            key: 'studyProvince'
+            key: 'studyProvince',
+            width: '8%'
           },
           {
             title: '上课地市',
             align: 'center',
-            key: 'studyCity'
+            key: 'studyCity',
+            width: '8%'
           },
           {
             title: '学习中心',
             align: 'center',
-            key: 'studyCenter'
+            key: 'studyCenter',
+            width: '10%'
           },
           {
             title: '课程价格',
             align: 'center',
             key: 'price',
+            width: '20%'
           },
           {
             title: '上课日期',
             align: 'center',
             key: 'beginTime',
             render: (h,params) => {
-              return this.timestampToTime(params.row.beginTime) + '-' + this.timestampToTime(params.row.endTime)
+              return h('div',[this.timestampToTime(params.row.beginTime) + '-' + this.timestampToTime(params.row.endTime),
+                this.isShow ?
+                h('span', {
+                  class: {'operate': true},
+                  on: {click: () => {this.changingDate(params.row.id)}}
+                }, '修改') : ''
+              ])
             }
           }
         ],
@@ -483,6 +518,15 @@
           //studyCity:[{required:true,message:'市不能为空',trigger:'change'}],
           studyCenter:[{required:true,message:'学习中心不能为空',trigger:'change'}],
           studyTimeList:[{validator:validateTimeList,required:true,trigger:'blur'}],
+        },
+        // 新增弹窗 修改日期
+        modal1 : false,
+        changingDateArr: [], //当前要修改的班次的日期
+        changingId: '',
+        optionsDate: {
+          disabledDate (date) {
+            return date && date.valueOf() < Date.now();
+          }
         },
       }
     },
@@ -651,7 +695,8 @@
           vm.addErp()
         }
       },
-      addErp () {// 批量添加班次到该课程
+      addErp () {
+        // 批量添加班次到该课程
         // 处理异步函数
         let vm = this
         if(!vm.newLesson.length){
@@ -795,6 +840,72 @@
           .catch((error)=> {
             this.$Message.error(error.message)
           })
+      },
+      changingDate (id) {
+        // 修改班级日期
+        this.modal1 = true
+        this.changingDateArr = []
+        this.getChangingDate(id)
+      },
+      getChangingDate (id) {
+        this.$http({
+          method:'get',
+          url: this.$store.state.app.baseUrl+'classInfo/findClassDays?classId='+id,
+          headers: {'Content-type': 'application/json'}
+        })
+          .then((res)=> {
+            if(res.data.code == 0) {
+              this.changingDateArr = res.data.data
+              this.changingId = id
+            } else {
+              this.$Message.error(res.data.message)
+            }
+          })
+          .catch((error)=> {
+            this.$Message.error(error.message)
+          })
+      },
+      addChangingDate (dateList) { //弹窗里的日期修改
+        if(!dateList)return
+        if(Object.prototype.toString.call(dateList)=='[object Array]'){
+          let days = (this.getRangeTime(dateList[1]) - this.getRangeTime(dateList[0])) / 86400000 +1
+          for(let i= 0 ; i<days; i++){
+            this.changingDateArr.push(this.getRangeTime(dateList[0])+86400000*i)
+          }
+        }else{
+          this.changingDateArr.push(this.getRangeTime(dateList))
+        }
+        this.changingDateArr = this.deepUniqueArr(this.changingDateArr)
+      },
+      removeChangingDate (i) {
+        this.changingDateArr.splice(i,1)
+      },
+      confirmChangeDate () {
+        if(this.changingDateArr.length != this.lessonDays){
+          this.$Message.error('班次天数与课程不一致！')
+          return
+        }else{
+          this.$http({
+            method:'post',
+            url: this.$store.state.app.baseUrl+'classInfo/updateClassDays',
+            headers: {'Content-type': 'application/json'},
+            data: {
+              id: this.changingId,
+              studyTimeList: this.changingDateArr
+            }
+          })
+            .then((res)=> {
+              if(res.data.code == 0) {
+                this.$Message.success('修改成功')
+                this.getLessonClasses()
+              } else {
+                this.$Message.error(res.data.message)
+              }
+            })
+            .catch((error)=> {
+              this.$Message.error(error.message)
+            })
+        }
       }
     },
     mounted() {
