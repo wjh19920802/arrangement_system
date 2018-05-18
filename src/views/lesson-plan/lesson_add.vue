@@ -94,6 +94,19 @@
               </Col>
             </Row>
             <Row>
+              <Col span="12" v-if="lessonAddNotGroup.examStyleId == 2">
+              <FormItem prop="interviewGroupNumber" label="面试分组人数" class="interviewGroupNumber">
+                <Input :min="1" v-model="lessonAddNotGroup.interviewGroupNumber"></Input>
+              </FormItem>
+              </Col>
+              <Col span="12">
+              <FormItem prop="writeMan" label="主办人-面试：" class="faceMan" v-if="lessonAddNotGroup.examStyleId == 2 && this.createModel">
+                <Select v-model="lessonAddNotGroup.faceMan" style="width:200px" placeholder="选择人员">
+                  <Option value="">请选择</Option>
+                  <Option v-for="item,index in faceManList" :value="item.planerId" :key="item.planerName">{{ item.planerName }}</Option>
+                </Select>
+              </FormItem>
+              </Col>
               <Col span="12">
               <FormItem label="休息天数" prop="dayOfRest" class="dayOfRest">
                 <InputNumber :min="0" v-model="lessonAddNotGroup.dayOfRest"></InputNumber>
@@ -105,21 +118,6 @@
                   <Option value="">请选择</Option>
                   <Option v-for="item,index in writeManList" :value="item.planerId" :key="item.planerName">{{ item.planerName }}</Option>
                 </Select>
-              </FormItem>
-              </Col>
-              <Col span="12">
-              <FormItem prop="writeMan" label="主办人-面试：" class="faceMan" v-if="lessonAddNotGroup.examStyleId == 2 && this.createModel">
-                <Select v-model="lessonAddNotGroup.faceMan" style="width:200px" placeholder="选择人员">
-                  <Option value="">请选择</Option>
-                  <Option v-for="item,index in faceManList" :value="item.planerId" :key="item.planerName">{{ item.planerName }}</Option>
-                </Select>
-              </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span="6" v-if="lessonAddNotGroup.examStyleId == 2">
-              <FormItem prop="interviewGroupNumber" label="面试分组人数" class="interviewGroupNumber">
-                <Input :min="1" v-model="lessonAddNotGroup.interviewGroupNumber"></Input>
               </FormItem>
               </Col>
             </Row>
@@ -874,7 +872,11 @@
             })
               .then((res)=>{
                 if(res.data.code == 0) {
-                  this.writeManList = res.data.data;
+                  if(this.lessonAddNotGroup.examStyleId == 1) {
+                    this.writeManList = res.data.data;
+                  }else {
+                    this.faceManList = res.data.data;
+                  }
                 } else {
                   this.$Message.error(res.data.message);
                 }

@@ -92,7 +92,7 @@
                 @on-ok="ok"
                 @on-cancel="cancel">
             <div class="pass_wrap" v-show="passOrReject">
-                <Row>
+                <Row v-show="writeManShow">
                     <Col span="6" offset="5">
                     <span class="height_30">主办人－笔试：</span>
                     </Col>
@@ -102,7 +102,7 @@
                     </Select>
                     </Col>
                 </Row>
-                <Row>
+                <Row v-show="faceManShow">
                     <Col span="6" offset="5">
                     <span class="height_30">主办人－面试：</span>
                     </Col>
@@ -112,6 +112,7 @@
                     </Select>
                     </Col>
                 </Row>
+                <p v-show="wordsShow">确认提交这些课程吗？</p>
             </div>
             <div class="reject_wrap" v-show="!passOrReject">
                 <Row>
@@ -206,11 +207,7 @@
             align: 'center',
             key: 'classSeries',
             render:(h,params)=>{
-              if(params.row.classType == 2){
-                return params.row.classSeries.classSeriesName
-              }else {
-                return '--'
-              }
+              return params.row.classSeries.classSeriesName
             }
           },
         /*  {
@@ -423,11 +420,7 @@
                 align: 'center',
                 key: 'classSeries',
                 render:(h,params)=>{
-                  if(params.row.classType == 2){
-                    return params.row.classSeries.classSeriesName
-                  }else {
-                    return '--'
-                  }
+                  return params.row.classSeries.classSeriesName
                 }
               },
               /*{
@@ -633,11 +626,7 @@
             align: 'center',
             key: 'classSeries',
             render:(h,params)=>{
-              if(params.row.classType == 2){
-                return params.row.classSeries.classSeriesName
-              }else {
-                return ''
-              }
+              return params.row.classSeries.classSeriesName
             }
           },
           /*{
@@ -835,7 +824,10 @@
         curIndex: '',
         scheduleData: [],
         type:1,
-        modalFlag:false      // 点击modal4的时候为true 否则为false
+        modalFlag:false ,     // 点击modal4的时候为true 否则为false
+        writeManShow:false,
+        faceManShow:false,
+        wordsShow:false
       }
     },
     methods: {
@@ -888,6 +880,27 @@
           .catch((error)=>{
             this.$Message.error(error.message);
           })
+
+        this.selectedStashData.forEach((item) => {
+          if(item.classType == 1) {    //组合班
+            this.writeManShow = false;
+            this.faceManShow = false;
+          }else {
+            if(item.examStyleId == 1) {
+              this.writeManShow = true;
+            }else {
+              this.faceManShow = true;
+            }
+          }
+        })
+        if(this.writeManShow == false && this.faceManShow == false) {
+          this.wordsShow = true ;
+        }else {
+          this.wordsShow = false ;
+        }
+      },
+      cancel () {
+        this.writeManShow = this.faceManShow = this.wordsShow = false;
       },
       reject () {
           this.isShow = true;
@@ -905,7 +918,7 @@
         if(this.passOrReject) {
           //创建经办人
           let writeManName,faceManName;
-          this.writeManList.forEach((item)=>{
+          this.writeManList.forEach((item) => {
             if(item.planerId == this.writeMan) {
               writeManName = item.planerName;
             }
@@ -957,8 +970,6 @@
         }else {
           this.$Message.error('请选择需要审核的课程和主办人或驳回原因');
         }
-      },
-      cancel () {
       },
       waitDataSelect (selection) {
           this.selectedStashData = selection ;

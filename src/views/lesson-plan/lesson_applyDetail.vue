@@ -236,11 +236,7 @@
             align: 'center',
             key: 'classSeries',
             render:(h,params)=>{
-              if(params.row.classType == 2){
-                return params.row.classSeries.classSeriesName
-              }else {
-                return '--'
-              }
+              return params.row.classSeries.classSeriesName
             }
           },
         /*  {
@@ -462,7 +458,7 @@
                   align: 'center',
                   key: 'classSeries',
                 render:(h,params)=>{
-                      return params.row.classSeries.classSeriesName
+                   return params.row.classSeries.classSeriesName
                 }
               },
             /*  {
@@ -812,11 +808,7 @@
             align: 'center',
             key: 'classSeries',
             render:(h,params)=>{
-              if(params.row.classType == 2){
-                return params.row.classSeries.classSeriesName
-              }else {
-                return ''
-              }
+              return params.row.classSeries.classSeriesName
             }
           },
          /* {

@@ -33,12 +33,12 @@ router.beforeEach((to, from, next) => {
             next({
                 name: 'login'
             });
-        } else if (Cookies.get('accessToken') && to.name === 'login') { // 判断是否已经登录且前往的是登录页
+        }else if (Cookies.get('accessToken') && to.name === 'login') { // 判断是否已经登录且前往的是登录页
             Util.title();
             next({
                 name: 'home_index'
             });
-        } else {
+        }else {
             const curRouterObj = Util.getRouterObjByName([otherRouter, ...appRouter], to.name);
             if (curRouterObj && curRouterObj.access !== undefined) { // 需要判断权限的路由
                 if (Util.showThisRoute(curRouterObj.access, parseInt(Cookies.get('access')))) {
