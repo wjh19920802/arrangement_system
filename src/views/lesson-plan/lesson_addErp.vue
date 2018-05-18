@@ -601,7 +601,7 @@
               .catch((error)=> {
                 this.$Message.error('获取地区列表失败，请刷新重试')
               })*/
-            this.$http({
+            /*this.$http({
               method:'post',
               url: this.$store.state.app.baseUrl + 'classInfo/checkName/course/' + this.lessonId ,
               data:{studyCenter:newRow.studyCenter,periodName:newRow.periodName},
@@ -610,14 +610,14 @@
               .then((res)=> {
                 console.log(res,'获取课程下的已有班次')
                 if(res.data.code == 0) {
-                  this.newLesson.push(newRow)
                 } else {
                   this.$Message.error(res.data.message)
                 }
               })
               .catch((error)=> {
                 this.$Message.error(error.message)
-              })
+              })*/
+            this.newLesson.push(newRow)
           }
         })
       },

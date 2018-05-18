@@ -23,13 +23,13 @@
                         <Panel name="2">
                             <Icon type="ios-search-strong"></Icon>待选课程
                             <Button type="primary" style="margin-left:50px;" @click.stop="addToSelectedLesson" v-show="collVal.indexOf('2')>=0">加入已选课程</Button>
-                            <Table slot="content" :data="waitData" :columns="columns1" border class="waitTable" @on-selection-change="getWaitSelectedData"></Table>
+                            <Table slot="content" :data="waitData" :columns="columns1" border class="waitTable" highlight-row @on-selection-change="getWaitSelectedData"></Table>
                             <Page slot="content" :total="total1" :current="pageNumber1" :page-size="pageSize1" @on-change="changePage1" show-total style="text-align: right;margin-top: 10px;"></Page>
                         </Panel>
                         <Panel name="3">
                             <Icon type="ios-star"></Icon>已选课程
                             <Button type="error" style="margin-left:50px;" v-show="collVal.indexOf('3')>=0" @click.stop="removeLesson">移出已选课程</Button>
-                            <Table slot="content" :data="selectedData" :columns="columns2" border class="selectedTable" @on-selection-change="getAlreadySelectedData"></Table>
+                            <Table slot="content" :data="selectedData" :columns="columns2" border class="selectedTable" highlight-row @on-selection-change="getAlreadySelectedData"></Table>
                             <Page slot="content" :total="total2" :current="pageNumber2" :page-size="pageSize2" @on-change="changePage2"  show-total style="text-align: right;margin-top: 10px;"></Page>
                         </Panel>
                     </Collapse>
@@ -183,7 +183,39 @@
         @on-ok="childrenOk"
         @on-cancel="childrenOk"
       >
-        <Table :data="childrenData" :columns="columns3" border></Table>
+        <Card>
+          <Form ref="searchChildren" :model="searchChildren" :label-width="150">
+            <Row>
+              <Col span="6">
+              <FormItem  label="考试类型">
+                <Select  v-model="searchChildren.examStyleId" @on-change="searchClassSeries">
+                  <Option value="">请选择</Option>
+                  <Option v-for="item in examStyleList" :key="item.value" :value="item.value">{{item.label}}</Option>
+                </Select>
+              </FormItem>
+              </Col>
+              <Col span="6">
+              <FormItem label="班级系列">
+                <Select v-model="searchChildren.childrenClassSeriesId">
+                  <Option value="">请选择</Option>
+                  <Option v-for="seriesItem in classSeriesIdGroup" :key="seriesItem.id" :value="seriesItem.id">{{seriesItem.classSeriesName}}</Option>
+                </Select>
+              </FormItem>
+              </Col>
+              <Col span="6" style="text-align: center">
+              <Button type="success" style="margin-right: 40px;" @click="searchChild">搜索</Button>
+              </Col>
+            </Row>
+          </Form>
+          <h3 style="margin: 20px 20px;">
+            查询结果：
+          </h3>
+          <Table :data="searchChildrenData" :columns="columns4" highlight-row border></Table>
+          <h3 style="margin: 20px 20px;">
+            已组合子班次：
+          </h3>
+          <Table :data="childrenData" :columns="columns3" highlight-row  border></Table>
+        </Card>
       </Modal>
     </div>
 </template>
@@ -705,6 +737,7 @@
                             click:()=>{
                               this.modal4 = true;
                               this.modalFlag = true;
+                              this.groupCourseId = params.row.id;
                               if(params.row.courseModelId) {
                                 this.$http(this.$store.state.app.baseUrl + 'courseModel/getSubCourses?courseModelId='+params.row.courseModelId)
                                   .then((res)=>{
@@ -909,6 +942,58 @@
                     class: 'operate',
                     on: {
                       click: () => {
+                        let subCourseId = params.row.id;
+                        if(this.childrenData.length > 1) {
+                          this.$Modal.confirm({
+                            title: '删除子班次',
+                            content: '<p>确定删除子班次吗？</p>',
+                            onOk: () => {
+                              this.$http({
+                                method:'get',
+                                url:this.$store.state.app.baseUrl + 'course/delSubCourseInGroup',
+                                params:{
+                                  groupCourseId:this.groupCourseId,
+                                  subCourseId:subCourseId
+                                },
+                                headers: {'Content-type': 'application/json'}
+                              })
+                                .then((res)=>{
+                                  if(res.data.code == 0) {
+                                    this.$Message.success('删除成功');
+                                    this.$http(this.$store.state.app.baseUrl + 'course/getSubCourses?courseId='+this.groupCourseId)
+                                      .then((res)=>{
+                                        if(res.data.code == 0) {
+                                          this.childrenData = res.data.data;
+                                          this.childrenData.forEach((item=>{
+                                            item.schoolBeginsTime = Util.formateDate(item.schoolBeginsTime);
+                                          }))
+                                        }else{
+                                          this.$Message.error(res.data.message)
+                                        }
+                                      })
+                                      .catch((error)=>{
+                                        this.$Message.error(error.message);
+                                      })
+
+                                  }else{
+                                    this.$Message.error(res.data.message);
+                                  }
+                                })
+                                .catch((error)=>{
+                                  this.$Message.error(error.message)
+                                })
+                            }
+                          });
+                        }else {
+                          this.$Message.error('组合班次至少要有一个子班次！')
+                        }
+                      }
+                    }
+                  }, '删除'),
+                  h('span', {
+                    class: 'operate',
+                    on: {
+                      click: () => {
                         this.modal1 = true;
                         if(this.modal4 == true && this.modalFlag == true) {
                           this.modal4 = false;
@@ -961,6 +1046,273 @@
             }
           },
         ],
+        columns4: [
+          {
+            type: 'selection',
+            width: 30,
+            align: 'center'
+          },
+          {
+            title: '班级编码',
+            align: 'center',
+            key: 'classCode'
+          },
+          {
+            title: '班级名称',
+            align: 'center',
+            key: 'courseName',
+          },
+          {
+            title: '班级类型',
+            align: 'center',
+            key: 'classType',
+            render:(h,params)=>{
+              return params.row.classType==1?'组合班次':'非组合班次'
+            }
+          },
+          {
+            title: '班级系列',
+            align: 'center',
+            key: 'classSeries',
+            render:(h,params)=>{
+              return params.row.classSeries.classSeriesName
+            }
+          },
+          /*  {
+              title: '根目录',
+              align: 'center',
+              key: 'rootDirectoryName',
+              render:(h,params)=>{
+                if(params.row.rootDirectoryName){
+                  return params.row.rootDirectoryName
+                }else {
+                  return '--'
+                }
+              }
+            },*/
+          {
+            title: '课时',
+            align: 'center',
+            key: 'classHour'
+          },
+          {
+            title: '科目',
+            align: 'center',
+            key: 'categoryName'
+          },
+          {
+            title: '预计开课日期',
+            align: 'center',
+            key: 'schoolBeginsTime',
+          },
+          {
+            title: '开班日期',
+            align: 'center',
+            key: 'openClassTime',
+          },
+          {
+            title: '项目',
+            align: 'center',
+            key: 'projectTag'
+          },
+          {
+            title: '价格/元',
+            align: 'center',
+            key: 'coursePrice',
+            render: (h, params) => {
+              return h('div', (() => {
+                let price=[];
+                params.row.priceInfoArray.forEach((item)=>{
+                  let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
+                  let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
+                  let isClosed = item.isClosed == 1?'封闭班-':item.isClosed === '0'?'非封闭班-':'';
+                  let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'':'-'+item.stay)  + writtenTf + interviewTf;
+                  price.push(str)
+                });
+                let ele = [];
+                for (let i = 0; i < price.length; i++) {
+                  ele.push(h('div', price[i]))
+                }
+                return ele
+              })())
+            },
+          },
+          {
+            title: '休息时间/天',
+            align: 'center',
+            key: 'dayOfRest'
+          },
+          {
+            title: '分组人数(面试)/人',
+            align: 'center',
+            key: 'interviewGroupNumber',
+            render:(h,params)=>{
+              if(params.row.interviewGroupNumber == 0 || params.row.interviewGroupNumber == null) {
+                return '--'
+              }else {
+                return params.row.interviewGroupNumber
+              }
+            }
+          },
+          {
+            title: '课时规划',
+            align: 'center',
+            key: 'classHourPlans',
+            render:(h,params)=>{
+              if(params.row.classHourPlans.length > 0) {
+                let hourDetail = params.row.classHourPlans;
+                let ele = [];
+                for (let i = 0; i < hourDetail.length; i++) {
+                  ele.push(h('div', hourDetail[i].categoryName + ':' + hourDetail[i].day + '天' + hourDetail[i].night + '晚'))
+                }
+                return ele
+              }else {
+                return '--'
+              }
+            }
+          },
+          {
+            title: '操作',
+            key: 'action',
+            align: 'center',
+            render: (h, params) => {
+              if(params.row.classType == 2) {
+                return h('div', {class:'handle'},[
+                  h('span', {
+                    class: 'operate',
+                    on: {
+                      click: () => {
+                        let subCourseId = params.row.id;
+                        let flag = true
+                        this.childrenData.forEach((item)=>{
+                          if(item.id == subCourseId) {
+                            flag = false;
+                          }
+                        });
+                        if(flag) {
+                          this.$Modal.confirm({
+                            title: '添加子班次',
+                            content: '<p>确定添加子班次吗？</p>',
+                            onOk: () => {
+                              this.$http({
+                                method:'get',
+                                url:this.$store.state.app.baseUrl + 'course/addSubCourseInGroup',
+                                params:{
+                                  groupCourseId:this.groupCourseId,
+                                  subCourseId:subCourseId
+                                },
+                                headers: {'Content-type': 'application/json'}
+                              })
+                                .then((res)=>{
+                                  if(res.data.code == 0) {
+                                    this.$Message.success('添加成功');
+                                    this.$http(this.$store.state.app.baseUrl + 'course/getSubCourses?courseId='+this.groupCourseId)
+                                      .then((res)=>{
+                                        if(res.data.code == 0) {
+                                          this.childrenData = res.data.data;
+                                          this.childrenData.forEach((item=>{
+                                            item.schoolBeginsTime = Util.formateDate(item.schoolBeginsTime);
+                                          }))
+                                        }else{
+                                          this.$Message.error(res.data.message)
+                                        }
+                                      })
+                                      .catch((error)=>{
+                                        this.$Message.error(error.message);
+                                      })
+
+                                  }else{
+                                    this.$Message.error(res.data.message);
+                                  }
+                                })
+                                .catch((error)=>{
+                                  this.$Message.error(error.message)
+                                })
+                            }
+                          });
+                        }else {
+                          this.$Message.error('组合班次下已有该班次')
+                        }
+                      }
+                    }
+                  }, '添加'),
+                  h('span', {
+                    class: 'operate',
+                    on: {
+                      click: () => {
+                        this.modal1 = true;
+                        if(this.modal4 == true && this.modalFlag == true) {
+                          this.modal4 = false;
+                        }
+                        this.classOrientation = params.row.classOrientation;
+                      }
+                    }
+                  }, '课程定位'),
+                  h('span', {
+                    class: 'operate',
+                    on: {
+                      click: () => {
+                        this.modal3 = true;
+                        if(this.modal4 == true && this.modalFlag == true) {
+                          this.modal4 = false;
+                        }
+                        this.branchCampusOption = params.row.branchCampusOption;
+                      }
+                    }
+                  }, '分校意见'),
+                  h('span', {
+                    class: 'operate',
+                    on: {
+                      click: () => {
+                        this.$http(this.$store.state.app.baseUrl + 'course/findCourseTableByCode?classCode='+params.row.classCode)
+                          .then((res)=>{
+                            if(res.data.code == 0) {
+                              this.scheduleData = res.data.data ? res.data.data.courseTableLineItemVos : []
+                            } else {
+                              this.$Message.error(res.data.message)
+                            }
+                          })
+                          .catch((error)=>{
+                            this.$Message.error(error.message);
+                          })
+                        this.curIndex = params.index;
+                        this.scheduleIsShow = true;
+                        this.lessonData = this.childrenData[this.curIndex];
+                        if(this.modal4 == true && this.modalFlag == true) {
+                          this.modal4 = false;
+                        }
+                      }
+                    }
+                  }, '课程表')
+                ])
+              }else {
+                return h('span',{
+                  class:'operate',
+                  on:{
+                    click:()=>{
+                      this.modal4 = true;
+                      this.modalFlag = true;
+                      this.$http(this.$store.state.app.baseUrl + 'courseModel/getSubCourses?courseModelId='+params.row.id)
+                        .then((res)=>{
+                          if(res.data.code == 0) {
+                            this.childrenData = res.data.data;
+                            this.childrenData.forEach((item=>{
+                              item.schoolBeginsTime = Util.formateDate(item.schoolBeginsTime);
+                            }))
+                          } else {
+                            this.$Message.error(res.data.message)
+                          }
+                        })
+                        .catch((error)=>{
+                          this.$Message.error(error.message);
+                        })
+                    }
+                  }
+                },'查看子班次')
+              }
+            }
+          },
+        ],   //弹窗中搜索的子班次
         childrenData:[],  //子班次
         waitData: [],
         selectedData: [],       //已选课程数据
@@ -1007,7 +1359,27 @@
         lessonData:null,
         scheduleData:[],
         scheduleIsShow:false,           //课程表
-        modalFlag:false      // 点击modal4的时候为true 否则为false
+        modalFlag:false ,     // 点击modal4的时候为true 否则为false
+        //查看子班次弹窗
+        searchChildren:{
+          examStyleId:'',
+          childrenClassSeriesId:''
+        },
+        examStyleList:[
+          {
+            value:'1',
+            label:'笔试'
+          },
+          {
+            value:'2',
+            label:'面试'
+          }
+        ],
+        classSeriesIdGroup:[],      //班级系列  组合班次子班次
+        examStyle:'',
+        groupCourseId:'',    //当前查看的组合班次的id
+        subCourseId:'' ,      //删除或者添加的子班次的id
+        searchChildrenData:[]  //弹窗中搜索的子班次
       }
     },
     methods: {
@@ -1390,7 +1762,56 @@
       },
       childrenOk(){
         this.modalFlag = false;
-      }
+      },
+      searchClassSeries () {
+        this.examStyle = this.searchChildren.examStyleId;
+        this.$http({
+          method:'get',
+          url:this.$store.state.app.baseUrl + 'classSeries/findByExamStyle',
+          params:{
+            examStyle:this.examStyle
+          },
+          headers: {'Content-type': 'application/json'}
+        })
+          .then((res)=>{
+            if(res.data.code == 0) {
+              this.classSeriesIdGroup = res.data.data;
+            }else{
+              this.$Message.error(res.data.message);
+            }
+          })
+          .catch((error)=>{
+            this.$Message.error(error.message)
+          })
+      },
+      searchChild () {
+        let classType = 2;
+        let examStyle = this.searchChildren.examStyleId;
+        let classSeries = this.searchChildren.childrenClassSeriesId;
+        // let rootDirectoryName = this.lessonAddGroup.rootDirectoryName;
+        let announcementId = this.$route.params.id;
+        let checkStates=[7];
+        let data = {
+          classType:classType,
+          examStyle:examStyle,
+          classSeries:classSeries,
+          // rootDirectoryName:rootDirectoryName,
+          announcementId:announcementId,
+          checkStates:checkStates
+        };
+        this.$http({
+          method:'POST',
+          url:this.$store.state.app.baseUrl + 'course/query',
+          data:data,
+          headers: {'Content-type': 'application/json'}
+        })
+          .then((res)=>{
+            this.searchChildrenData = res.data.data.content;
+          })
+          .catch(()=>{
+            this.$Message.error(error.message);
+          })
+      },
     },
     beforeMount () {
       // window.scrollTo(0, 0)
@@ -1478,5 +1899,11 @@
     .repeated {
       color:red;
     }
+  }
+  .operate{
+    color: #2d8cf0;
+    margin: 0 3px;
+    cursor: pointer;
+    padding:0 5px 0 ;
   }
 </style>
