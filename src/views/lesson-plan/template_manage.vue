@@ -134,7 +134,7 @@
       </p>
       <table id="template_table" border="1" width="100%" style="border-collapse:collapse;text-align: center;">
         <tr>
-          <th v-for="item in tableHeadData">{{item.value}}</th>
+          <th v-for="item in tableHeadData" :style="{width: item.width? item.width +'px' : 'auto'}">{{item.value}}</th>
         </tr>
         <tr v-for="item in templateData">
           <td>{{item.courseName}}</td>
@@ -304,11 +304,13 @@
                     },
                     {
                       name:'dayOfRest',
-                      value:'休息时间'
+                      value:'休息时间',
+                      width: 60
                     },
                     {
                       name:'interviewGroupNumber',
-                      value:'分组人数（面试）'
+                      value:'分组人数（面试）',
+                      width: 60
                     },
                     {
                       name:'classHourDetail',
@@ -316,19 +318,23 @@
                     },
                     {
                       name:'checkStates',
-                      value:'状态'
+                      value:'状态',
+                      width: 60
                     },
                     {
                       name:'action',
-                      value:'操作'
+                      value:'操作',
+                      width: 60
                     },
                     {
                       name:'provinceId',
-                      value:'适用省份'
+                      value:'适用省份',
+                      width: 60
                     },{
                       name:'operate',
-                      value:'操作'
-                  }
+                      value:'操作',
+                      width: 60
+                    }
                   ],
                 templateData: [],
                 childrenHeadData:[

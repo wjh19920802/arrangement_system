@@ -150,6 +150,11 @@
             key:'headteacherName'
           },
           {
+            title: 'IS账号',
+            align:'center',
+            key:'isName'
+          },
+          {
             title:'电话',
             align:'center',
             key:'headteacherTel'
@@ -185,6 +190,10 @@
             render:(h,params)=>{
               return params.row.isName + params.row.headteacherName
             }
+          },{
+            title: 'IS账号',
+            align:'center',
+            key:'isName'
           },{
             title: '联系电话',
             align: 'center',
