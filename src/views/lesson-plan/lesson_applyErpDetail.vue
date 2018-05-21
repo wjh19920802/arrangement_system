@@ -433,7 +433,7 @@
       },
       getCourses() {
         let data = {};
-        let url = this.$store.state.app.baseUrl  + 'course/query';
+        let url = this.$store.state.app.baseUrl  + 'course/queryForCourseList';
         data.checkStates = [7];
         data.announcementId = this.id;
         data.pageNumber = this.pageNumber;
