@@ -11,7 +11,7 @@
                 </div>
                 <div class="content">
                     <Table :data="waitData" :columns="columns1" border class="waitTable"></Table>
-                    <Page :total="total" :current="pageNumber" :page-size="pageSize" show-total style="text-align: right;margin-top: 10px;"></Page>
+                    <Page :total="total" :current="pageNumber" :page-size="pageSize" @on-change="changePage" show-total style="text-align: right;margin-top: 10px;"></Page>
                 </div>
             </Card>
             <Card class="margin-top-10">
@@ -20,7 +20,7 @@
                 </div>
                 <div class="content">
                     <Table :data="lessonData" :columns="columns2" border></Table>
-                    <Page :total="total2" :current="pageNumber2" :page-size="pageSize2" show-total style="text-align: right;margin-top: 10px;"></Page>
+                    <Page :total="total2" :current="pageNumber2" :page-size="pageSize2"  @on-change="changePage2" show-total style="text-align: right;margin-top: 10px;"></Page>
                 </div>
             </Card>
             <Card class="margin-top-10">
@@ -455,29 +455,40 @@
           .catch(()=>{
             this.$Message.error(error.message)
           })
+      },
+      search2() {
+        this.$http({
+          method:'get',
+          url: this.$store.state.app.baseUrl + 'classInfo/announcement/'+ this.announceId +'/classInfoPage?pageNumber='+this.pageNumber2+'&pageSize='+this.pageSize2,
+          headers: {'Content-type': 'application/json'}
+        })
+          .then((res)=> {
+            console.log(res)
+            if(res.data.code == 0){
+              this.lessonData = res.data.data == null?[]:res.data.data .content;
+              this.total2 = res.data.data == null?0:res.data.data.total;
+            }else{
+              this.$Message.error(res.data.message)
+            }
+          })
+          .catch((error)=> {
+            this.$Message.error(error.message)
+          })
+      },
+      changePage (page) {
+        this.pageNumber = page;
+        this.getCourses();
+      },
+      changePage2 (page) {
+        this.pageNumber2 = page;
+        this.search2();
       }
     },
     created () {
 
     },
     mounted() {
-      this.$http({
-        method:'get',
-        url: this.$store.state.app.baseUrl + 'classInfo/announcement/'+ this.announceId +'/classInfoPage?pageNumber='+this.pageNumber2+'&pageSize='+this.pageSize2,
-        headers: {'Content-type': 'application/json'}
-      })
-        .then((res)=> {
-          console.log(res)
-          if(res.data.code == 0){
-            this.lessonData = res.data.data == null?[]:res.data.data .content;
-            this.total2 = res.data.data == null?0:res.data.data.total;
-          }else{
-            this.$Message.error(res.data.message)
-          }
-        })
-        .catch((error)=> {
-          this.$Message.error(error.message)
-        })
+      this.search2();
       this.getCourses();
     },
     components:{
