@@ -1242,7 +1242,7 @@
           method:'post',
           url:this.$store.state.app.baseUrl + 'courseModel/query',
           data:{
-            checkState:7,
+            checkStates:[7],
             pageNumber:this.pageNumber1,
             pageSize:this.pageSize1,
             announcementId:this.$route.params.id
@@ -1266,7 +1266,7 @@
           method:'post',
           url:this.$store.state.app.baseUrl + 'courseModel/query',
           data:{
-            checkState:3,
+            checkStates:[3],
             pageNumber:this.pageNumber2,
             pageSize:this.pageSize2,
             announcementId:this.$route.params.id
