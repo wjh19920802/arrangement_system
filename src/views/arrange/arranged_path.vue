@@ -96,6 +96,7 @@
           班次列表
         </p>
         <Table border ref="selection" :columns="columns" :data="data1"></Table>
+        <Page :total="total" :current="pageNumber" :page-size="pageSize" @on-change="changePage" show-total style="margin-top: 20px;"></Page>
       </Card>
       </Col>
     </Row>
@@ -324,7 +325,9 @@
           },
         ],
         data1: [],
-        total1:0,
+        total:0,
+        pageNumber:0,
+        pageSize:20,
         tagModal:false,
         addTag:false,
         tagOption:'',
@@ -380,7 +383,7 @@
           .then((res)=>{
             if(res.data.code == 0) {
               this.data1 = res.data.data.content;
-              this.total1 = res.data.data.total;
+              this.total = res.data.data.total;
             }else {
               this.$Message.error(res.data.message);
             }
@@ -389,6 +392,9 @@
             console.log(error)
             this.$Message.error(error.message);
           })
+      },
+      changePage (page) {
+        this.pageNumber = page;
       },
       //添加标记
       tag (classInfoCategoryLinkId) {

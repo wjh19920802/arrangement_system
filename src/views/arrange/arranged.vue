@@ -273,7 +273,22 @@
           {
             title: '班级名称',
             align: 'center',
-            key: 'classInfoName'
+            key: 'classInfoName',
+            render:(h,params)=>{
+              return h('div',{class:'item2'},[
+                h('div',{width:'8px',height:'8px'},[
+                  h('Icon',{
+                    props:{
+                      type:'information-circled',
+                      size:'10px',
+                      color:'red'
+                    },
+                    class:params.row.signs.length>0?'icon-sign iconShow':'icon-sign iconNotShow'
+                  })
+                ]),
+                h('div',params.row.classInfoName?params.row.classInfoName:'--'),
+              ])
+            }
           },
           {
             title: '班级系列',
@@ -795,6 +810,7 @@
       /*}*/
     /*}*/
     .ivu-table-cell {
+      height: 100%;
       padding: 0;
     }
     td:nth-of-type(12),td:nth-of-type(5),td:nth-of-type(6),td:nth-of-type(7),td:nth-of-type(8),td:nth-of-type(9),td:nth-of-type(10),td:nth-of-type(11){
@@ -821,6 +837,24 @@
     .day{
       margin-left: 0;
       margin-right: 0;
+    }
+    .item2 {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
+    .icon-sign {
+      position: absolute;
+      top: 5px;
+      left: 1px;
+    }
+    .iconNotShow {
+      display: none;
+    }
+    .iconShow {
+      display: inherit;
     }
   }
   .operate{

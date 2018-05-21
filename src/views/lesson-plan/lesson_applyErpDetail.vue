@@ -11,7 +11,7 @@
                 </div>
                 <div class="content">
                     <Table :data="waitData" :columns="columns1" border class="waitTable"></Table>
-                    <Page :total="total" :current="pageNumber" :page-size="pageSize" show-total style="text-align: right;margin-top: 10px;"></Page>
+                    <Page :total="total" :current="pageNumber" :page-size="pageSize" @on-change="changePage1" show-total style="text-align: right;margin-top: 10px;"></Page>
                 </div>
             </Card>
             <Card class="margin-top-10">
