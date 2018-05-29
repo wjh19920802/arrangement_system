@@ -596,7 +596,7 @@
                           on: {
                               click: () => {
                                   this.addIsShow = true;
-                                  this.selectedId = params.row.id;
+                                  this.selectedId = params.row.classCode;
                                   this.examStyleId = params.row.examStyleId;
                               }
                           }
@@ -1442,7 +1442,7 @@
           let price = this.priceForm.price;
           let writtenTf = this.priceForm.writtenTf;
           let interviewTf = this.priceForm.interviewTf;
-          let isClosed = this.priceForm.isClosed == '1'?'封闭班':'非封闭班';
+          let isClosed = this.priceForm.isClosed;
 
           obj={
             agreement:agreement,
@@ -1453,11 +1453,12 @@
             isClosed:isClosed
           };
           this.selectedData.forEach((item)=>{
-            if(item.id == this.selectedId) {
+            if(item.classCode == this.selectedId) {
               item.priceInfoArray.push(obj);
               item._checked = true;
             }
           });
+          // console.log('selectedId',this.selectedId);
           this.alreadyStashData = this.selectedData.filter((item)=>{
             return item._checked;
           })
@@ -1469,7 +1470,7 @@
         if(this.waitStashData.length > 0) {
           this.waitStashData.forEach((item)=>{
             item.courseModelId = item.id;
-            item.id = null;
+            // item.id = null;
 
             item.schoolBeginsTime = new Date(item.schoolBeginsTime).getTime();
           });

@@ -6,7 +6,6 @@ import Cookies from 'js-cookie';
 import {routers, otherRouter, appRouter} from './router';
 
 
-console.log(1)
 
 Vue.use(VueRouter);
 

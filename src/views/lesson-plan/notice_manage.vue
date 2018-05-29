@@ -367,7 +367,7 @@
       }
     },
     mounted () {
-        this.$http(this.$store.state.app.baseUrl + 'area/getUserVisualProvince')
+        this.$http(this.$store.state.app.baseUrl + 'area/getUserProvince')
             .then((res)=>{
                 if(res.data.code == 0 ){
                     this.provinces = res.data.data;
