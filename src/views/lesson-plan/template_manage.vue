@@ -591,7 +591,7 @@
               }else {
                 this.$Message.error(res.data.message);
               }
-            })
+            });
 
           // 非组合班次
           this.$http({

@@ -10,7 +10,7 @@
                 <Form :model="formItem" :label-width="100">
                     <Row>
                         <Col span="8">
-                        <FormItem label="教师姓名" prop="headerTeacherName">
+                        <FormItem label="班主任姓名" prop="headerTeacherName">
                           <Input v-model="formItem.headerTeacherName" placeholder=""></Input>
                         </FormItem>
                         </Col>
@@ -181,9 +181,22 @@
           {
             title: '班级名称',
             align: 'center',
-            width: '20%',
             key: 'classInfoName',
-            sortable: true
+            render:(h,params)=>{
+              return h('div',{class:'item2'},[
+                h('div',{width:'8px',height:'8px'},[
+                  h('Icon',{
+                    props:{
+                      type:'information-circled',
+                      size:'10px',
+                      color:'red'
+                    },
+                    class:params.row.signs.length>0?'icon-sign iconShow':'icon-sign iconNotShow'
+                  })
+                ]),
+                h('div',params.row.classInfoName?params.row.classInfoName:'--'),
+              ])
+            }
           },
           {
             title: '申请科目',
@@ -605,6 +618,10 @@
 
 <style lang="less" rel="stylesheet/less">
   #passed {
+    .ivu-table-cell {
+      position: relative;
+      padding: 10px 8px !important;
+    }
     td:nth-of-type(5),td:nth-of-type(6),td:nth-of-type(7),td:nth-of-type(8),td:nth-of-type(9),td:nth-of-type(10) {
       .ivu-table-cell {
         padding: 0;
@@ -637,6 +654,17 @@
     }
     .state {
       color:red;
+    }
+    .icon-sign {
+      position: absolute;
+      top: 5px;
+      left: 1px;
+    }
+    .iconNotShow {
+      display: none;
+    }
+    .iconShow {
+      display: inherit;
     }
     .operate{
       color: #2d8cf0;

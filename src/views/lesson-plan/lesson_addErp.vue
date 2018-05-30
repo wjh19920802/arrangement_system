@@ -654,6 +654,7 @@
               .then((res)=> {
                 console.log(res,'获取课程下的已有班次')
                 if(res.data.code == 0) {
+                  this.newLesson.push(newRow)
                 } else {
                   this.$Message.error(res.data.message)
                 }
@@ -661,7 +662,7 @@
               .catch((error)=> {
                 this.$Message.error(error.message)
               })*/
-            this.newLesson.push(newRow);
+            this.newLesson.push(newRow)
           }
         })
       },

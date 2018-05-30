@@ -307,7 +307,7 @@
             align: 'center',
             key: 'classSeriesName',
             render:(h,params)=>{
-              return params.row.classSeries ? params.row.classSeries.classSeriesName : '--'
+              return params.row.classSeriesName
             }
           },
           /*{
