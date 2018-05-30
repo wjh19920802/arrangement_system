@@ -19,15 +19,13 @@
                             <Input v-model="formItem.courseName" placeholder=""></Input>
                         </FormItem>
                         </Col>
-                      </Row>
+                    </Row>
                     <Row>
                         <Col span="12">
-                        <FormItem label="班级类型" prop="classType">
-                            <RadioGroup v-model="formItem.classType" type="button" size="small">
-                                <Radio label="">全部</Radio>
-                                <Radio label="1">组合班次</Radio>
-                                <Radio label="2">非组合班次</Radio>
-                            </RadioGroup>
+                        <FormItem label="省份" prop="province">
+                          <Select v-model="formItem.provinceIdList"  multiple>
+                            <Option v-for="item in provinces" :value="item.areaid" :key="item.areaid">{{item.name}}</Option>
+                          </Select>
                         </FormItem>
                         </Col>
                         <Col span="12">
@@ -116,6 +114,17 @@
                         </Col>
                     </Row>
                     <Row>
+                      <Col span="12">
+                        <FormItem label="班级类型" prop="classType">
+                          <RadioGroup v-model="formItem.classType" type="button" size="small">
+                            <Radio label="">全部</Radio>
+                            <Radio label="1">组合班次</Radio>
+                            <Radio label="2">非组合班次</Radio>
+                          </RadioGroup>
+                        </FormItem>
+                      </Col>
+                    </Row>
+                    <Row>
                         <Col span="1">
                         <FormItem>
                             <Button type="primary" @click="search">查询</Button>
@@ -162,8 +171,10 @@
             schoolBeginsTime: '',
             moon: '',
             projectTag: '',
-            checkState: 0
+            checkState: 0,
+            provinceIdList:[]
         },
+        provinces:[],
         classSeries:[],
         pageNumber:1,
         pageSize:20,
@@ -463,6 +474,20 @@
         })
         .catch((error)=>{
           this.$Message.error(error.message)
+        })
+
+      //获取全部省份
+      this.$http({
+        method:'get',
+        url:this.$store.state.app.baseUrl + 'area/getUserVisualProvince',
+        headers: {'Content-type': 'application/json'}
+      })
+        .then((res)=>{
+          if(res.data.code == 0) {
+            this.provinces = res.data.data;
+          }else {
+            this.$Message.error(res.data.message);
+          }
         })
     },
     created () {

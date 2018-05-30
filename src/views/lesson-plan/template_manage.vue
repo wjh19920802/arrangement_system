@@ -219,8 +219,9 @@
       <Modal v-model="provinceNotice" title="提示" width="500px" @on-ok="ok">
         <h3>确定修改适用省份吗？</h3>
       </Modal>
-      <Modal v-model="showProvinceList" title="提示" width="500px">
+      <Modal v-model="showProvinceList" title="提示" width="500px" @on-ok="okProvince" @on-cancel="okProvince" >
         <Select v-model="provinceIdList" multiple @on-change="change">
+          <Option value="-1">全选 <span style="color: #ff0000;font-size: 10px;">(第二次点击为全部取消)</span></Option>
           <Option v-for="item2 in provinces" :value="item2.id" :key="item2.id">{{item2.cityName}}</Option>
         </Select>
       </Modal>
@@ -358,6 +359,7 @@
                 total:0,
                 pageNumber:1,
                 pageSize:20,
+                isAll:true
             }
         },
         methods:{
@@ -398,8 +400,31 @@
                 })
             },
             change () {
+              if(this.provinceIdList.indexOf('-1') > -1) {
+                if(this.isAll) {
+                  if(this.provinceIdList.length == this.provinces.length + 1) {
+                    this.provinceIdList.splice(0,this.provinceIdList.length);
+                  }else {
+                    this.provinceIdList.splice(0,this.provinceIdList.length);
+                    this.provinces.forEach((item) => {
+                      this.provinceIdList.push(item.id)
+                    });
+                    this.isAll = false ;
+                  }
+                }else {
+                  this.provinceIdList.splice(0,this.provinceIdList.length);
+                  this.isAll = true ;
+                }
+
+              }
                 console.log(this.templateData)
             },
+            okProvince () {
+              this.isAll = true ;
+            },
+           /* okProvince () {
+
+            },*/
             showChild (courseModelId) {  //查看子班次
                 this.$http({
                     method:'post',
