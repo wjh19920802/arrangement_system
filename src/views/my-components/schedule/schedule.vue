@@ -10,7 +10,7 @@
       <span class="table-header flex-1">时间</span>
       <span class="flex-1">{{title}}   课程天数：{{row}}天</span>
     </div>
-    <div class="tbody">
+    <div class="tbody" style="overflow-x: auto">
       <div class="frontPage pageBtn" @click="toFrontPage" v-if="row>7">
         <Icon type="chevron-up"></Icon>
       </div>
@@ -179,7 +179,7 @@
   .scheduleTable{
     box-sizing: border-box;
     text-align: center;
-    font-size: 15px;
+    font-size: 12px;
     .edit_modal {
       .ivu-modal-wrap {
         z-index: 1000!important;
@@ -219,8 +219,8 @@
       .tr{
         width: 100%;
         //display: flex;
-        border-bottom: 1px solid #e9eaec;
-        border-right: 1px solid #e9eaec;
+        //border-bottom: 1px solid #e9eaec;
+        //border-right: 1px solid #e9eaec;
         &>span{
           min-width: 50px;
           min-height: 80px;
@@ -272,13 +272,14 @@
         .date{
           background-color: #f8f8f9;
           border-right: 1px solid #e9eaec;
+          border-bottom: 1px solid #e9eaec;
           max-width: 150px;
           min-width: 150px;
           //display: flex;
           //align-items: center;
           //justify-content: center;
           position: relative;
-          font-size: 14px;
+          font-size: 12px;
           .operate{
             color: #2d8cf0;
             font-size: 10px;
