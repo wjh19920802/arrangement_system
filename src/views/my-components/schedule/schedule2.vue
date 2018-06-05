@@ -5,9 +5,12 @@
                 title="课程信息"
                 @on-ok="fillTitle">
             <Form :model="modalInfo" :label-width="100">
-                <FormItem label="科目" prop="topCategoryId">
+                <FormItem label="科目" prop="topCategoryId" class="firstCategory">
                     <Select ref="firstCat" v-model="modalInfo.topCategoryId" label-in-value placeholder="一级科目" @on-change="getCategoryTree(modalInfo.topCategoryId)">
                         <Option v-for="(s,i) in modalSubject" :key="s.id" :value="s.id">{{s.categoryName}}</Option>
+                        <Option  value="-1">早自习</Option>
+                        <Option  value="-3">晚自习</Option>
+                        <Option  value="-4">休息</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="课程项目" prop="itemContent">
@@ -137,7 +140,7 @@
         return this.lessonData ? this.lessonData.courseName : '课程表'
       },
       row () {
-        return this.lessonData ? (this.lessonData.openClassTime == '下午' || this.lessonData.openClassTime == '晚上') ? +this.lessonData.classHour.split('天')[0]+1 : +this.lessonData.classHour.split('天')[0] : 1
+        return this.lessonData ? (this.lessonData.openClassTime == '下午' || this.lessonData.openClassTime == '晚上') ? +this.lessonData.classHour.split('天')[0]+1 : +this.lessonData.classHour.split('天')[0]: 1
       },
       /*data1 () {
         return this.$store.state.user.schedule
@@ -268,13 +271,25 @@
           //newItem.time[1] = end.getHours()*100 + end.getMinutes();
           newItem.time[1] = parseInt(end.split(':')[0])*100 + parseInt(end.split(':')[1]);
         }
-        if(!(this.isEdit)){
-          this.data1[this.curRowIndex].courseTableItems.push(newItem)
-          //this.$store.state.user.schedule[this.curRowIndex].push(newItem)
-        }else{
-          this.data1[this.curRowIndex].courseTableItems[this.curColIndex] = newItem
-          //this.$store.state.user.schedule[this.curRowIndex][this.curColIndex] = newItem
+        if(newItem.topCategoryName != '') {
+          if(!(this.isEdit)){
+            this.data1[this.curRowIndex].courseTableItems.push(newItem)
+            //this.$store.state.user.schedule[this.curRowIndex].push(newItem)
+          }else{
+            this.data1[this.curRowIndex].courseTableItems[this.curColIndex] = newItem
+            //this.$store.state.user.schedule[this.curRowIndex][this.curColIndex] = newItem
+          }
+        }else {
+          this.$Modal.confirm({
+            title: '提示',
+            content: '请选择一级科目',
+            okText: '确定',
+            cancelText: '取消'
+          });
         }
+        this.$refs.firstCat.selectedSingle = '';
+        this.$refs.secondCat.selectedSingle = '';
+        this.$refs.thirdCat.selectedSingle = '';
         // 将数组重新排序
         this.data1[this.curRowIndex].courseTableItems.sort(function (a, b) {
           if (a.time[0] < b.time[0]) {
@@ -500,6 +515,15 @@
                 left:0;
                 top:-30px;
             }*/
+        }
+        .firstCategory>.ivu-form-item-label {
+          content: '*';
+          display: inline-block;
+          margin-right: 4px;
+          line-height: 1;
+          font-family: SimSun;
+          font-size: 12px;
+          color: #ed3f14;
         }
     }
 
