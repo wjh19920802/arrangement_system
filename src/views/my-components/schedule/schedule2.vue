@@ -49,7 +49,7 @@
                 </span>
                 <span class="classes flex flex-v flex-align-center flex-pack-center" v-for="(c,i) in (data1[index] ? data1[index].courseTableItems : {})" :key="i" :style="formatClass(c.time[0], c.time[1])">
                     <div class="className">
-                        {{c.topCategoryName}} - {{c.itemContent}}
+                        {{c.itemContent}}
                     </div>
                     <div class="classTime">
                         {{formatTime(c.time[0], c.time[1])}}
@@ -260,9 +260,11 @@
           topCategoryName: this.$refs.firstCat.selectedSingle || '',
           categoryId: this.modalInfo.categoryId,
           categoryName: this.$refs.thirdCat.selectedSingle || '',
-          itemContent: this.$refs.secondCat.selectedSingle + '/' + this.$refs.thirdCat.selectedSingle,
+          itemContent: this.$refs.firstCat.selectedSingle + (this.$refs.secondCat.selectedSingle?('/' + this.$refs.secondCat.selectedSingle + '/' + this.$refs.thirdCat.selectedSingle):''),
           time: [0, 0],
         }
+        console.log(newItem)
+        console.log(this.$refs.secondCat.selectedSingle)
         if(start){
           //newItem.time[0] = start.getHours()*100 + start.getMinutes();
           newItem.time[0] = parseInt(start.split(':')[0])*100 + parseInt(start.split(':')[1]);
