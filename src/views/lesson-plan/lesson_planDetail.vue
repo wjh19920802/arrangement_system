@@ -151,14 +151,26 @@
       <Modal v-model="scheduleModal2"
              width="80%"
              title="课程表"
-             @on-ok="submitSchedule(0)"
-             @on-cancel="classOrientationOk">
+             class="schedule"
+      >
             <Schedule ref="scheduleDom2"
                       class="margin-top-20"
                       :lessonData="lessonData"
                       :scheduleData="scheduleData"
                       :scheduleEdit=true>
             </Schedule>
+            <div slot="footer">
+              <Upload
+                ref="upload"
+                :show-upload-list="false"
+                :on-success="handleSuccessExcel"
+                :action="url + 'upload/uploadFile'"
+              >
+                <Button type="primary" size="large" style="float: left;">导入课表Excel</Button>
+              </Upload>
+              <Button type="text" size="large"   @click="classOrientationOk">取消</Button>
+              <Button type="primary" size="large"   @click="submitSchedule(0)">确定</Button>
+            </div>
         </Modal>
       <Modal
         v-model="modal1"
@@ -1015,7 +1027,9 @@
         ],
         currentId:'',
         modalFlag:false,   // 点击modal4的时候为true 否则为false
-        lessonData:null
+        lessonData:null,
+        scheduleExcel:[],
+        uploadList:[]
       }
     },
     methods: {
@@ -1273,6 +1287,7 @@
         this.reason = '';
       },
       submitSchedule (type) {
+        this.scheduleModal2 = false ;
         if(this.modalFlag == true) {
           this.modal4 = true;
           this.modalFlag = true;
@@ -1413,6 +1428,7 @@
         this.teachingMaterialList.splice(index,1);
       },
       classOrientationOk() {
+        this.scheduleModal2 = false ;
         if(this.modalFlag == true) {
           this.modal4 = true;
           this.modalFlag = true;
@@ -1420,7 +1436,14 @@
       },
       childrenOk(){
         this.modalFlag = false;
-      }
+      },
+      handleSuccessExcel (res,file, fileList) {
+        if(res.code == 0) {
+          this.$Message.success('上传成功');
+        }else {
+          this.$Message.success('上传失败');
+        }
+      },
     },
     mounted() {
       this.search1();
@@ -1516,5 +1539,19 @@
       color: #2d8cf0;
       margin: 0 3px;
       cursor: pointer;
+    }
+    .schedule {
+      .ivu-upload {
+        float: left;
+        ul {
+          float: left;
+          width: 300px;
+          text-align: left;
+          margin-left: 50px;
+        }
+      }
+      .uploadList {
+        float: left;
+      }
     }
 </style>
