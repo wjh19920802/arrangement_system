@@ -318,7 +318,7 @@
                     params.row.priceInfoArray.forEach((item)=>{
                       let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                       let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                      let isClosed = item.isClosed == 1?'封闭班-':item.isClosed === '0'?'非封闭班-':'';
+                      let isClosed = item.isClosed == 1?'封闭班-':item.isClosed == '0'?'非封闭班-':'';
                       let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'':'-'+item.stay)  + writtenTf + interviewTf;
                       price.push(str)
                     });
@@ -560,7 +560,7 @@
                           params.row.priceInfoArray.forEach((item)=>{
                             let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                             let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                            let isClosed = item.isClosed == 1?'封闭班-':item.isClosed === '0'?'非封闭班-':'';
+                            let isClosed = item.isClosed == 1?'封闭班-':item.isClosed == '0'?'非封闭班-':'';
                             let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'':'-'+item.stay)  + writtenTf + interviewTf;
                               price.push(str)
                           });
@@ -884,7 +884,7 @@
                 params.row.priceInfoArray.forEach((item)=>{
                   let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                   let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                  let isClosed = item.isClosed == 1?'封闭班-':item.isClosed === '0'?'非封闭班-':'';
+                  let isClosed = item.isClosed == 1?'封闭班-':item.isClosed == '0'?'非封闭班-':'';
                   let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'':'-'+item.stay)  + writtenTf + interviewTf;
                   price.push(str)
                 });
@@ -1125,7 +1125,7 @@
                 params.row.priceInfoArray.forEach((item)=>{
                   let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                   let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                  let isClosed = item.isClosed == 1?'封闭班-':item.isClosed === '0'?'非封闭班-':'';
+                  let isClosed = item.isClosed == 1?'封闭班-':item.isClosed == '0'?'非封闭班-':'';
                   let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'':'-'+item.stay)  + writtenTf + interviewTf;
                   price.push(str)
                 });
@@ -1504,11 +1504,13 @@
                     this.repeatData.forEach((item1)=>{
                       if(item.id == item1.id) {
                         item.courseNameRepeat = false
-                        item.schoolBeginsTime = Util.formateDate(item.schoolBeginsTime);
                       }
                     })
                   })
                 }
+                this.waitStashData.forEach((item)=> {
+                  item.schoolBeginsTime = Util.formateDate(item.schoolBeginsTime);
+                });
                 this.selectedData = this.waitStashData.concat(this.selectedData);
                 this.total2 = this.total2 + this.selectedData.length;
                 this.hasToSelectedData = this.hasToSelectedData.concat(this.waitStashData);
