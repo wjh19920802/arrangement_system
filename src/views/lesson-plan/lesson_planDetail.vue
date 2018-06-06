@@ -136,10 +136,11 @@
           </Row>
         </div>
       </Modal>
-      <Modal  width="50%"
-                v-model="scheduleModal1"
-                @on-ok="submitSchedule(1)"
-              @on-cancel="classOrientationOk">
+      <Modal v-model="scheduleModal1"
+             width="80%"
+             title="课程表"
+             @on-ok="submitSchedule(1)"
+             @on-cancel="classOrientationOk">
             <Schedule ref="scheduleDom1"
                       class="margin-top-20"
                       :lessonData="lessonData"
@@ -147,10 +148,11 @@
                       :scheduleEdit=false>
             </Schedule>
         </Modal>
-      <Modal  width="50%"
-                v-model="scheduleModal2"
-                @on-ok="submitSchedule(0)"
-              @on-cancel="classOrientationOk">
+      <Modal v-model="scheduleModal2"
+             width="80%"
+             title="课程表"
+             @on-ok="submitSchedule(0)"
+             @on-cancel="classOrientationOk">
             <Schedule ref="scheduleDom2"
                       class="margin-top-20"
                       :lessonData="lessonData"

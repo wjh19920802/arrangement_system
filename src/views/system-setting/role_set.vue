@@ -350,23 +350,11 @@
         }, [])
         return arr
       },
-      onScroll () {
-        let pageContent = window.document.getElementsByClassName('single-page-con')[0]
-        console.log(window.innerHeight,'inner');//在谷歌浏览器中请使用 innerHeight以替换clientHeight
-        console.log(pageContent.scrollTop,'scrollTop');
-        console.log(pageContent.scrollHeight);//以上三个属性打印出来之后当滚动条滚到底部 1 + 2 = 3。
-        if(window.innerHeight + pageContent.scrollTop == pageContent.scrollHeight+117){
-
-        }
-      }
     },
     mounted () {
       //console.log(area.data)
       //this.getMenuList()
-      this.$nextTick(function () {
-        let pageContent = window.document.getElementsByClassName('single-page-con')[0]
-        pageContent.addEventListener('scroll', this.onScroll)
-      })
+
     }
   }
 </script>
