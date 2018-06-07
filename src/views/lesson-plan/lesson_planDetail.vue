@@ -165,7 +165,7 @@
                 :headers="{'accessToken':accessToken}"
                 :show-upload-list="false"
                 :on-success="handleSuccessExcel"
-                :action="url + 'course/getCourseTableByExcel'"
+                :action="url + 'course/getCourseTableByExcel?scheduleDays=' + scheduleDays"
               >
                 <Button type="primary" size="large" style="float: left;">导入课表Excel</Button>
               </Upload>
@@ -709,6 +709,7 @@
                                   })
                                 this.scheduleModal2 = true;
                                 this.curIndex = params.index;
+                                this.scheduleDays = parseInt(this.waitPlanData[this.curIndex].classHour.split('天')[0]) + (this.waitPlanData[this.curIndex].openClassTime == '上午' ? 0 : 1)
                                 this.lessonData = this.waitPlanData[this.curIndex];
                                 //this.scheduleEdit = true
                               }else {
@@ -1004,7 +1005,7 @@
         // 课程表
         scheduleModal1: false,
         scheduleModal2: false,
-        curIndex: '',
+        curIndex: 0,
         scheduleData: [],
         // 课程表是否可以编辑  仅在待规划中可编辑
         scheduleEdit: true,
@@ -1036,8 +1037,7 @@
         currentId:'',
         modalFlag:false,   // 点击modal4的时候为true 否则为false
         lessonData:null,
-        scheduleExcel:[],
-        uploadList:[]
+        scheduleDays:0
       }
     },
     methods: {
@@ -1446,24 +1446,30 @@
         this.modalFlag = false;
       },
       handleSuccessExcel (res,file, fileList) {
-        /*if(res.code == 0) {
-          this.$Message.success('上传成功');
-          this.$http({
-            method:'post',
-            url:this.$store.state.app.baseUrl + 'course/gerCourseTableByExcel',
-            data:res.data
+        if(res.code == 0) {
+          this.scheduleData = res.data.courseTableLineItemVos ? res.data.courseTableLineItemVos : []
+        }else if(res.code == 505) {
+          let errorTips='';
+          res.data.forEach((item)=>{
+            errorTips += item + '\/n';
           })
-            .then((res)=>{
-
-            })
-            .catch((error)=>{
-              this.$Message.error(error.message);
-            })
-
+          this.$Notice.error({
+            title: '提示',
+            desc: errorTips,
+            render:h=>{
+              let ele = [];
+              return h('div',(()=>{
+                res.data.forEach((item)=>{
+                  ele.push(h('div',item))
+                })
+                return ele;
+              })())
+            },
+            duration: 0
+          });
         }else {
-          this.$Message.success('上传失败');
-        }*/
-        console.log(res)
+          this.$Message.error(res.message);
+        }
       },
       uploadFile() {
         // debugger
