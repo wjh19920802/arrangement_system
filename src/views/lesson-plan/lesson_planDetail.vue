@@ -160,14 +160,18 @@
                       :scheduleEdit=true>
             </Schedule>
             <div slot="footer">
-              <Upload
+              <!--<Upload
                 ref="upload"
                 :show-upload-list="false"
                 :on-success="handleSuccessExcel"
-                :action="url + 'upload/uploadFile'"
+                :action="url + 'course/gerCourseTableByExcel'"
               >
                 <Button type="primary" size="large" style="float: left;">导入课表Excel</Button>
-              </Upload>
+              </Upload>-->
+              <input type="file" ref="upload_file" style="display: none;">
+              <Button @click="uploadFile">
+                上传Excel
+              </Button>
               <Button type="text" size="large"   @click="classOrientationOk">取消</Button>
               <Button type="primary" size="large"   @click="submitSchedule(0)">确定</Button>
             </div>
@@ -1438,12 +1442,29 @@
         this.modalFlag = false;
       },
       handleSuccessExcel (res,file, fileList) {
-        if(res.code == 0) {
+        /*if(res.code == 0) {
           this.$Message.success('上传成功');
+          this.$http({
+            method:'post',
+            url:this.$store.state.app.baseUrl + 'course/gerCourseTableByExcel',
+            data:res.data
+          })
+            .then((res)=>{
+
+            })
+            .catch((error)=>{
+              this.$Message.error(error.message);
+            })
+
         }else {
           this.$Message.success('上传失败');
-        }
+        }*/
+        console.log(res)
       },
+      uploadFile() {
+        // debugger
+        this.$refs.upload_file.click()
+      }
     },
     mounted() {
       this.search1();

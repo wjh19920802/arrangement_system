@@ -35,6 +35,7 @@ const app = {
         // baseUrl:'http://ke.offcn.com/v1/',
         baseUrl:'http://192.168.65.250:60000/v1/',
         // baseUrl:'http://192.168.65.60:60000/v1/',
+        // baseUrl:'http://192.168.65.88:60000/v1/',
         // baseUrl:'http://localhost:60000/v1/',
         // 用来判断menu是否active 的 字段
         parentName: '',
