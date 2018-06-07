@@ -4,7 +4,7 @@
                 v-model="modal1"
                 title="课程信息"
                 @on-ok="fillTitle">
-            <Form :model="modalInfo" ref="modalInfo" :label-width="100">
+            <Form :model="modalInfo" :label-width="100">
                 <FormItem label="科目" prop="topCategoryId" class="firstCategory">
                     <Select ref="firstCat" v-model="modalInfo.topCategoryId" label-in-value placeholder="一级科目" @on-change="getCategoryTree(modalInfo.topCategoryId)">
                         <Option v-for="(s,i) in modalSubject" :key="s.id" :value="s.id">{{s.categoryName}}</Option>
@@ -15,7 +15,7 @@
                 </FormItem>
                 <FormItem label="课程项目" prop="itemContent">
                     <!--<Cascader :data="modalProject.length?modalProject:[]" v-model="modalInfo.itemContent"></Cascader>-->
-                    <Select ref="secondCat" @on-change="getThirdTree" placeholder="二级科目">
+                    <Select ref="secondCat" v-model="secondId" @on-change="getThirdTree" placeholder="二级科目">
                         <Option v-for="(s,i) in modalProject" :key="s.value" :value="s.value">{{s.label}}</Option>
                     </Select>
                     <Select ref="thirdCat" v-model="modalInfo.categoryId" placeholder="三级科目">
@@ -87,6 +87,7 @@
         // 弹窗
         isEdit: false,
         modal1: false,
+        secondId:'',
         modalInfo: {
           topCategoryId: '',
           topCategoryName: '',
@@ -227,7 +228,6 @@
       },
       addClass (index) {
         this.modalInfo.topCategoryId = ''
-        this.$refs['modalInfo'].resetFields();
         //this.modalInfo.time = [];
         this.modal1 = true;
         this.curRowIndex = index
@@ -248,12 +248,21 @@
           itemContent: this.data1[index].courseTableItems[i].itemContent,
           time: []
         }
-        console.log(this.$refs.firstCat)
+        this.$refs.secondCat.selectedSingle = this.modalInfo.secondCategoryName;
+        this.$refs.thirdCat.selectedSingle = this.modalInfo.categoryName;
       },
       deleteClass (index, i) {
         this.data1[index].courseTableItems.splice(i,1)
       },
       fillTitle () {
+        if(this.modalInfo.topCategoryId == '') {
+          alert('添加科目')
+          return
+        }else if(this.secondId == '') {
+          this.$refs.secondCat.selectedSingle = '';
+          this.$refs.thirdCat.selectedSingle = '';
+        }
+
         let start = this.modalInfo.time[0];
         let end = this.modalInfo.time[1];
         //console.log(this.$refs.firstCat)
@@ -265,9 +274,8 @@
           itemContent: this.$refs.firstCat.selectedSingle + (this.$refs.secondCat.selectedSingle?('/' + this.$refs.secondCat.selectedSingle + '/' + this.$refs.thirdCat.selectedSingle):''),
           time: [0, 0],
         }
-        // if(newItem.topCategoryId == -1 || newItem.topCategoryId == -3 || newItem.topCategoryId == -4) {
-        //   newItem.itemContent = newItem.topCategoryName;
-        // }
+        console.log(newItem)
+        console.log(this.$refs.secondCat.selectedSingle)
         if(start){
           //newItem.time[0] = start.getHours()*100 + start.getMinutes();
           newItem.time[0] = parseInt(start.split(':')[0])*100 + parseInt(start.split(':')[1]);
@@ -292,8 +300,9 @@
             cancelText: '取消'
           });
         }
-
-
+        // this.$refs.firstCat.selectedSingle = '';
+        // this.$refs.secondCat.selectedSingle = '';
+        // this.$refs.thirdCat.selectedSingle = '';
         // 将数组重新排序
         this.data1[this.curRowIndex].courseTableItems.sort(function (a, b) {
           if (a.time[0] < b.time[0]) {
@@ -314,6 +323,7 @@
         this.page = (this.page+1) > pages ? pages : this.page+1
       },
       getCategoryTree (val) {
+        console.log(val)
         this.modalProject = []
         this.thirdTree = []
         this.$http({
