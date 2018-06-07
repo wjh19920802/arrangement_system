@@ -15,7 +15,7 @@
                 </FormItem>
                 <FormItem label="课程项目" prop="itemContent">
                     <!--<Cascader :data="modalProject.length?modalProject:[]" v-model="modalInfo.itemContent"></Cascader>-->
-                    <Select ref="secondCat" v-model="secondId" @on-change="getThirdTree" placeholder="二级科目">
+                    <Select ref="secondCat" v-model="modalInfo.secondCategoryId" @on-change="getThirdTree" placeholder="二级科目">
                         <Option v-for="(s,i) in modalProject" :key="s.value" :value="s.value">{{s.label}}</Option>
                     </Select>
                     <Select ref="thirdCat" v-model="modalInfo.categoryId" placeholder="三级科目">
@@ -241,10 +241,12 @@
         this.curRowIndex = index
         this.curColIndex = i
         this.modalInfo = {
-          topCategoryId: this.data1[index].courseTableItems[i].topCategoryId,
-          topCategoryName: this.data1[index].courseTableItems[i].topCategoryName,
-          categoryId: this.data1[index].courseTableItems[i].categoryId,
-          categoryName: this.data1[index].courseTableItems[i].categoryName,
+          topCategoryId: this.data1[index].courseTableItems[i].categoryList[0].id,
+          topCategoryName: this.data1[index].courseTableItems[i].categoryList[0].categoryName,
+          secondCategoryId:this.data1[index].courseTableItems[i].categoryList[1]?this.data1[index].courseTableItems[i].categoryList[1].id:'',
+          secondCategoryName:this.data1[index].courseTableItems[i].categoryList[1]?this.data1[index].courseTableItems[i].categoryList[1].categoryName:'',
+          categoryId: this.data1[index].courseTableItems[i].categoryList[2]?this.data1[index].courseTableItems[i].categoryList[2].id:'',
+          categoryName: this.data1[index].courseTableItems[i].categoryList[2]?this.data1[index].courseTableItems[i].categoryList[2].categoryName:'',
           itemContent: this.data1[index].courseTableItems[i].itemContent,
           time: []
         }
