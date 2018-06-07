@@ -266,7 +266,6 @@
                   <div class="month">{{item.day | stampToMonth}}</div>
                     <div v-for="i in item.categoryScheduleRouteLogVo" class="detail">
                       <div>{{ new Date(i.date).toLocaleString()}}</div>&nbsp;&nbsp;
-                      <span>师资:{{i.teacherId}}</span>&nbsp;&nbsp;
                       <span><span>{{i.operateId==0?'添加排课':i.operateId==1?'编辑排课':'删除排课'}}:</span>{{i.operateContent}}</span>&nbsp;&nbsp;
                     </div>
                 </div>
@@ -477,6 +476,7 @@
                 item.arranged = true;
                 this.getArrangedTeachers();
                 this.getThirdCourses();
+                this.getModifyHistory();
               }
             })
         }
@@ -513,7 +513,8 @@
             // debugger
             this.timeValue[0] = this.numberToTime(item.beginTime) + ':00';
             this.timeValue[1] = this.numberToTime(item.endTime) + ':00';
-            this.$data.timeValue = Object.assign([], this.$data.timeValue)
+            this.$data.timeValue = Object.assign([], this.$data.timeValue);
+            this.getModifyHistory();
           }
         })
       },
@@ -543,6 +544,7 @@
              })
               this.getThirdCourses();
               this.getClassInfo();
+              this.getModifyHistory();
             }
           })
       },
@@ -677,6 +679,16 @@
             .then((res) => {
               if (res.data.code == 0) {
                 this.data2 = res.data.data?res.data.data.pageList:[];
+                this.data2.forEach((item)=>{
+                  item.arranged = false;
+                });
+                this.data2.forEach((item)=>{
+                  this.data3.forEach((item2)=>{
+                    if(item.teacherId == item2.teacherId) {
+                      item.arranged = true;
+                    }
+                  })
+                })
                 this.total1 = res.data.data?res.data.data.total:0;
                 this.flag = 1;
               }else {
