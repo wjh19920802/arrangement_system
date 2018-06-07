@@ -1447,6 +1447,7 @@
       },
       handleSuccessExcel (res,file, fileList) {
         if(res.code == 0) {
+          this.$Message.success('上传成功');
           this.scheduleData = res.data.courseTableLineItemVos ? res.data.courseTableLineItemVos : []
         }else if(res.code == 505) {
           let errorTips='';
