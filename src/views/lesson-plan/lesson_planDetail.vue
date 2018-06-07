@@ -160,18 +160,21 @@
                       :scheduleEdit=true>
             </Schedule>
             <div slot="footer">
-              <!--<Upload
+              <Upload
                 ref="upload"
+                :headers="{'accessToken':accessToken}"
                 :show-upload-list="false"
                 :on-success="handleSuccessExcel"
-                :action="url + 'course/gerCourseTableByExcel'"
+                :action="url + 'course/getCourseTableByExcel'"
               >
                 <Button type="primary" size="large" style="float: left;">导入课表Excel</Button>
-              </Upload>-->
-              <input type="file" ref="upload_file" style="display: none;" @change="uploadExcel">
-              <Button @click="uploadFile">
-                上传Excel
-              </Button>
+              </Upload>
+              <!--<div class="upload_excel">
+                <input type="file" id="FileUpload" ref="upload_file" style="display: none;" @change="uploadExcel">
+                <Button @click="uploadFile">
+                  上传Excel
+                </Button>
+              </div>-->
               <Button type="text" size="large"   @click="classOrientationOk">取消</Button>
               <Button type="primary" size="large"   @click="submitSchedule(0)">确定</Button>
             </div>
@@ -242,6 +245,7 @@
       return {
         id:this.$route.params.id,
         url:this.$store.state.app.baseUrl,
+        accessToken:Cookies.get('accessToken'),
         columns1: [
           {
             title: '班级编码',
@@ -1464,17 +1468,15 @@
       uploadFile() {
         // debugger
         this.$refs.upload_file.click()
-
-
       },
-      uploadExcel () {
+     /* uploadExcel () {
         var fileObj = document.getElementById("FileUpload").files[0]; // js 获取文件对象
         if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
-          alert("请选择图片");
+          alert("请选择Excel文件");
           return;
         }
         var formFile = new FormData();
-        formFile.append("action", "UploadVMKImagePath");
+        // formFile.append("action", "UploadVMKImagePath");
         formFile.append("file", fileObj); //加入文件对象
 
         //第一种  XMLHttpRequest 对象
@@ -1488,25 +1490,15 @@
         //第二种 ajax 提交
 
         var data = formFile;
-        $.ajax({
-          url: "/Admin/Ajax/VMKHandler.ashx",
-          data: data,
-          type: "Post",
-          dataType: "json",
-          cache: false,//上传文件无需缓存
-          processData: false,//用于对data参数进行序列化处理 这里必须false
-          contentType: false, //必须
-          success: function (result) {
-            alert("上传完成!");
-          },
-        })
-
         this.$http({
           method:'post',
-          url:this.$store.app.state.baseUrl + course/gerCourseTableByExcel,
-
+          url:this.$store.state.app.baseUrl + 'course/getCourseTableByExcel',
+          data: data,
         })
-      }
+          .then((res)=>{
+            console.log(res)
+          })
+      }*/
     },
     mounted() {
       this.search1();
@@ -1614,6 +1606,9 @@
         }
       }
       .uploadList {
+        float: left;
+      }
+      .upload_excel {
         float: left;
       }
     }
