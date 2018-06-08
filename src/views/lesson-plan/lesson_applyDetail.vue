@@ -148,7 +148,7 @@
             <!--<input type="number" min="0" max="12" class="month">月<input type="number" min="0" max="31" class="day">日-->
           <DatePicker v-model="currentPublish"  type="date" placeholder="Select date" style="width: 200px"></DatePicker>
         </Modal>
-      <Modal  width="50%"
+      <Modal  width="80%"
               v-model="scheduleIsShow"
               @on-ok="classOrientationOk"
               @on-cancel="classOrientationOk"
