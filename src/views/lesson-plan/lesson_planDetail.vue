@@ -165,7 +165,7 @@
                 :headers="{'accessToken':accessToken}"
                 :show-upload-list="false"
                 :on-success="handleSuccessExcel"
-                :action="url + 'course/getCourseTableByExcel?scheduleDays=' + scheduleDays"
+                :action="url + 'course/getCourseTableByExcel?scheduleDays=' + scheduleDays + '&categoryIds=' + categoryIds "
               >
                 <Button type="primary" size="large" style="float: left;">导入课表Excel</Button>
               </Upload>
@@ -709,6 +709,7 @@
                                   })
                                 this.scheduleModal2 = true;
                                 this.curIndex = params.index;
+                                this.categoryIds = params.row.categoryIds;
                                 this.scheduleDays = parseInt(this.waitPlanData[this.curIndex].classHour.split('天')[0]) + (this.waitPlanData[this.curIndex].openClassTime == '上午' ? 0 : 1)
                                 this.lessonData = this.waitPlanData[this.curIndex];
                                 //this.scheduleEdit = true
@@ -1037,7 +1038,13 @@
         currentId:'',
         modalFlag:false,   // 点击modal4的时候为true 否则为false
         lessonData:null,
-        scheduleDays:0
+        scheduleDays:0,
+        categoryIds:[]
+      }
+    },
+    computed:{
+      categoryStr() {
+        // this.categoryIds.forEach(())
       }
     },
     methods: {
