@@ -18,7 +18,7 @@
                     <Select ref="secondCat" v-model="modalInfo.secondCategoryId" @on-change="getThirdTree" placeholder="二级科目">
                         <Option v-for="(s,i) in modalProject" :key="s.value" :value="s.value">{{s.label}}</Option>
                     </Select>
-                    <Select ref="thirdCat" v-model="modalInfo.categoryId" placeholder="三级科目">
+                    <Select ref="thirdCat" v-model="modalInfo.thirdCategoryId" placeholder="三级科目">
                         <Option v-for="(s,i) in thirdTree" :key="s.value" :value="s.value">{{s.label}}</Option>
                     </Select>
                     <!--<Input v-model="modalInfo.project" placeholder=""></Input>-->
@@ -87,12 +87,14 @@
         // 弹窗
         isEdit: false,
         modal1: false,
-        secondId:'',
         modalInfo: {
           topCategoryId: '',
           topCategoryName: '',
+          secondCategoryId:'',
+          secondCategoryName:'',
+          thirdCategoryId:'',
+          thirdCategoryName:'',
           categoryId: '',
-          categoryName: '',
           itemContent: '',
           time: ['08:00','09：00']
         },
@@ -241,17 +243,24 @@
         this.curRowIndex = index
         this.curColIndex = i
         this.modalInfo = {
-          topCategoryId: this.data1[index].courseTableItems[i].categoryList[0].id,
-          topCategoryName: this.data1[index].courseTableItems[i].categoryList[0].categoryName,
-          secondCategoryId:this.data1[index].courseTableItems[i].categoryList[1]?this.data1[index].courseTableItems[i].categoryList[1].id:'',
-          secondCategoryName:this.data1[index].courseTableItems[i].categoryList[1]?this.data1[index].courseTableItems[i].categoryList[1].categoryName:'',
-          categoryId: this.data1[index].courseTableItems[i].categoryList[2]?this.data1[index].courseTableItems[i].categoryList[2].id:'',
-          categoryName: this.data1[index].courseTableItems[i].categoryList[2]?this.data1[index].courseTableItems[i].categoryList[2].categoryName:'',
+          topCategoryId: this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[0]?this.data1[index].courseTableItems[i].categoryList[0].id:'':'',
+          topCategoryName: this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[0]?this.data1[index].courseTableItems[i].categoryList[0].categoryName:'':'',
+          secondCategoryId:this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[1]?this.data1[index].courseTableItems[i].categoryList[1].id:'':'',
+          secondCategoryName:this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[1]?this.data1[index].courseTableItems[i].categoryList[1].categoryName:'':'',
+          thirdCategoryId: this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[2]?this.data1[index].courseTableItems[i].categoryList[2].id:'':'',
+          thirdCategoryName: this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[2]?this.data1[index].courseTableItems[i].categoryList[2].categoryName:'':'',
+          categoryId:this.modalInfo.thirdCategoryId?this.modalInfo.thirdCategoryId:this.modalInfo.secondCategoryId?this.modalInfo.secondCategoryId:this.modalInfo.topCategoryId,
+          categoryList:[
+            {id:this.modalInfo.topCategoryId,categoryName:this.modalInfo.topCategoryName},
+            {id:this.modalInfo.secondCategoryId,categoryName:this.modalInfo.secondCategoryName},
+            {id:this.modalInfo.thirdCategoryId,categoryName:this.modalInfo.thirdCategoryName},
+          ],
           itemContent: this.data1[index].courseTableItems[i].itemContent,
-          time: []
+          time: ['08:00','09:00']
         }
+        this.$refs.firstCat.selectedSingle = this.modalInfo.topCategoryName;
         this.$refs.secondCat.selectedSingle = this.modalInfo.secondCategoryName;
-        this.$refs.thirdCat.selectedSingle = this.modalInfo.categoryName;
+        this.$refs.thirdCat.selectedSingle = this.modalInfo.thirdCategoryName;
       },
       deleteClass (index, i) {
         this.data1[index].courseTableItems.splice(i,1)
@@ -260,7 +269,7 @@
         if(this.modalInfo.topCategoryId == '') {
           alert('添加科目')
           return
-        }else if(this.secondId == '') {
+        }else if(this.modalInfo.secondCategoryId == '') {
           this.$refs.secondCat.selectedSingle = '';
           this.$refs.thirdCat.selectedSingle = '';
         }
@@ -271,8 +280,16 @@
         let newItem = {
           topCategoryId: this.modalInfo.topCategoryId,
           topCategoryName: this.$refs.firstCat.selectedSingle || '',
-          categoryId: this.modalInfo.categoryId,
-          categoryName: this.$refs.thirdCat.selectedSingle || '',
+          secondCategoryId:this.modalInfo.secondCategoryId,
+          secondCategoryName:this.$refs.secondCat.selectedSingle || '',
+          thirdCategoryId: this.modalInfo.thirdCategoryId,
+          thirdCategoryName: this.$refs.thirdCat.selectedSingle || '',
+          categoryId:this.modalInfo.thirdCategoryId?this.modalInfo.thirdCategoryId:this.modalInfo.secondCategoryId?this.modalInfo.secondCategoryId:this.modalInfo.topCategoryId,
+          categoryList:[
+            {id:this.modalInfo.topCategoryId,categoryName:this.$refs.firstCat.selectedSingle},
+            {id:this.modalInfo.secondCategoryId,categoryName:this.$refs.secondCat.selectedSingle},
+            {id:this.modalInfo.thirdCategoryId,categoryName:this.$refs.thirdCat.selectedSingle },
+          ],
           itemContent: this.$refs.firstCat.selectedSingle + (this.$refs.secondCat.selectedSingle?('/' + this.$refs.secondCat.selectedSingle + '/' + this.$refs.thirdCat.selectedSingle):''),
           time: [0, 0],
         }
