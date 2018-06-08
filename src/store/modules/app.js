@@ -33,9 +33,9 @@ const app = {
         messageCount: 0,
         dontCache: ['text-editor', 'artical-publish'], // 在这里定义你不想要缓存的页面的name属性值(参见路由配置router.js)
         // baseUrl:'http://ke.offcn.com/v1/',
-        // baseUrl:'http://192.168.65.250:60000/v1/',
-        // baseUrl:'http://192.168.65.60:60000/v1/',
-        baseUrl:'http://192.168.65.88:60000/v1/',
+        baseUrl:'http://192.168.65.250:60000/v1/',
+        // baseUrl:'http://192.168.65.88:60000/v1/',
+        // baseUrl:'http://47.92.3.192:60000/v1/',
         // baseUrl:'http://localhost:60000/v1/',
         // 用来判断menu是否active 的 字段
         parentName: '',

@@ -15,10 +15,10 @@
                 </FormItem>
                 <FormItem label="课程项目" prop="itemContent">
                     <!--<Cascader :data="modalProject.length?modalProject:[]" v-model="modalInfo.itemContent"></Cascader>-->
-                    <Select ref="secondCat" @on-change="getThirdTree" placeholder="二级科目">
+                    <Select ref="secondCat" v-model="modalInfo.secondCategoryId" @on-change="getThirdTree" placeholder="二级科目">
                         <Option v-for="(s,i) in modalProject" :key="s.value" :value="s.value">{{s.label}}</Option>
                     </Select>
-                    <Select ref="thirdCat" v-model="modalInfo.categoryId" placeholder="三级科目">
+                    <Select ref="thirdCat" v-model="modalInfo.thirdCategoryId" placeholder="三级科目">
                         <Option v-for="(s,i) in thirdTree" :key="s.value" :value="s.value">{{s.label}}</Option>
                     </Select>
                     <!--<Input v-model="modalInfo.project" placeholder=""></Input>-->
@@ -90,8 +90,11 @@
         modalInfo: {
           topCategoryId: '',
           topCategoryName: '',
+          secondCategoryId:'',
+          secondCategoryName:'',
+          thirdCategoryId:'',
+          thirdCategoryName:'',
           categoryId: '',
-          categoryName: '',
           itemContent: '',
           time: ['08:00','09：00']
         },
@@ -229,7 +232,8 @@
         this.modalInfo.topCategoryId = ''
         //this.modalInfo.time = [];
         this.modal1 = true;
-        this.curRowIndex = index
+        this.curRowIndex = index;
+        this.isEdit = false;
       },
       formatClass (start, end) {
         return {width: parseInt(end-start)+'px'}
@@ -240,26 +244,53 @@
         this.curRowIndex = index
         this.curColIndex = i
         this.modalInfo = {
-          topCategoryId: this.data1[index].courseTableItems[i].topCategoryId,
-          topCategoryName: this.data1[index].courseTableItems[i].topCategoryName,
-          categoryId: this.data1[index].courseTableItems[i].categoryId,
-          categoryName: this.data1[index].courseTableItems[i].categoryName,
+          topCategoryId: this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[0]?this.data1[index].courseTableItems[i].categoryList[0].id:'':'',
+          topCategoryName: this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[0]?this.data1[index].courseTableItems[i].categoryList[0].categoryName:'':'',
+          secondCategoryId:this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[1]?this.data1[index].courseTableItems[i].categoryList[1].id:'':'',
+          secondCategoryName:this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[1]?this.data1[index].courseTableItems[i].categoryList[1].categoryName:'':'',
+          thirdCategoryId: this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[2]?this.data1[index].courseTableItems[i].categoryList[2].id:'':'',
+          thirdCategoryName: this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[2]?this.data1[index].courseTableItems[i].categoryList[2].categoryName:'':'',
+          categoryId:this.modalInfo.thirdCategoryId?this.modalInfo.thirdCategoryId:this.modalInfo.secondCategoryId?this.modalInfo.secondCategoryId:this.modalInfo.topCategoryId,
+          categoryList:[
+            {id:this.modalInfo.topCategoryId,categoryName:this.modalInfo.topCategoryName},
+            {id:this.modalInfo.secondCategoryId,categoryName:this.modalInfo.secondCategoryName},
+            {id:this.modalInfo.thirdCategoryId,categoryName:this.modalInfo.thirdCategoryName},
+          ],
           itemContent: this.data1[index].courseTableItems[i].itemContent,
-          time: []
+          time: ['08:00','09:00']
         }
+        this.$refs.firstCat.selectedSingle = this.modalInfo.topCategoryName;
+        this.$refs.secondCat.selectedSingle = this.modalInfo.secondCategoryName;
+        this.$refs.thirdCat.selectedSingle = this.modalInfo.thirdCategoryName;
       },
       deleteClass (index, i) {
         this.data1[index].courseTableItems.splice(i,1)
       },
       fillTitle () {
+        if(this.modalInfo.topCategoryId == '') {
+          alert('添加科目')
+          return
+        }else if(this.modalInfo.secondCategoryId == '') {
+          this.$refs.secondCat.selectedSingle = '';
+          this.$refs.thirdCat.selectedSingle = '';
+        }
+
         let start = this.modalInfo.time[0];
         let end = this.modalInfo.time[1];
         //console.log(this.$refs.firstCat)
         let newItem = {
           topCategoryId: this.modalInfo.topCategoryId,
           topCategoryName: this.$refs.firstCat.selectedSingle || '',
-          categoryId: this.modalInfo.categoryId,
-          categoryName: this.$refs.thirdCat.selectedSingle || '',
+          secondCategoryId:this.modalInfo.secondCategoryId,
+          secondCategoryName:this.$refs.secondCat.selectedSingle || '',
+          thirdCategoryId: this.modalInfo.thirdCategoryId,
+          thirdCategoryName: this.$refs.thirdCat.selectedSingle || '',
+          categoryId:this.modalInfo.thirdCategoryId?this.modalInfo.thirdCategoryId:this.modalInfo.secondCategoryId?this.modalInfo.secondCategoryId:this.modalInfo.topCategoryId,
+          categoryList:[
+            {id:this.modalInfo.topCategoryId,categoryName:this.$refs.firstCat.selectedSingle},
+            {id:this.modalInfo.secondCategoryId,categoryName:this.$refs.secondCat.selectedSingle},
+            {id:this.modalInfo.thirdCategoryId,categoryName:this.$refs.thirdCat.selectedSingle },
+          ],
           itemContent: this.$refs.firstCat.selectedSingle + (this.$refs.secondCat.selectedSingle?('/' + this.$refs.secondCat.selectedSingle + '/' + this.$refs.thirdCat.selectedSingle):''),
           time: [0, 0],
         }
@@ -289,9 +320,9 @@
             cancelText: '取消'
           });
         }
-        this.$refs.firstCat.selectedSingle = '';
-        this.$refs.secondCat.selectedSingle = '';
-        this.$refs.thirdCat.selectedSingle = '';
+        // this.$refs.firstCat.selectedSingle = '';
+        // this.$refs.secondCat.selectedSingle = '';
+        // this.$refs.thirdCat.selectedSingle = '';
         // 将数组重新排序
         this.data1[this.curRowIndex].courseTableItems.sort(function (a, b) {
           if (a.time[0] < b.time[0]) {
@@ -302,7 +333,7 @@
             return 0;
           }
         })
-        this.isEdit = false
+        // this.isEdit = false
       },
       toFrontPage () {
         this.page = (this.page-1)<1? 1 : this.page-1
