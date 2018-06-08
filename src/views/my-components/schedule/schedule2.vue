@@ -3,6 +3,7 @@
         <Modal  class="edit_modal"
                 v-model="modal1"
                 title="课程信息"
+                @on-cancel="cancelFill"
                 @on-ok="fillTitle">
             <Form :model="modalInfo" :label-width="100">
                 <FormItem label="科目" prop="topCategoryId" class="firstCategory">
@@ -229,10 +230,13 @@
         return start_h + ':' + start_m + ' - ' + end_h + ':' + end_m
       },
       addClass (index) {
-        this.modalInfo.topCategoryId = ''
-        //this.modalInfo.time = [];
+        this.modalInfo.topCategoryId = '';
+        this.modalInfo.secondCategoryId = '';
+        this.modalInfo.thirdCategoryId = '';
+        this.modalInfo.time = ['08:00','09:00'];
+        this.modalInfo = Object.assign({},this.modalInfo);
         this.modal1 = true;
-        this.curRowIndex = index
+        this.curRowIndex = index;
       },
       formatClass (start, end) {
         return {width: parseInt(end-start)+'px'}
@@ -256,7 +260,7 @@
             {id:this.modalInfo.thirdCategoryId,categoryName:this.modalInfo.thirdCategoryName},
           ],
           itemContent: this.data1[index].courseTableItems[i].itemContent,
-          time: ['08:00','09:00']
+          time: this.formatTime( this.data1[index].courseTableItems[i].time[0], this.data1[index].courseTableItems[i].time[1]).split('-')
         }
         this.$refs.firstCat.selectedSingle = this.modalInfo.topCategoryName;
         this.$refs.secondCat.selectedSingle = this.modalInfo.secondCategoryName;
@@ -333,6 +337,9 @@
           }
         })
         this.isEdit = false
+      },
+      cancelFill () {
+        this.isEdit = false ;
       },
       toFrontPage () {
         this.page = (this.page-1)<1? 1 : this.page-1
