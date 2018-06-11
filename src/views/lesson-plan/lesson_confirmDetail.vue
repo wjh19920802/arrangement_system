@@ -87,7 +87,7 @@
             </Card>
             </Col>
         </Row>
-        <Modal  width="50%"
+        <Modal  width="80%"
                 v-model="scheduleModal1"
                 @on-ok="classOrientationOk"
                 @on-cancel="classOrientationOk"
