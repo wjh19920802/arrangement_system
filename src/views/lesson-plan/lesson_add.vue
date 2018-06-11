@@ -393,13 +393,13 @@
       'search2'
     ],
     data() {
-      const validateCourseName = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('课程名称不能为空'));
-        }else {
-          this.checkExist(callback)
-        }
-      };
+      // const validateCourseName = (rule, value, callback) => {
+      //   if (value === '') {
+      //     callback(new Error('课程名称不能为空'));
+      //   }else {
+      //     this.checkExist(callback)
+      //   }
+      // };
 
       const validateSeries = (rule, value, callback) => {
         if (value === '') {
@@ -485,7 +485,7 @@
           faceMan:''
         },  //非组合班次
         addNotGroupRules: {
-          courseName:[{validator:validateCourseName,required:true,trigger:'blur'}],
+          courseName:[{message:'班级名称不能为空',required:true,trigger:'blur'}],
           classType:[{required:true,message:'班级类型不能为空',trigger:'change'}],
           classSeriesId:[{validator:validateSeries,required:true,trigger:'change'}],
           examStyleId:[{required:true,message:'考试类型不能为空',trigger:'change'}],
@@ -518,7 +518,7 @@
           courseName:'',     //班级名称
         },      //组合班次
         addGroupRules:{
-          courseName:[{validator:validateCourseName,required:true,trigger:'blur'}],
+          courseName:[{message:'班级名称不能为空',required:true,trigger:'blur'}],
           classType:[{required:true,message:'班级类型不能为空',trigger:'change'}],
           classSeriesId:[{required:true,validator:validateClassSeriesId,trigger:'change'}],
           erpClassTypeId:[{validator:validateAddErp,required:true,trigger:'change'}],
@@ -888,7 +888,7 @@
         }
 
       },
-      checkExist (callback) {     //根目录查重
+     /* checkExist (callback) {     //根目录查重
         let courseName = this.lessonAddNotGroup.courseName;
         if(this.lessonAddNotGroup.classType == 2 || (this.lessonAddNotGroup.classType == '' && this.lessonAddGroup.classType == '')) {
           courseName = this.lessonAddNotGroup.courseName;
@@ -946,7 +946,7 @@
             })
         }
 
-      },
+      },*/
       searchChild () {
         let classType = 2;
         let examStyle = this.lessonAddGroup.examStyleId;

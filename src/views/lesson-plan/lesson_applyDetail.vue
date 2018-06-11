@@ -148,7 +148,7 @@
             <!--<input type="number" min="0" max="12" class="month">月<input type="number" min="0" max="31" class="day">日-->
           <DatePicker v-model="currentPublish"  type="date" placeholder="Select date" style="width: 200px"></DatePicker>
         </Modal>
-      <Modal  width="50%"
+      <Modal  width="80%"
               v-model="scheduleIsShow"
               @on-ok="classOrientationOk"
               @on-cancel="classOrientationOk"
@@ -459,7 +459,7 @@
                   align: 'center',
                   key: 'courseName',
                   render:(h,params)=>{
-                      return h('div',{class:params.row.courseNameRepeat === false?'repeated':''},[
+                      return h('div',[
                           (()=>{
                               let title = params.row.courseName;
                               return title
@@ -937,6 +937,7 @@
             key: 'action',
             align: 'center',
             render: (h, params) => {
+              if(params.row.checkState != 7) {
                 return h('div', {class:'handle'},[
                   h('span', {
                     class: 'operate',
@@ -989,7 +990,7 @@
                         }
                       }
                     }
-                  }, '删除'),
+                  },'删除'),
                   h('span', {
                     class: 'operate',
                     on: {
@@ -1043,6 +1044,62 @@
                     }
                   }, '课程表')
                 ])
+              }else {
+                return h('div', {class:'handle'},[
+                  h('span', {
+                    class: 'operate',
+                    on: {
+                      click: () => {
+                        this.modal1 = true;
+                        if(this.modal4 == true && this.modalFlag == true) {
+                          this.modal4 = false;
+                        }
+                        this.classOrientation = params.row.classOrientation;
+                      }
+                    }
+                  }, '课程定位'),
+                  h('span', {
+                    class: 'operate',
+                    on: {
+                      click: () => {
+                        this.modal3 = true;
+                        if(this.modal4 == true && this.modalFlag == true) {
+                          this.modal4 = false;
+                        }
+                        this.branchCampusOption = params.row.branchCampusOption;
+                      }
+                    }
+                  }, '分校意见'),
+                  h('span', {
+                    class: 'operate',
+                    on: {
+                      click: () => {
+                        if(params.row.classType == 2) {
+                          this.$http(this.$store.state.app.baseUrl + 'course/findCourseTableByCode?classCode='+params.row.classCode)
+                            .then((res)=>{
+                              if(res.data.code == 0) {
+                                this.scheduleData = res.data.data ? res.data.data.courseTableLineItemVos : []
+                              } else {
+                                this.$Message.error(res.data.message)
+                              }
+                            })
+                            .catch((error)=>{
+                              this.$Message.error(error.message);
+                            })
+                          this.curIndex = params.index;
+                          this.scheduleIsShow = true;
+                          this.lessonData = this.childrenData[this.curIndex];
+                          if(this.modal4 == true && this.modalFlag == true) {
+                            this.modal4 = false;
+                          }
+                        }else {
+                          this.$Message.error('组合班次没有课程表！！')
+                        }
+                      }
+                    }
+                  }, '课程表')
+                ])
+              }
             }
           },
         ],
@@ -1379,7 +1436,8 @@
         examStyle:'',
         groupCourseId:'',    //当前查看的组合班次的id
         subCourseId:'' ,      //删除或者添加的子班次的id
-        searchChildrenData:[]  //弹窗中搜索的子班次
+        searchChildrenData:[] , //弹窗中搜索的子班次
+        isCourseModel:false
       }
     },
     methods: {
@@ -1472,7 +1530,7 @@
             item.courseModelId = item.id;
             // item.id = null;
 
-            item.schoolBeginsTime = new Date(item.schoolBeginsTime).getTime();
+            // item.schoolBeginsTime = new Date(item.schoolBeginsTime).getTime();
           });
           //添加到已选课程中的元素 不可选
           this.waitStashData.forEach((item1)=>{
@@ -1484,8 +1542,11 @@
               }
             })
           });
+          this.selectedData = this.waitStashData.concat(this.selectedData);
+          this.total2 = this.total2 + this.selectedData.length;
+          this.hasToSelectedData = this.hasToSelectedData.concat(this.waitStashData);
 
-          //校验名称是否重复
+        /*  //校验名称是否重复
           this.$http({
             method:'post',
             url:this.$store.state.app.baseUrl + 'course/checkBaseModelCourseName',
@@ -1504,23 +1565,19 @@
                     this.repeatData.forEach((item1)=>{
                       if(item.id == item1.id) {
                         item.courseNameRepeat = false
+                        item.schoolBeginsTime = Util.formateDate(item.schoolBeginsTime);
                       }
                     })
                   })
                 }
-                this.waitStashData.forEach((item)=> {
-                  item.schoolBeginsTime = Util.formateDate(item.schoolBeginsTime);
-                });
-                this.selectedData = this.waitStashData.concat(this.selectedData);
-                this.total2 = this.total2 + this.selectedData.length;
-                this.hasToSelectedData = this.hasToSelectedData.concat(this.waitStashData);
+
               } else {
                 this.$Message.error(res.data.message);
               }
             })
             .catch((error)=>{
               this.$Message.error(error.message);
-            })
+            })*/
 
 
           // this.waitStashData.splice(0,this.waitStashData.length);
