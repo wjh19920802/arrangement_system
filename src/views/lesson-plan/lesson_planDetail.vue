@@ -152,6 +152,7 @@
              width="80%"
              title="课程表"
              class="schedule"
+             @on-cancel="cancelSchedule"
       >
             <Schedule ref="scheduleDom2"
                       class="margin-top-20"
@@ -165,6 +166,7 @@
                 :headers="{'accessToken':accessToken}"
                 :show-upload-list="false"
                 :on-success="handleSuccessExcel"
+                :before-upload="handleBefore"
                 :action="url + 'course/getCourseTableByExcel?scheduleDays=' + scheduleDays + '&categoryIds=' + categoryIds "
               >
                 <Button type="primary" size="large" style="float: left;">导入课表Excel</Button>
@@ -1335,6 +1337,9 @@
             this.$Message.error(error.message);
           })
       },
+      cancelSchedule () {
+        this.scheduleData = [];
+      },
       search1 () {
         //查询已选课程
         this.$http({
@@ -1448,22 +1453,34 @@
           this.modal4 = true;
           this.modalFlag = true;
         }
+        this.scheduleData = [];
       },
       childrenOk(){
         this.modalFlag = false;
+      },
+      handleBefore() {
+        this.$Spin.show({
+          render: (h) => {
+            return h('div', [
+              h('Icon', {
+                'class': 'demo-spin-icon-load',
+                props: {
+                  type: 'load-c',
+                  size: 38
+                }
+              }),
+              h('div', '努力加载中...')
+            ])
+          }
+        });
       },
       handleSuccessExcel (res,file, fileList) {
         if(res.code == 0) {
           this.$Message.success('上传成功');
           this.scheduleData = res.data.courseTableLineItemVos ? res.data.courseTableLineItemVos : []
         }else if(res.code == 505) {
-          let errorTips='';
-          res.data.forEach((item)=>{
-            errorTips += item + '\/n';
-          })
           this.$Notice.error({
             title: '提示',
-            desc: errorTips,
             render:h=>{
               let ele = [];
               return h('div',(()=>{
@@ -1478,6 +1495,7 @@
         }else {
           this.$Message.error(res.message);
         }
+        this.$Spin.hide();
       },
       uploadFile() {
         // debugger
