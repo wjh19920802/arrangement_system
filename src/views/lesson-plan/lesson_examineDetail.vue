@@ -944,7 +944,7 @@
           data.rejectInfo = this.reason;
         }
 
-        if(this.selectedStashData.length > 0 && ((this.writeMan != '' || this.faceMan !='' ) || this.reason != '')){
+        if(this.selectedStashData.length > 0 && ((this.writeMan != '' || this.faceMan !='' ) || this.reason != '' || (this.writeManShow == false && this.faceManShow == false ))){
           this.$http({
             method:'post',
             url:this.$store.state.app.baseUrl + 'course/course-review',
