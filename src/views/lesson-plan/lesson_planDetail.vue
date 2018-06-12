@@ -153,8 +153,7 @@
              title="课程表"
              class="schedule"
              @on-cancel="cancelSchedule"
-             @on-ok="submitSchedule(0)"
-             @on-cancel="classOrientationOk">
+      >
             <Schedule ref="scheduleDom2"
                       class="margin-top-20"
                       :lessonData="lessonData"
@@ -164,12 +163,20 @@
             <div slot="footer">
               <Upload
                 ref="upload"
+                :headers="{'accessToken':accessToken}"
                 :show-upload-list="false"
                 :on-success="handleSuccessExcel"
-                :action="url + 'upload/uploadFile'"
+                :before-upload="handleBefore"
+                :action="url + 'course/getCourseTableByExcel?scheduleDays=' + scheduleDays + '&categoryIds=' + categoryIds "
               >
                 <Button type="primary" size="large" style="float: left;">导入课表Excel</Button>
               </Upload>
+              <!--<div class="upload_excel">
+                <input type="file" id="FileUpload" ref="upload_file" style="display: none;" @change="uploadExcel">
+                <Button @click="uploadFile">
+                  上传Excel
+                </Button>
+              </div>-->
               <Button type="text" size="large"   @click="classOrientationOk">取消</Button>
               <Button type="primary" size="large"   @click="submitSchedule(0)">确定</Button>
             </div>

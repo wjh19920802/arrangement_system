@@ -71,7 +71,6 @@ new Vue({
       });
 
       axios.interceptors.response.use((response)=>{
-        console.log(this)
         this.$Spin.hide();
         /*console.log('response',response);
         if(response.data.code == 403) {

@@ -150,7 +150,7 @@
         this.curIndex = index
       },
       fillCurDate () {
-        debugger
+        // debugger
         this.scheduleData[this.curIndex].day = this.curDate
         if(!this.formatDaysData()){
           this.$Message.error('请勿输入重复天数')
