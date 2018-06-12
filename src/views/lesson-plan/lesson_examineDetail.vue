@@ -881,7 +881,7 @@
             this.$Message.error(error.message);
           })
 
-        this.selectedStashData.forEach((item) => {
+       /* this.selectedStashData.forEach((item) => {
           if(item.classType == 1) {    //组合班
             this.writeManShow = false;
             this.faceManShow = false;
@@ -892,7 +892,31 @@
               this.faceManShow = true;
             }
           }
+        })*/
+
+        //组合班次集合
+        var groupClass = this.selectedStashData.filter((item)=>{
+          return item.classType == 1;
         })
+        //非组合班次集合
+        var notGroupClass = this.selectedStashData.filter((item)=>{
+          return item.classType == 2;
+        })
+        //只有组合班时
+        if(groupClass.length > 0 && notGroupClass.length == 0) {
+          this.writeManShow = false;
+          this.faceManShow = false;
+        }else if(groupClass.length >= 0 && notGroupClass.length > 0) {   //只有非组合班时或者组合班和非组合班都有时
+          notGroupClass.forEach((item)=>{
+            if(item.examStyleId == 1 || item.examStyleId == 3) {
+              this.writeManShow = true;
+            }else if(item.examStyleId == 2 || item.examStyleId == 3){
+              this.faceManShow = true;
+            }
+          })
+        }
+
+
         if(this.writeManShow == false && this.faceManShow == false) {
           this.wordsShow = true ;
         }else {
