@@ -663,7 +663,6 @@
                 this.$Message.error(error.message)
               })*/
             this.newLesson.push(newRow)
-            this.formRules.studyCenter[0].required = true;
           }
         })
       },
@@ -698,6 +697,8 @@
         if(this.thirdTree == null) {
           this.formRules.studyCenter[0].required = false;
           // this.formRules = Object.assign({},this.formRules);
+        }else {
+          this.formRules.studyCenter[0].required = true;
         }
       },
       submit () {
