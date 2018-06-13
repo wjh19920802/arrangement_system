@@ -693,7 +693,13 @@
         let secondArea = this.secondTree.filter((item, index) => {
           return item.areaid == value
         })
-        this.thirdTree = secondArea[0].childrens
+        this.thirdTree = secondArea[0].childrens;
+        if(this.thirdTree == null) {
+          this.formRules.studyCenter[0].required = false;
+          // this.formRules = Object.assign({},this.formRules);
+        }else {
+          this.formRules.studyCenter[0].required = true;
+        }
       },
       submit () {
         let vm = this
