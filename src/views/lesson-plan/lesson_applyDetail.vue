@@ -318,7 +318,7 @@
                     params.row.priceInfoArray.forEach((item)=>{
                       let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                       let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                      let isClosed = item.isClosed == 1?'封闭班-':item.isClosed == '0'?'非封闭班-':'';
+                      let isClosed = item.isClosed == 1?'封闭班-':item.isClosed === '0'?'非封闭班-':'';
                       let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'':'-'+item.stay)  + writtenTf + interviewTf;
                       price.push(str)
                     });
@@ -560,7 +560,7 @@
                           params.row.priceInfoArray.forEach((item)=>{
                             let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                             let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                            let isClosed = item.isClosed == 1?'封闭班-':item.isClosed == '0'?'非封闭班-':'';
+                            let isClosed = item.isClosed == 1?'封闭班-':item.isClosed === '0'?'非封闭班-':'';
                             let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'':'-'+item.stay)  + writtenTf + interviewTf;
                               price.push(str)
                           });
@@ -884,7 +884,7 @@
                 params.row.priceInfoArray.forEach((item)=>{
                   let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                   let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                  let isClosed = item.isClosed == 1?'封闭班-':item.isClosed == '0'?'非封闭班-':'';
+                  let isClosed = item.isClosed == 1?'封闭班-':item.isClosed === '0'?'非封闭班-':'';
                   let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'':'-'+item.stay)  + writtenTf + interviewTf;
                   price.push(str)
                 });
@@ -1182,7 +1182,7 @@
                 params.row.priceInfoArray.forEach((item)=>{
                   let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                   let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                  let isClosed = item.isClosed == 1?'封闭班-':item.isClosed == '0'?'非封闭班-':'';
+                  let isClosed = item.isClosed == 1?'封闭班-':item.isClosed === '0'?'非封闭班-':'';
                   let str = item.agreement + '班-' + isClosed + item.price  + (item.stay==null?'':'-'+item.stay)  + writtenTf + interviewTf;
                   price.push(str)
                 });
@@ -1660,36 +1660,11 @@
         },
       changeName () {
         //修改数据源中的值为输入框的值
-        this.$http({
-          method:'get',
-          url:this.$store.state.app.baseUrl + 'course/checkCourseName',
-          params:{
-            courseName:this.currentName,
-            projectId:this.$route.query.projectId,
-          },
-          headers: {'Content-type': 'application/json'}
+        this.selectedData.forEach((item)=>{
+          if(item.classCode == this.changeNameId) {
+            item.courseName = this.currentName;
+          }
         })
-          .then((res)=>{
-            if(res.data.code == 0) {
-              if(res.data.data == false) {
-                this.$Message.error('课程名称已存在！')
-              }else {
-                //修改数据源中的值为输入框的值
-                this.selectedData.forEach((item)=>{
-                  if(item.classCode == this.changeNameId) {
-                    item.courseNameRepeat = true;
-                    item.courseName = this.currentName;
-                  }
-                })
-              }
-            }else{
-              this.$Message.error(res.data.message);
-            }
-          })
-          .catch((error)=>{
-            this.$Message.error(error.message);
-          })
-
 
       },
       changePublish () {

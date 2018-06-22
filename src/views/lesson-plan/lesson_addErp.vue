@@ -150,7 +150,13 @@
                       <span style="color: orange;">请添加{{lessonDays}}天的课程日期</span>
                     </FormItem>-->
                     </Col>
-
+                  </Row>
+                  <Row>
+                    <Col span="20">
+                    <FormItem label="备注">
+                      <Input type="textarea" v-model="formItem.beiz" placeholder="请输入备注"></Input>
+                    </FormItem>
+                      </Col>
                   </Row>
                   <Row>
                       <Col span="6">
@@ -211,7 +217,8 @@
           noPer:-1,
           teacherFood:'',
           teacherFoodRemark:'',
-          period:''
+          period:'',
+          beiz:''
         },
         lessonColumns: [
           {
@@ -316,9 +323,9 @@
               return h('div', (() => {
                 let price=[];
                 params.row.priceInfoArray.forEach((item)=>{
-                  let writtenTf = item.writtenTf?'笔试不过退费:'+item.writtenTf:'';
+                  let writtenTf = item.writtenTf?'-笔试不过退费:'+item.writtenTf:'';
                   let interviewTf = item.interviewTf?'-面试不过退费:'+item.interviewTf:'';
-                  let str = item.agreement + '班-' + item.price + '-' + (item.stay==null?'':item.stay) + '-' + writtenTf + interviewTf;
+                  let str = item.agreement + '班-' + item.price  + (item.stay==null?'':'-'+item.stay) + writtenTf + interviewTf;
                   price.push(str)
                 });
                 let ele = [];
@@ -551,9 +558,9 @@
         if(this.data1.length > 0) {
           this.data1.forEach((item)=>{
             item.priceInfoArray.forEach((item2)=>{
-              let writtenTf = item2.writtenTf?'笔试不过退费:'+item2.writtenTf:'';
+              let writtenTf = item2.writtenTf?'-笔试不过退费:'+item2.writtenTf:'';
               let interviewTf = item2.interviewTf?'-面试不过退费:'+item2.interviewTf:'';
-              let str = item2.agreement + '班-' + item2.price + '-' + (item2.stay==null?'':item2.stay) + '-' + writtenTf + interviewTf;
+              let str = item2.agreement + '班-' + item2.price + (item2.stay==null?'':'-'+item2.stay) + writtenTf + interviewTf;
               price.push(str)
             });
           })
@@ -624,6 +631,7 @@
           foodRemark:form.foodRemark,
           teacherFood:form.teacherFood,
           teacherFoodRemark:form.teacherFoodRemark,
+          beiz:form.beiz
         };
         this.$refs['formItem'].validate((valid) => {
           if(valid) {
@@ -747,8 +755,8 @@
               foodRemark:item.foodRemark,
               teacherFood:item.teacherFood,
               teacherFoodRemark:item.teacherFoodRemark,
-              studyTimeList:vm.data1[0].classType == 1?[]:item.studyTimeList.map((item2)=>{ return  new Date(item2).getTime()})
-
+              studyTimeList:vm.data1[0].classType == 1?[]:item.studyTimeList.map((item2)=>{ return  new Date(item2).getTime()}),
+              beiz:item.beiz
               /*checkState: vm.data1[0].checkState,
               classCode: vm.data1[0].classCode,
               createTime: vm.data1[0].createTime,

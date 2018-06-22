@@ -265,7 +265,7 @@
                 <div v-for="item in modifyHistoryList" class="modify_item">
                   <div class="month">{{item.day | stampToMonth}}</div>
                     <div v-for="i in item.categoryScheduleRouteLogVo" class="detail">
-                      <div>{{ new Date(i.date).toLocaleString()}}</div>&nbsp;&nbsp;
+                      <div>{{ new Date(i.date).toLocaleString()}}</div>&nbsp;&nbsp;&nbsp;
                       <span><span>{{i.operateId==0?'添加排课':i.operateId==1?'编辑排课':'删除排课'}}:</span>{{i.operateContent}}</span>&nbsp;&nbsp;
                     </div>
                 </div>
@@ -513,8 +513,7 @@
             // debugger
             this.timeValue[0] = this.numberToTime(item.beginTime) + ':00';
             this.timeValue[1] = this.numberToTime(item.endTime) + ':00';
-            this.$data.timeValue = Object.assign([], this.$data.timeValue);
-            this.getModifyHistory();
+            this.$data.timeValue = Object.assign([], this.$data.timeValue)
           }
         })
       },

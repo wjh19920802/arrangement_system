@@ -151,35 +151,14 @@
       <Modal v-model="scheduleModal2"
              width="80%"
              title="课程表"
-             class="schedule"
-             @on-cancel="cancelSchedule"
-      >
+             @on-ok="submitSchedule(0)"
+             @on-cancel="classOrientationOk">
             <Schedule ref="scheduleDom2"
                       class="margin-top-20"
                       :lessonData="lessonData"
                       :scheduleData="scheduleData"
                       :scheduleEdit=true>
             </Schedule>
-            <div slot="footer">
-              <Upload
-                ref="upload"
-                :headers="{'accessToken':accessToken}"
-                :show-upload-list="false"
-                :on-success="handleSuccessExcel"
-                :before-upload="handleBefore"
-                :action="url + 'course/getCourseTableByExcel?scheduleDays=' + scheduleDays + '&categoryIds=' + categoryIds "
-              >
-                <Button type="primary" size="large" style="float: left;">导入课表Excel</Button>
-              </Upload>
-              <!--<div class="upload_excel">
-                <input type="file" id="FileUpload" ref="upload_file" style="display: none;" @change="uploadExcel">
-                <Button @click="uploadFile">
-                  上传Excel
-                </Button>
-              </div>-->
-              <Button type="text" size="large"   @click="classOrientationOk">取消</Button>
-              <Button type="primary" size="large"   @click="submitSchedule(0)">确定</Button>
-            </div>
         </Modal>
       <Modal
         v-model="modal1"
@@ -247,7 +226,6 @@
       return {
         id:this.$route.params.id,
         url:this.$store.state.app.baseUrl,
-        accessToken:Cookies.get('accessToken'),
         columns1: [
           {
             title: '班级编码',
@@ -711,8 +689,6 @@
                                   })
                                 this.scheduleModal2 = true;
                                 this.curIndex = params.index;
-                                this.categoryIds = params.row.categoryIds;
-                                this.scheduleDays = parseInt(this.waitPlanData[this.curIndex].classHour.split('天')[0]) + (this.waitPlanData[this.curIndex].openClassTime == '上午' ? 0 : 1)
                                 this.lessonData = this.waitPlanData[this.curIndex];
                                 //this.scheduleEdit = true
                               }else {
@@ -1008,7 +984,7 @@
         // 课程表
         scheduleModal1: false,
         scheduleModal2: false,
-        curIndex: 0,
+        curIndex: '',
         scheduleData: [],
         // 课程表是否可以编辑  仅在待规划中可编辑
         scheduleEdit: true,
@@ -1039,14 +1015,7 @@
         ],
         currentId:'',
         modalFlag:false,   // 点击modal4的时候为true 否则为false
-        lessonData:null,
-        scheduleDays:0,
-        categoryIds:[]
-      }
-    },
-    computed:{
-      categoryStr() {
-        // this.categoryIds.forEach(())
+        lessonData:null
       }
     },
     methods: {
@@ -1304,7 +1273,6 @@
         this.reason = '';
       },
       submitSchedule (type) {
-        this.scheduleModal2 = false ;
         if(this.modalFlag == true) {
           this.modal4 = true;
           this.modalFlag = true;
@@ -1336,9 +1304,6 @@
           .catch((error)=>{
             this.$Message.error(error.message);
           })
-      },
-      cancelSchedule () {
-        this.scheduleData = [];
       },
       search1 () {
         //查询已选课程
@@ -1448,89 +1413,14 @@
         this.teachingMaterialList.splice(index,1);
       },
       classOrientationOk() {
-        this.scheduleModal2 = false ;
         if(this.modalFlag == true) {
           this.modal4 = true;
           this.modalFlag = true;
         }
-        this.scheduleData = [];
       },
       childrenOk(){
         this.modalFlag = false;
-      },
-      handleBefore() {
-        this.$Spin.show({
-          render: (h) => {
-            return h('div', [
-              h('Icon', {
-                'class': 'demo-spin-icon-load',
-                props: {
-                  type: 'load-c',
-                  size: 38
-                }
-              }),
-              h('div', '努力加载中...')
-            ])
-          }
-        });
-      },
-      handleSuccessExcel (res,file, fileList) {
-        if(res.code == 0) {
-          this.$Message.success('上传成功');
-          this.scheduleData = res.data.courseTableLineItemVos ? res.data.courseTableLineItemVos : []
-        }else if(res.code == 505) {
-          this.$Notice.error({
-            title: '提示',
-            render:h=>{
-              let ele = [];
-              return h('div',(()=>{
-                res.data.forEach((item)=>{
-                  ele.push(h('div',item))
-                })
-                return ele;
-              })())
-            },
-            duration: 0
-          });
-        }else {
-          this.$Message.error(res.message);
-        }
-        this.$Spin.hide();
-      },
-      uploadFile() {
-        // debugger
-        this.$refs.upload_file.click()
-      },
-     /* uploadExcel () {
-        var fileObj = document.getElementById("FileUpload").files[0]; // js 获取文件对象
-        if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
-          alert("请选择Excel文件");
-          return;
-        }
-        var formFile = new FormData();
-        // formFile.append("action", "UploadVMKImagePath");
-        formFile.append("file", fileObj); //加入文件对象
-
-        //第一种  XMLHttpRequest 对象
-        //var xhr = new XMLHttpRequest();
-        //xhr.open("post", "/Admin/Ajax/VMKHandler.ashx", true);
-        //xhr.onload = function () {
-        //    alert("上传完成!");
-        //};
-        //xhr.send(formFile);
-
-        //第二种 ajax 提交
-
-        var data = formFile;
-        this.$http({
-          method:'post',
-          url:this.$store.state.app.baseUrl + 'course/getCourseTableByExcel',
-          data: data,
-        })
-          .then((res)=>{
-            console.log(res)
-          })
-      }*/
+      }
     },
     mounted() {
       this.search1();
@@ -1626,22 +1516,5 @@
       color: #2d8cf0;
       margin: 0 3px;
       cursor: pointer;
-    }
-    .schedule {
-      .ivu-upload {
-        float: left;
-        ul {
-          float: left;
-          width: 300px;
-          text-align: left;
-          margin-left: 50px;
-        }
-      }
-      .uploadList {
-        float: left;
-      }
-      .upload_excel {
-        float: left;
-      }
     }
 </style>

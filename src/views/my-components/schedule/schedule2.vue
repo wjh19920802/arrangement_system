@@ -3,23 +3,19 @@
         <Modal  class="edit_modal"
                 v-model="modal1"
                 title="课程信息"
-                @on-cancel="cancelFill"
                 @on-ok="fillTitle">
             <Form :model="modalInfo" :label-width="100">
-                <FormItem label="科目" prop="topCategoryId" class="firstCategory">
+                <FormItem label="科目" prop="topCategoryId">
                     <Select ref="firstCat" v-model="modalInfo.topCategoryId" label-in-value placeholder="一级科目" @on-change="getCategoryTree(modalInfo.topCategoryId)">
                         <Option v-for="(s,i) in modalSubject" :key="s.id" :value="s.id">{{s.categoryName}}</Option>
-                        <Option  value="-1">早自习</Option>
-                        <Option  value="-3">晚自习</Option>
-                        <Option  value="-4">休息</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="课程项目" prop="itemContent">
                     <!--<Cascader :data="modalProject.length?modalProject:[]" v-model="modalInfo.itemContent"></Cascader>-->
-                    <Select ref="secondCat" v-model="modalInfo.secondCategoryId" @on-change="getThirdTree" placeholder="二级科目">
+                    <Select ref="secondCat" @on-change="getThirdTree" placeholder="二级科目">
                         <Option v-for="(s,i) in modalProject" :key="s.value" :value="s.value">{{s.label}}</Option>
                     </Select>
-                    <Select ref="thirdCat" v-model="modalInfo.thirdCategoryId" placeholder="三级科目">
+                    <Select ref="thirdCat" v-model="modalInfo.categoryId" placeholder="三级科目">
                         <Option v-for="(s,i) in thirdTree" :key="s.value" :value="s.value">{{s.label}}</Option>
                     </Select>
                     <!--<Input v-model="modalInfo.project" placeholder=""></Input>-->
@@ -50,7 +46,7 @@
                 </span>
                 <span class="classes flex flex-v flex-align-center flex-pack-center" v-for="(c,i) in (data1[index] ? data1[index].courseTableItems : {})" :key="i" :style="formatClass(c.time[0], c.time[1])">
                     <div class="className">
-                        {{c.itemContent}}
+                        {{c.topCategoryName}} - {{c.itemContent}}
                     </div>
                     <div class="classTime">
                         {{formatTime(c.time[0], c.time[1])}}
@@ -91,11 +87,8 @@
         modalInfo: {
           topCategoryId: '',
           topCategoryName: '',
-          secondCategoryId:'',
-          secondCategoryName:'',
-          thirdCategoryId:'',
-          thirdCategoryName:'',
           categoryId: '',
+          categoryName: '',
           itemContent: '',
           time: ['08:00','09：00']
         },
@@ -144,7 +137,7 @@
         return this.lessonData ? this.lessonData.courseName : '课程表'
       },
       row () {
-        return this.lessonData ? (this.lessonData.openClassTime == '下午' || this.lessonData.openClassTime == '晚上') ? +this.lessonData.classHour.split('天')[0]+1 : +this.lessonData.classHour.split('天')[0]: 1
+        return this.lessonData ? (this.lessonData.openClassTime == '下午' || this.lessonData.openClassTime == '晚上') ? +this.lessonData.classHour.split('天')[0]+1 : +this.lessonData.classHour.split('天')[0] : 1
       },
       /*data1 () {
         return this.$store.state.user.schedule
@@ -230,13 +223,10 @@
         return start_h + ':' + start_m + ' - ' + end_h + ':' + end_m
       },
       addClass (index) {
-        this.modalInfo.topCategoryId = '';
-        this.modalInfo.secondCategoryId = '';
-        this.modalInfo.thirdCategoryId = '';
-        this.modalInfo.time = ['08:00','09:00'];
-        this.modalInfo = Object.assign({},this.modalInfo);
+        this.modalInfo.topCategoryId = ''
+        //this.modalInfo.time = [];
         this.modal1 = true;
-        this.curRowIndex = index;
+        this.curRowIndex = index
       },
       formatClass (start, end) {
         return {width: parseInt(end-start)+'px'}
@@ -247,58 +237,29 @@
         this.curRowIndex = index
         this.curColIndex = i
         this.modalInfo = {
-          topCategoryId: this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[0]?this.data1[index].courseTableItems[i].categoryList[0].id:'':'',
-          topCategoryName: this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[0]?this.data1[index].courseTableItems[i].categoryList[0].categoryName:'':'',
-          secondCategoryId:this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[1]?this.data1[index].courseTableItems[i].categoryList[1].id:'':'',
-          secondCategoryName:this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[1]?this.data1[index].courseTableItems[i].categoryList[1].categoryName:'':'',
-          thirdCategoryId: this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[2]?this.data1[index].courseTableItems[i].categoryList[2].id:'':'',
-          thirdCategoryName: this.data1[index].courseTableItems[i].categoryList?this.data1[index].courseTableItems[i].categoryList[2]?this.data1[index].courseTableItems[i].categoryList[2].categoryName:'':'',
-          categoryId:this.modalInfo.thirdCategoryId?this.modalInfo.thirdCategoryId:this.modalInfo.secondCategoryId?this.modalInfo.secondCategoryId:this.modalInfo.topCategoryId,
-          categoryList:[
-            {id:this.modalInfo.topCategoryId,categoryName:this.modalInfo.topCategoryName},
-            {id:this.modalInfo.secondCategoryId,categoryName:this.modalInfo.secondCategoryName},
-            {id:this.modalInfo.thirdCategoryId,categoryName:this.modalInfo.thirdCategoryName},
-          ],
+          topCategoryId: this.data1[index].courseTableItems[i].topCategoryId,
+          topCategoryName: this.data1[index].courseTableItems[i].topCategoryName,
+          categoryId: this.data1[index].courseTableItems[i].categoryId,
+          categoryName: this.data1[index].courseTableItems[i].categoryName,
           itemContent: this.data1[index].courseTableItems[i].itemContent,
-          time: this.formatTime( this.data1[index].courseTableItems[i].time[0], this.data1[index].courseTableItems[i].time[1]).split('-')
+          time: []
         }
-        this.$refs.firstCat.selectedSingle = this.modalInfo.topCategoryName;
-        this.$refs.secondCat.selectedSingle = this.modalInfo.secondCategoryName;
-        this.$refs.thirdCat.selectedSingle = this.modalInfo.thirdCategoryName;
       },
       deleteClass (index, i) {
         this.data1[index].courseTableItems.splice(i,1)
       },
       fillTitle () {
-        if(this.modalInfo.topCategoryId == '') {
-          alert('添加科目')
-          return
-        }else if(this.modalInfo.secondCategoryId == '') {
-          this.$refs.secondCat.selectedSingle = '';
-          this.$refs.thirdCat.selectedSingle = '';
-        }
-
         let start = this.modalInfo.time[0];
         let end = this.modalInfo.time[1];
         //console.log(this.$refs.firstCat)
         let newItem = {
           topCategoryId: this.modalInfo.topCategoryId,
           topCategoryName: this.$refs.firstCat.selectedSingle || '',
-          secondCategoryId:this.modalInfo.secondCategoryId,
-          secondCategoryName:this.$refs.secondCat.selectedSingle || '',
-          thirdCategoryId: this.modalInfo.thirdCategoryId,
-          thirdCategoryName: this.$refs.thirdCat.selectedSingle || '',
-          categoryId:this.modalInfo.thirdCategoryId?this.modalInfo.thirdCategoryId:this.modalInfo.secondCategoryId?this.modalInfo.secondCategoryId:this.modalInfo.topCategoryId,
-          categoryList:[
-            {id:this.modalInfo.topCategoryId,categoryName:this.$refs.firstCat.selectedSingle},
-            {id:this.modalInfo.secondCategoryId,categoryName:this.$refs.secondCat.selectedSingle},
-            {id:this.modalInfo.thirdCategoryId,categoryName:this.$refs.thirdCat.selectedSingle },
-          ],
-          itemContent: this.$refs.firstCat.selectedSingle + (this.$refs.secondCat.selectedSingle?('/' + this.$refs.secondCat.selectedSingle + '/' + this.$refs.thirdCat.selectedSingle):''),
+          categoryId: this.modalInfo.categoryId,
+          categoryName: this.$refs.thirdCat.selectedSingle || '',
+          itemContent: this.$refs.secondCat.selectedSingle + '/' + this.$refs.thirdCat.selectedSingle,
           time: [0, 0],
         }
-        console.log(newItem)
-        console.log(this.$refs.secondCat.selectedSingle)
         if(start){
           //newItem.time[0] = start.getHours()*100 + start.getMinutes();
           newItem.time[0] = parseInt(start.split(':')[0])*100 + parseInt(start.split(':')[1]);
@@ -307,25 +268,13 @@
           //newItem.time[1] = end.getHours()*100 + end.getMinutes();
           newItem.time[1] = parseInt(end.split(':')[0])*100 + parseInt(end.split(':')[1]);
         }
-        if(newItem.topCategoryName != '') {
-          if(!(this.isEdit)){
-            this.data1[this.curRowIndex].courseTableItems.push(newItem)
-            //this.$store.state.user.schedule[this.curRowIndex].push(newItem)
-          }else{
-            this.data1[this.curRowIndex].courseTableItems[this.curColIndex] = newItem
-            //this.$store.state.user.schedule[this.curRowIndex][this.curColIndex] = newItem
-          }
-        }else {
-          this.$Modal.confirm({
-            title: '提示',
-            content: '请选择一级科目',
-            okText: '确定',
-            cancelText: '取消'
-          });
+        if(!(this.isEdit)){
+          this.data1[this.curRowIndex].courseTableItems.push(newItem)
+          //this.$store.state.user.schedule[this.curRowIndex].push(newItem)
+        }else{
+          this.data1[this.curRowIndex].courseTableItems[this.curColIndex] = newItem
+          //this.$store.state.user.schedule[this.curRowIndex][this.curColIndex] = newItem
         }
-        // this.$refs.firstCat.selectedSingle = '';
-        // this.$refs.secondCat.selectedSingle = '';
-        // this.$refs.thirdCat.selectedSingle = '';
         // 将数组重新排序
         this.data1[this.curRowIndex].courseTableItems.sort(function (a, b) {
           if (a.time[0] < b.time[0]) {
@@ -337,9 +286,6 @@
           }
         })
         this.isEdit = false
-      },
-      cancelFill () {
-        this.isEdit = false ;
       },
       toFrontPage () {
         this.page = (this.page-1)<1? 1 : this.page-1
@@ -553,15 +499,6 @@
                 left:0;
                 top:-30px;
             }*/
-        }
-        .firstCategory>.ivu-form-item-label {
-          content: '*';
-          display: inline-block;
-          margin-right: 4px;
-          line-height: 1;
-          font-family: SimSun;
-          font-size: 12px;
-          color: #ed3f14;
         }
     }
 
